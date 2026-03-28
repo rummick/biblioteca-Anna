@@ -1,8 +1,8 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 
 // TODO: Canviar per la BD de l'Anna
-const SUPABASE_URL = "https://NOVA_BD_ANNA.supabase.co";
-const SUPABASE_KEY = "NOVA_CLAU_ANNA";
+const SUPABASE_URL = "https://ptmartuivivhavzgbnvw.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB0bWFydHVpdml2aGF2emdibnZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ3MzA1MzUsImV4cCI6MjA5MDMwNjUzNX0.hPxV1P-YyIIv4ErA-jEdKLLQTPG2L747WkVsI56gQVs";
 const ANTHROPIC_KEY = ""; // deixar buit — s'usa via proxy de Vercel si es configura
 
 const supaFetch = async (table, params = "") => {
