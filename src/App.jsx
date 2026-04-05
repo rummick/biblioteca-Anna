@@ -463,7 +463,7 @@ const LLEGIT_OPTIONS = [
   { val: "si", icon: "✓", label: "Llegit", color: "#6ec88e" },
 ];
 const STARS = [1,2,3,4,5];
-const APP_VERSION = "1.0.0";
+const APP_VERSION = "1.2.0";
 
 const getGridCols = () => {
   const w = window.innerWidth;
