@@ -459,11 +459,11 @@ const AUTORS_FALTEN = [
 ];
 const LLEGIT_OPTIONS = [
   { val: "no", icon: "○", label: "No llegit", color: "#555" },
-  { val: "llegint", icon: "½", label: "Llegint", color: "#8b3a1a" },
+  { val: "llegint", icon: "½", label: "Llegint", color: "#d4783a" },
   { val: "si", icon: "✓", label: "Llegit", color: "#6ec88e" },
 ];
 const STARS = [1,2,3,4,5];
-const APP_VERSION = "1.2.0";
+const APP_VERSION = "1.2.3";
 
 const getGridCols = () => {
   const w = window.innerWidth;
@@ -477,16 +477,16 @@ const BarChart = ({ data, title, onClickBar }) => {
   const max = Math.max(...data.map(d => d.val), 1);
   return (
     <div style={{ marginBottom: 20 }}>
-      <div style={{ fontSize: 11, color: "#8b3a1a99", letterSpacing: 1, textTransform: "uppercase", marginBottom: 8 }}>{title}</div>
+      <div style={{ fontSize: 11, color: "#d4783a99", letterSpacing: 1, textTransform: "uppercase", marginBottom: 8 }}>{title}</div>
       {data.map(d => (
         <div key={d.label} style={{ marginBottom: 6, cursor: onClickBar ? "pointer" : "default" }}
           onClick={() => onClickBar && onClickBar(d)}>
           <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, color: "#888", marginBottom: 2 }}>
-            <span style={{ color: onClickBar ? "#8b3a1a" : "#888" }}>{d.label}</span>
-            <span style={{ color: "#8b3a1a" }}>{d.val}</span>
+            <span style={{ color: onClickBar ? "#d4783a" : "#888" }}>{d.label}</span>
+            <span style={{ color: "#d4783a" }}>{d.val}</span>
           </div>
-          <div style={{ height: 6, background: "#c4b090", borderRadius: 3 }}>
-            <div style={{ height: 6, width: `${(d.val/max)*100}%`, background: onClickBar ? "#8b3a1a66" : "#8b3a1a44", borderRadius: 3, transition: "width 0.4s" }} />
+          <div style={{ height: 6, background: "#4a3828", borderRadius: 3 }}>
+            <div style={{ height: 6, width: `${(d.val/max)*100}%`, background: onClickBar ? "#d4783a66" : "#d4783a44", borderRadius: 3, transition: "width 0.4s" }} />
           </div>
         </div>
       ))}
@@ -502,23 +502,23 @@ const EditField = ({ label, value, onSave, multiline = false, type = "text" }) =
   if (!editing) return (
     <div style={{ display: "flex", alignItems: "flex-start", gap: 6, marginBottom: 5 }}>
       <div style={{ flex: 1 }}>
-        <span style={{ color: "#8b3a1a66", textTransform: "uppercase", fontSize: 10, letterSpacing: 1 }}>{label} </span>
-        <span style={{ fontSize: 12, color: value ? "#2c1a0a" : "#333" }}>{value || "—"}</span>
+        <span style={{ color: "#d4783a66", textTransform: "uppercase", fontSize: 10, letterSpacing: 1 }}>{label} </span>
+        <span style={{ fontSize: 12, color: value ? "#e8dcc8" : "#333" }}>{value || "—"}</span>
       </div>
       <button onClick={() => setEditing(true)} style={{ background: "none", border: "none", color: "#444", cursor: "pointer", fontSize: 11, padding: "0 4px", flexShrink: 0 }}>✎</button>
     </div>
   );
   return (
     <div style={{ marginBottom: 8 }}>
-      <div style={{ color: "#8b3a1a66", textTransform: "uppercase", fontSize: 10, letterSpacing: 1, marginBottom: 4 }}>{label}</div>
+      <div style={{ color: "#d4783a66", textTransform: "uppercase", fontSize: 10, letterSpacing: 1, marginBottom: 4 }}>{label}</div>
       {multiline
         ? <textarea value={val} onChange={e => setVal(e.target.value)} rows={4}
-            style={{ width: "100%", background: "#ede8de", border: "1px solid #8b3a1a44", color: "#2c1a0a", padding: "8px", fontSize: 12, fontFamily: "Georgia, serif", borderRadius: 2, resize: "vertical", boxSizing: "border-box" }} />
+            style={{ width: "100%", background: "#352a1c", border: "1px solid #d4783a44", color: "#e8dcc8", padding: "8px", fontSize: 12, fontFamily: "Georgia, serif", borderRadius: 2, resize: "vertical", boxSizing: "border-box" }} />
         : <input type={type} value={val} onChange={e => setVal(e.target.value)}
-            style={{ width: "100%", background: "#ede8de", border: "1px solid #8b3a1a44", color: "#2c1a0a", padding: "7px 10px", fontSize: 12, fontFamily: "Georgia, serif", borderRadius: 2, boxSizing: "border-box" }} />
+            style={{ width: "100%", background: "#352a1c", border: "1px solid #d4783a44", color: "#e8dcc8", padding: "7px 10px", fontSize: 12, fontFamily: "Georgia, serif", borderRadius: 2, boxSizing: "border-box" }} />
       }
       <div style={{ display: "flex", gap: 6, marginTop: 6 }}>
-        <button onClick={save} style={{ padding: "4px 12px", background: "#8b3a1a22", border: "1px solid #8b3a1a44", color: "#8b3a1a", cursor: "pointer", fontSize: 11, borderRadius: 2, fontFamily: "Georgia, serif" }}>Desar</button>
+        <button onClick={save} style={{ padding: "4px 12px", background: "#d4783a22", border: "1px solid #d4783a44", color: "#d4783a", cursor: "pointer", fontSize: 11, borderRadius: 2, fontFamily: "Georgia, serif" }}>Desar</button>
         <button onClick={cancel} style={{ padding: "4px 12px", background: "none", border: "1px solid #1e3060", color: "#555", cursor: "pointer", fontSize: 11, borderRadius: 2, fontFamily: "Georgia, serif" }}>Cancel·lar</button>
       </div>
     </div>
@@ -527,99 +527,99 @@ const EditField = ({ label, value, onSave, multiline = false, type = "text" }) =
 
 // ── STYLES ──
 const S = {
-  app: { minHeight: "100vh", background: "#f5f0e8", color: "#2c1a0a", fontFamily: "Georgia, serif", maxWidth: "100%", fontSize: 16 },
-  header: { padding: "14px 16px 0", background: "#f5f0e8", borderBottom: "1px solid #1a2540", position: "sticky", top: 0, zIndex: 100 },
+  app: { minHeight: "100vh", background: "#2a1f14", color: "#e8dcc8", fontFamily: "Georgia, serif", colorScheme: "light", maxWidth: "100%", fontSize: 16 },
+  header: { padding: "14px 16px 0", background: "#2a1f14", borderBottom: "1px solid #1a2540", position: "sticky", top: 0, zIndex: 100 },
   headerTop: { display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 },
-  title: { fontSize: 17, fontWeight: "bold", letterSpacing: 3, color: "#8b3a1a", textTransform: "uppercase", margin: 0, display: "flex", alignItems: "center" },
+  title: { fontSize: 17, fontWeight: "bold", letterSpacing: 3, color: "#d4783a", textTransform: "uppercase", margin: 0, display: "flex", alignItems: "center" },
   headerRight: { display: "flex", gap: 8, alignItems: "center" },
-  iconBtn: { background: "none", border: "1px solid #2a3a5a", color: "#7a5a3a", cursor: "pointer", fontSize: 13, padding: "3px 9px", borderRadius: 12, fontFamily: "Georgia, serif" },
+  iconBtn: { background: "none", border: "1px solid #2a3a5a", color: "#b8a888", cursor: "pointer", fontSize: 13, padding: "3px 9px", borderRadius: 12, fontFamily: "Georgia, serif" },
   nav: { display: "flex" },
-  navBtn: (a) => ({ flex: 1, padding: "9px 4px", background: "none", color: a ? "#8b3a1a" : "#8a6a4a", border: "none", borderBottom: `2px solid ${a ? "#8b3a1a" : "transparent"}`, cursor: "pointer", fontSize: 13, fontFamily: "Georgia, serif", letterSpacing: 1, textTransform: "uppercase" }),
-  searchWrap: { padding: "10px 16px", background: "#f5f0e8", borderBottom: "1px solid #1a2540", position: "sticky", top: 83, zIndex: 99 },
-  input: { width: "100%", background: "#ede8de", border: "1px solid #2a3a5a", color: "#2c1a0a", padding: "9px 12px", fontSize: 15, fontFamily: "Georgia, serif", outline: "none", boxSizing: "border-box", borderRadius: 2 },
+  navBtn: (a) => ({ flex: 1, padding: "9px 4px", background: "none", color: a ? "#d4783a" : "#a89878", border: "none", borderBottom: `2px solid ${a ? "#d4783a" : "transparent"}`, cursor: "pointer", fontSize: 13, fontFamily: "Georgia, serif", letterSpacing: 1, textTransform: "uppercase" }),
+  searchWrap: { padding: "10px 16px", background: "#2a1f14", borderBottom: "1px solid #1a2540", position: "sticky", top: 83, zIndex: 99 },
+  input: { width: "100%", background: "#352a1c", border: "1px solid #2a3a5a", color: "#e8dcc8", padding: "9px 12px", fontSize: 15, fontFamily: "Georgia, serif", outline: "none", boxSizing: "border-box", borderRadius: 2 },
   pills: { display: "flex", gap: 6, overflowX: "auto", padding: "8px 16px", scrollbarWidth: "none", borderBottom: "1px solid #1a2540" },
-  pill: (a) => ({ padding: "4px 10px", background: a ? "#8b3a1a18" : "transparent", color: a ? "#8b3a1a" : "#8a6a4a", border: `1px solid ${a ? "#8b3a1a55" : "#d4c4a0"}`, cursor: "pointer", fontSize: 11, whiteSpace: "nowrap", fontFamily: "Georgia, serif", borderRadius: 2 }),
-  statsBar: { padding: "6px 16px", fontSize: 13, color: "#8a6a4a", borderBottom: "1px solid #111", background: "#e8e2d4" },
+  pill: (a) => ({ padding: "4px 10px", background: a ? "#d4783a18" : "transparent", color: a ? "#d4783a" : "#a89878", border: `1px solid ${a ? "#d4783a55" : "#5a4838"}`, cursor: "pointer", fontSize: 11, whiteSpace: "nowrap", fontFamily: "Georgia, serif", borderRadius: 2 }),
+  statsBar: { padding: "6px 16px", fontSize: 13, color: "#a89878", borderBottom: "1px solid #111", background: "#1e1510" },
   viewToggle: { display: "flex", gap: 4 },
-  viewBtn: (a) => ({ padding: "3px 8px", background: a ? "#8b3a1a22" : "transparent", color: a ? "#8b3a1a" : "#8a6a4a", border: `1px solid ${a ? "#8b3a1a44" : "#d4c4a0"}`, cursor: "pointer", fontSize: 11, borderRadius: 2 }),
+  viewBtn: (a) => ({ padding: "3px 8px", background: a ? "#d4783a22" : "transparent", color: a ? "#d4783a" : "#a89878", border: `1px solid ${a ? "#d4783a44" : "#5a4838"}`, cursor: "pointer", fontSize: 11, borderRadius: 2 }),
   grid: (cols) => ({ display: "grid", gridTemplateColumns: `repeat(${cols}, 1fr)`, gap: 2, padding: 2 }),
-  card: { position: "relative", aspectRatio: "2/3", overflow: "hidden", cursor: "pointer", background: "#ede8de" },
+  card: { position: "relative", aspectRatio: "2/3", overflow: "hidden", cursor: "pointer", background: "#352a1c" },
   cardImg: { width: "100%", height: "100%", objectFit: "cover" },
   cardOverlay: { position: "absolute", bottom: 0, left: 0, right: 0, background: "linear-gradient(transparent, rgba(0,0,0,0.92))", padding: "18px 6px 6px" },
-  cardTitle: { fontSize: 9, color: "#2c1a0a", lineHeight: 1.3, fontWeight: "bold" },
-  cardShelf: { fontSize: 8, color: "#8b3a1a", marginTop: 2 },
+  cardTitle: { fontSize: 9, color: "#e8dcc8", lineHeight: 1.3, fontWeight: "bold" },
+  cardShelf: { fontSize: 8, color: "#d4783a", marginTop: 2 },
   cardLlegit: { position: "absolute", top: 5, left: 5, fontSize: 12, textShadow: "0 0 4px black" },
-  multiDot: { position: "absolute", top: 5, right: 5, background: "#8b3a1a", color: "#f5f0e8", fontSize: 8, fontWeight: "bold", padding: "1px 5px", borderRadius: 8 },
+  multiDot: { position: "absolute", top: 5, right: 5, background: "#d4783a", color: "#2a1f14", fontSize: 8, fontWeight: "bold", padding: "1px 5px", borderRadius: 8 },
   listItem: { display: "flex", gap: 12, padding: "12px 16px", borderBottom: "1px solid #131f35", cursor: "pointer", alignItems: "center" },
-  listImg: { width: 38, height: 57, objectFit: "cover", background: "#ede8de", flexShrink: 0 },
+  listImg: { width: 38, height: 57, objectFit: "cover", background: "#352a1c", flexShrink: 0 },
   listInfo: { flex: 1, minWidth: 0 },
-  listTitle: { fontSize: 16, color: "#2c1a0a", marginBottom: 3, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" },
-  listMeta: { fontSize: 13, color: "#8a6a4a" },
-  listShelf: { fontSize: 12, color: "#8b3a1a", fontFamily: "monospace", flexShrink: 0 },
+  listTitle: { fontSize: 16, color: "#e8dcc8", marginBottom: 3, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" },
+  listMeta: { fontSize: 13, color: "#a89878" },
+  listShelf: { fontSize: 12, color: "#d4783a", fontFamily: "monospace", flexShrink: 0 },
   listLlegit: { fontSize: 14, flexShrink: 0 },
-  loader: { textAlign: "center", padding: 60, color: "#8a6a4a", fontSize: 12, letterSpacing: 3 },
-  empty: { textAlign: "center", padding: 40, color: "#8a6a4a", fontSize: 14 },
+  loader: { textAlign: "center", padding: 60, color: "#a89878", fontSize: 12, letterSpacing: 3 },
+  empty: { textAlign: "center", padding: 40, color: "#a89878", fontSize: 14 },
   errMsg: { textAlign: "center", padding: 30, color: "#c44", fontSize: 13, lineHeight: 1.5 },
   detall: { padding: 20 },
-  backBtn: { background: "none", border: "none", color: "#8b3a1a", cursor: "pointer", fontSize: 14, fontFamily: "Georgia, serif", padding: "0 0 14px 0" },
+  backBtn: { background: "none", border: "none", color: "#d4783a", cursor: "pointer", fontSize: 14, fontFamily: "Georgia, serif", padding: "0 0 14px 0" },
   edTabs: { display: "flex", gap: 4, marginBottom: 16, flexWrap: "wrap" },
-  edTab: (a) => ({ padding: "5px 12px", background: a ? "#8b3a1a18" : "transparent", color: a ? "#8b3a1a" : "#8a6a4a", border: `1px solid ${a ? "#8b3a1a55" : "#d4c4a0"}`, cursor: "pointer", fontSize: 11, fontFamily: "Georgia, serif", borderRadius: 2 }),
+  edTab: (a) => ({ padding: "5px 12px", background: a ? "#d4783a18" : "transparent", color: a ? "#d4783a" : "#a89878", border: `1px solid ${a ? "#d4783a55" : "#5a4838"}`, cursor: "pointer", fontSize: 11, fontFamily: "Georgia, serif", borderRadius: 2 }),
   detallImgWrap: { position: "relative", marginBottom: 12 },
-  detallImg: { width: "100%", maxHeight: 280, objectFit: "contain", background: "#ede8de", display: "block" },
+  detallImg: { width: "100%", maxHeight: 280, objectFit: "contain", background: "#352a1c", display: "block" },
   coverBtns: { display: "flex", gap: 4, flexWrap: "wrap", marginBottom: 10 },
   coverBtn: (color) => ({ background: "none", border: `1px solid ${color}55`, color, cursor: "pointer", fontSize: 11, padding: "4px 10px", borderRadius: 2, fontFamily: "Georgia, serif" }),
   detallTitle: { fontSize: 24, color: "#d4b878", marginBottom: 6, lineHeight: 1.3, fontWeight: "bold" },
-  detallOrig: { fontSize: 16, color: "#7a5a3a", fontStyle: "italic", marginBottom: 10 },
-  resum: { fontSize: 15, color: "#4a3520", lineHeight: 1.7, marginBottom: 12, padding: "14px 16px", background: "#ede8de", borderLeft: "3px solid #8b3a1a55" },
-  llegitRow: { display: "flex", gap: 6, alignItems: "center", marginBottom: 16, padding: "10px 14px", background: "#ede8de", borderRadius: 2, flexWrap: "wrap" },
-  llegitBtn: (active, color) => ({ padding: "5px 12px", background: active ? color + "22" : "transparent", color: active ? color : "#8a6a4a", border: `1px solid ${active ? color + "66" : "#d4c4a0"}`, cursor: "pointer", fontSize: 13, borderRadius: 2, fontFamily: "Georgia, serif" }),
+  detallOrig: { fontSize: 16, color: "#b8a888", fontStyle: "italic", marginBottom: 10 },
+  resum: { fontSize: 15, color: "#c0b498", lineHeight: 1.7, marginBottom: 12, padding: "14px 16px", background: "#352a1c", borderLeft: "3px solid #d4783a55" },
+  llegitRow: { display: "flex", gap: 6, alignItems: "center", marginBottom: 16, padding: "10px 14px", background: "#352a1c", borderRadius: 2, flexWrap: "wrap" },
+  llegitBtn: (active, color) => ({ padding: "5px 12px", background: active ? color + "22" : "transparent", color: active ? color : "#a89878", border: `1px solid ${active ? color + "66" : "#5a4838"}`, cursor: "pointer", fontSize: 13, borderRadius: 2, fontFamily: "Georgia, serif" }),
   starsRow: { display: "flex", gap: 4, alignItems: "center", marginLeft: "auto" },
-  star: (active) => ({ fontSize: 18, cursor: "pointer", color: active ? "#8b3a1a" : "#d4c4a0" }),
-  sectionTitle: { fontSize: 13, color: "#8b3a1acc", letterSpacing: 2, textTransform: "uppercase", margin: "20px 0 10px", borderBottom: "1px solid #2a3a5a", paddingBottom: 6 },
-  badge: { display: "inline-block", padding: "3px 8px", background: "#8b3a1a12", border: "1px solid #8b3a1a44", color: "#8b3a1a", fontSize: 13, marginRight: 4, marginBottom: 4, letterSpacing: 0.5, borderRadius: 2 },
-  notesArea: { width: "100%", background: "#ede8de", border: "1px solid #2a3a5a", color: "#2c1a0a", padding: "10px 12px", fontSize: 13, fontFamily: "Georgia, serif", borderRadius: 2, resize: "vertical", boxSizing: "border-box", minHeight: 80 },
+  star: (active) => ({ fontSize: 18, cursor: "pointer", color: active ? "#d4783a" : "#5a4838" }),
+  sectionTitle: { fontSize: 13, color: "#d4783acc", letterSpacing: 2, textTransform: "uppercase", margin: "20px 0 10px", borderBottom: "1px solid #2a3a5a", paddingBottom: 6 },
+  badge: { display: "inline-block", padding: "3px 8px", background: "#d4783a12", border: "1px solid #d4783a44", color: "#d4783a", fontSize: 13, marginRight: 4, marginBottom: 4, letterSpacing: 0.5, borderRadius: 2 },
+  notesArea: { width: "100%", background: "#352a1c", border: "1px solid #2a3a5a", color: "#e8dcc8", padding: "10px 12px", fontSize: 13, fontFamily: "Georgia, serif", borderRadius: 2, resize: "vertical", boxSizing: "border-box", minHeight: 80 },
   deleteBtn: { width: "100%", marginTop: 24, padding: "10px", background: "none", border: "1px solid #c4444455", color: "#dd4444", cursor: "pointer", fontFamily: "Georgia, serif", fontSize: 12, borderRadius: 2 },
   selectorRow: { display: "flex", gap: 6, flexWrap: "wrap", padding: "10px 16px", borderBottom: "1px solid #1a2540" },
-  selBtn: (a) => ({ padding: "5px 10px", background: a ? "#8b3a1a" : "transparent", color: a ? "#f5f0e8" : "#7a5a3a", border: `1px solid ${a ? "#8b3a1a" : "#d4c4a0"}`, cursor: "pointer", fontSize: 11, fontFamily: "Georgia, serif", borderRadius: 2 }),
+  selBtn: (a) => ({ padding: "5px 10px", background: a ? "#d4783a" : "transparent", color: a ? "#2a1f14" : "#b8a888", border: `1px solid ${a ? "#d4783a" : "#5a4838"}`, cursor: "pointer", fontSize: 11, fontFamily: "Georgia, serif", borderRadius: 2 }),
   faltenList: { padding: "0 16px" },
   faltenItem: { padding: "12px 0", borderBottom: "1px solid #1a2540", display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 8 },
-  faltenTitle: { fontSize: 14, color: "#2c1a0a", marginBottom: 2 },
-  faltenCast: { fontSize: 12, color: "#8b3a1a99", fontStyle: "italic", marginBottom: 2 },
-  faltenYear: { fontSize: 13, color: "#8a6a4a" },
-  tipusBadge: { fontSize: 10, color: "#8b3a1a", border: "1px solid #8b3a1a55", padding: "2px 7px", whiteSpace: "nowrap", borderRadius: 2, flexShrink: 0 },
+  faltenTitle: { fontSize: 14, color: "#e8dcc8", marginBottom: 2 },
+  faltenCast: { fontSize: 12, color: "#d4783a99", fontStyle: "italic", marginBottom: 2 },
+  faltenYear: { fontSize: 13, color: "#a89878" },
+  tipusBadge: { fontSize: 10, color: "#d4783a", border: "1px solid #d4783a55", padding: "2px 7px", whiteSpace: "nowrap", borderRadius: 2, flexShrink: 0 },
   relatItem: { padding: "14px 16px", borderBottom: "1px solid #1a2540" },
-  relatTitle: { fontSize: 14, color: "#2c1a0a", marginBottom: 4, fontStyle: "italic" },
-  relatMeta: { fontSize: 12, color: "#8a6a4a", marginBottom: 5 },
-  relatResum: { fontSize: 12, color: "#6a5040", lineHeight: 1.6, marginBottom: 6 },
+  relatTitle: { fontSize: 14, color: "#e8dcc8", marginBottom: 4, fontStyle: "italic" },
+  relatMeta: { fontSize: 12, color: "#a89878", marginBottom: 5 },
+  relatResum: { fontSize: 12, color: "#a09078", lineHeight: 1.6, marginBottom: 6 },
   relatBooks: { display: "flex", flexWrap: "wrap", gap: 4, marginTop: 4 },
-  relatBook: { fontSize: 10, color: "#7a5030", border: "1px solid #8899cc44", padding: "2px 7px", borderRadius: 2 },
+  relatBook: { fontSize: 10, color: "#c8a868", border: "1px solid #8899cc44", padding: "2px 7px", borderRadius: 2 },
   relatNoDisp: { fontSize: 10, color: "#c44", border: "1px solid #c4444433", padding: "2px 7px", borderRadius: 2, display: "inline-block", marginTop: 4 },
-  univers: { display: "inline-block", fontSize: 9, color: "#8b3a1a99", border: "1px solid #8b3a1a22", padding: "1px 6px", marginLeft: 6, borderRadius: 2 },
+  univers: { display: "inline-block", fontSize: 9, color: "#d4783a99", border: "1px solid #d4783a22", padding: "1px 6px", marginLeft: 6, borderRadius: 2 },
   prestSection: { padding: "14px 16px 5px", borderBottom: "1px solid #1a2540" },
-  prestSectionTitle: { fontSize: 13, color: "#8b3a1a", letterSpacing: 2, textTransform: "uppercase", marginBottom: 4 },
+  prestSectionTitle: { fontSize: 13, color: "#d4783a", letterSpacing: 2, textTransform: "uppercase", marginBottom: 4 },
   prestItem: { padding: "12px 16px", borderBottom: "1px solid #131f35", display: "flex", gap: 12, alignItems: "center", cursor: "pointer" },
-  prestShelf: { fontSize: 12, color: "#8b3a1a", minWidth: 110, fontFamily: "monospace" },
-  prestTitle: { fontSize: 15, color: "#2c1a0a", flex: 1 },
+  prestShelf: { fontSize: 12, color: "#d4783a", minWidth: 110, fontFamily: "monospace" },
+  prestTitle: { fontSize: 15, color: "#e8dcc8", flex: 1 },
   prestLlegit: { fontSize: 15 },
   statsPage: { padding: 20 },
-  statsTitle: { fontSize: 15, color: "#8b3a1a", letterSpacing: 2, textTransform: "uppercase", marginBottom: 20, marginTop: 0 },
+  statsTitle: { fontSize: 15, color: "#d4783a", letterSpacing: 2, textTransform: "uppercase", marginBottom: 20, marginTop: 0 },
   statGrid: { display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 10, marginBottom: 24 },
-  statCard: { background: "#ede8de", border: "1px solid #1a2540", borderRadius: 4, padding: "14px 16px", cursor: "pointer" },
-  statNum: { fontSize: 28, color: "#8b3a1a", fontWeight: "bold", lineHeight: 1 },
-  statLabel: { fontSize: 13, color: "#8a6a4a", marginTop: 4 },
+  statCard: { background: "#352a1c", border: "1px solid #1a2540", borderRadius: 4, padding: "14px 16px", cursor: "pointer" },
+  statNum: { fontSize: 28, color: "#d4783a", fontWeight: "bold", lineHeight: 1 },
+  statLabel: { fontSize: 13, color: "#a89878", marginTop: 4 },
   modalOverlay: { position: "fixed", inset: 0, background: "rgba(0,0,0,0.88)", zIndex: 200, display: "flex", alignItems: "center", justifyContent: "center", padding: 20, overflowY: "auto" },
-  modal: { background: "#ede8de", border: "1px solid #2a3a5a", borderRadius: 6, padding: 24, maxWidth: 480, width: "100%", maxHeight: "90vh", overflowY: "auto" },
-  modalTitle: { fontSize: 16, color: "#8b3a1a", letterSpacing: 2, textTransform: "uppercase", marginBottom: 16, marginTop: 0 },
+  modal: { background: "#352a1c", border: "1px solid #2a3a5a", borderRadius: 6, padding: 24, maxWidth: 480, width: "100%", maxHeight: "90vh", overflowY: "auto" },
+  modalTitle: { fontSize: 16, color: "#d4783a", letterSpacing: 2, textTransform: "uppercase", marginBottom: 16, marginTop: 0 },
   modalRow: { fontSize: 15, color: "#aab0c0", marginBottom: 8, display: "flex", justifyContent: "space-between" },
-  modalVal: { color: "#2c1a0a", fontWeight: "bold" },
-  modalClose: { width: "100%", marginTop: 8, padding: "10px", background: "none", border: "1px solid #2a3a5a", color: "#7a5a3a", cursor: "pointer", fontFamily: "Georgia, serif", fontSize: 12, borderRadius: 2 },
+  modalVal: { color: "#e8dcc8", fontWeight: "bold" },
+  modalClose: { width: "100%", marginTop: 8, padding: "10px", background: "none", border: "1px solid #2a3a5a", color: "#b8a888", cursor: "pointer", fontFamily: "Georgia, serif", fontSize: 12, borderRadius: 2 },
   modalDivider: { borderTop: "1px solid #1a2540", margin: "14px 0" },
-  modalSmall: { fontSize: 10, color: "#8a6a4a", textAlign: "center", marginTop: 8 },
+  modalSmall: { fontSize: 10, color: "#a89878", textAlign: "center", marginTop: 8 },
   formGroup: { marginBottom: 14 },
-  formLabel: { fontSize: 12, color: "#8b3a1aaa", textTransform: "uppercase", letterSpacing: 1, display: "block", marginBottom: 4 },
-  formInput: { width: "100%", background: "#f5f0e8", border: "1px solid #2a3a5a", color: "#2c1a0a", padding: "8px 10px", fontSize: 15, fontFamily: "Georgia, serif", borderRadius: 2, boxSizing: "border-box", outline: "none" },
-  formBtn: { width: "100%", padding: "11px", background: "#8b3a1a22", border: "1px solid #8b3a1a55", color: "#8b3a1a", cursor: "pointer", fontFamily: "Georgia, serif", fontSize: 13, borderRadius: 2, marginTop: 8 },
-  addBtn: { position: "fixed", bottom: 20, right: 20, background: "#8b3a1a", color: "#f5f0e8", border: "none", borderRadius: "50%", width: 52, height: 52, fontSize: 26, cursor: "pointer", zIndex: 150, boxShadow: "0 4px 16px rgba(200,169,110,0.4)", display: "flex", alignItems: "center", justifyContent: "center" },
+  formLabel: { fontSize: 12, color: "#d4783aaa", textTransform: "uppercase", letterSpacing: 1, display: "block", marginBottom: 4 },
+  formInput: { width: "100%", background: "#2a1f14", border: "1px solid #2a3a5a", color: "#e8dcc8", padding: "8px 10px", fontSize: 15, fontFamily: "Georgia, serif", borderRadius: 2, boxSizing: "border-box", outline: "none" },
+  formBtn: { width: "100%", padding: "11px", background: "#d4783a22", border: "1px solid #d4783a55", color: "#d4783a", cursor: "pointer", fontFamily: "Georgia, serif", fontSize: 13, borderRadius: 2, marginTop: 8 },
+  addBtn: { position: "fixed", bottom: 20, right: 20, background: "#d4783a", color: "#2a1f14", border: "none", borderRadius: "50%", width: 52, height: 52, fontSize: 26, cursor: "pointer", zIndex: 150, boxShadow: "0 4px 16px rgba(200,169,110,0.4)", display: "flex", alignItems: "center", justifyContent: "center" },
 };
 
 // ── FORMULARI NOU LLIBRE ──
@@ -916,7 +916,7 @@ const FormNouLlibre = ({ onClose, onSaved }) => {
             <div style={{ display:"flex", gap:6 }}>
               <input style={{...S.formInput, flex:1}} value={form.isbn}
                 onChange={e => { set("isbn", e.target.value); if (e.target.value.replace(/-/g,'').length >= 10) fetchBookData(e.target.value); }} />
-              <button style={{ padding:"6px 10px", background:"#8b3a1a22", border:"1px solid #8b3a1a44", color:"#8b3a1a", cursor:"pointer", borderRadius:2, fontSize:11 }}
+              <button style={{ padding:"6px 10px", background:"#d4783a22", border:"1px solid #d4783a44", color:"#d4783a", cursor:"pointer", borderRadius:2, fontSize:11 }}
                 onClick={scanning ? stopScan : startScan} title="Escanejar amb càmera">
                 {scanning ? "⏹" : "📷"}
               </button>
@@ -939,11 +939,11 @@ const FormNouLlibre = ({ onClose, onSaved }) => {
                 </div>
                 {/* Línia de scan animada */}
                 <div style={{ position:"absolute", top:0, left:0, right:0, bottom:0, pointerEvents:"none" }}>
-                  <div style={{ position:"absolute", top:"50%", left:"10%", right:"10%", height:2, background:"#8b3a1a88", boxShadow:"0 0 8px #8b3a1a" }} />
-                  <div style={{ position:"absolute", top:"30%", left:"10%", right:"10%", bottom:"30%", border:"2px solid #8b3a1a44", borderRadius:4 }} />
+                  <div style={{ position:"absolute", top:"50%", left:"10%", right:"10%", height:2, background:"#d4783a88", boxShadow:"0 0 8px #d4783a" }} />
+                  <div style={{ position:"absolute", top:"30%", left:"10%", right:"10%", bottom:"30%", border:"2px solid #d4783a44", borderRadius:4 }} />
                 </div>
                 <div style={{ padding:"6px 12px", background:"rgba(0,0,0,0.7)", textAlign:"center" }}>
-                  <div style={{ fontSize:10, color:"#8b3a1a", marginBottom:4 }}>📷 Apunta el codi de barres al requadre</div>
+                  <div style={{ fontSize:10, color:"#d4783a", marginBottom:4 }}>📷 Apunta el codi de barres al requadre</div>
                   <button style={{ background:"none", border:"1px solid #c4444444", color:"#c44", cursor:"pointer", fontSize:10, padding:"3px 10px", borderRadius:2, fontFamily:"Georgia, serif" }}
                     onClick={stopScan}>⏹ Tancar càmera</button>
                 </div>
@@ -954,7 +954,7 @@ const FormNouLlibre = ({ onClose, onSaved }) => {
             <label style={S.formLabel}>Format</label>
             <div style={{ display: "flex", gap: 6 }}>
               {["paper","ebook"].map(f => (
-                <button key={f} style={{ flex:1, padding:"6px", background: form.format===f?"#8b3a1a22":"transparent", border:`1px solid ${form.format===f?"#8b3a1a44":"#c8b898"}`, color: form.format===f?"#8b3a1a":"#555", cursor:"pointer", fontSize:11, borderRadius:2, fontFamily:"Georgia, serif" }}
+                <button key={f} style={{ flex:1, padding:"6px", background: form.format===f?"#d4783a22":"transparent", border:`1px solid ${form.format===f?"#d4783a44":"#4a3828"}`, color: form.format===f?"#d4783a":"#555", cursor:"pointer", fontSize:11, borderRadius:2, fontFamily:"Georgia, serif" }}
                   onClick={() => set("format", f)}>{f==="paper"?"📚 Paper":"📱 eBook"}</button>
               ))}
             </div>
@@ -996,7 +996,7 @@ const FormNouLlibre = ({ onClose, onSaved }) => {
         <div style={{ marginBottom: 14 }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
             <label style={S.formLabel}>Resum</label>
-            <button style={{ background: "none", border: "1px solid #8b3a1a33", color: "#8b3a1a88", cursor: "pointer", fontSize: 10, padding: "2px 8px", borderRadius: 2, fontFamily: "Georgia, serif" }}
+            <button style={{ background: "none", border: "1px solid #d4783a33", color: "#d4783a88", cursor: "pointer", fontSize: 10, padding: "2px 8px", borderRadius: 2, fontFamily: "Georgia, serif" }}
               onClick={autoResum} disabled={loadingResum}>
               {loadingResum ? "⏳" : "✨ Auto"}
             </button>
@@ -1129,6 +1129,22 @@ export default function Biblioteca() {
   }, []);
 
   useEffect(() => { loadEdicions(); }, [loadEdicions]);
+  useEffect(() => {
+    document.body.style.background = "#2a1f14";
+    document.body.style.color = "#e8dcc8";
+    document.documentElement.style.background = "#2a1f14";
+    document.documentElement.style.colorScheme = "light";
+    // Injectar estil global per forçar mode clar
+    const style = document.createElement("style");
+    style.innerHTML = `
+      *, *::before, *::after { color-scheme: light !important; }
+      html, body { background: #2a1f14 !important; color: #e8dcc8 !important; }
+      @media (prefers-color-scheme: dark) {
+        html, body { background: #2a1f14 !important; color: #e8dcc8 !important; }
+      }
+    `;
+    document.head.appendChild(style);
+  }, []);
 
   // Stats
   const stats = (() => {
@@ -1564,12 +1580,12 @@ export default function Biblioteca() {
             <ellipse cx="22" cy="50" rx="26" ry="5" fill="none" stroke="#4488cc" strokeWidth="1.5" opacity="0.7"/>
             <path d="M58 8 L48 38 L55 38 L43 72 L68 32 L60 32 L72 8 Z" fill="#f5c842" opacity="0.88"/>
             <path d="M58 8 L48 38 L55 38 L43 72 L68 32 L60 32 L72 8 Z" fill="none" stroke="#c8963b" strokeWidth="1"/>
-            <line x1="85" y1="15" x2="85" y2="85" stroke="#8b3a1a44" strokeWidth="1"/>
-            <text x="100" y="48" fontFamily="Georgia, serif" fontSize="28" fontWeight="bold" fill="#8b3a1a" letterSpacing="4">BIBLIOTECA</text>
+            <line x1="85" y1="15" x2="85" y2="85" stroke="#d4783a44" strokeWidth="1"/>
+            <text x="100" y="48" fontFamily="Georgia, serif" fontSize="28" fontWeight="bold" fill="#d4783a" letterSpacing="4">BIBLIOTECA</text>
             <g transform="rotate(-12, 290, 72)">
               <text x="290" y="72" fontFamily="'Brush Script MT', 'Comic Sans MS', cursive" fontSize="22" fontWeight="bold" fill="#f5c842" opacity="0.9">Novel·la Negra</text>
             </g>
-            <line x1="100" y1="55" x2="395" y2="55" stroke="#8b3a1a44" strokeWidth="0.5"/>
+            <line x1="100" y1="55" x2="395" y2="55" stroke="#d4783a44" strokeWidth="0.5"/>
             <rect x="100" y="65" width="8" height="22" rx="1" fill="#cc2222"/>
             <rect x="110" y="68" width="6" height="19" rx="1" fill="#1a6644"/>
             <rect x="118" y="62" width="9" height="25" rx="1" fill="#1155aa"/>
@@ -1581,7 +1597,7 @@ export default function Biblioteca() {
             <rect x="175" y="61" width="9" height="26" rx="1" fill="#0a2255"/>
             <rect x="186" y="68" width="7" height="19" rx="1" fill="#551188"/>
             <rect x="195" y="64" width="10" height="23" rx="1" fill="#9a7420"/>
-            <line x1="100" y1="88" x2="210" y2="88" stroke="#8b3a1a" strokeWidth="2"/>
+            <line x1="100" y1="88" x2="210" y2="88" stroke="#d4783a" strokeWidth="2"/>
           </svg>
           <div style={S.headerRight}>
             <button style={S.iconBtn} onClick={() => navTo("stats")}>📊</button>
@@ -1628,16 +1644,16 @@ export default function Biblioteca() {
               {/* Resum */}
               <div style={{display:"grid", gridTemplateColumns:"1fr 1fr", gap:8, marginBottom:16}}>
                 {[
-                  {label:"📸 Sense preu", val:sensePreu.length, color: sensePreu.length>0?"#8b3a1a":"#6ec88e"},
-                  {label:"📄 Sense pàgines", val:sensePagines.length, color: sensePagines.length>50?"#c44":"#8b3a1a"},
-                  {label:"🔤 Sense traductor", val:senseTraductor.length, color:"#7a5030"},
-                  {label:"🔢 Sense ISBN", val:senseIsbn.length, color:"#8a6a4a"},
+                  {label:"📸 Sense preu", val:sensePreu.length, color: sensePreu.length>0?"#d4783a":"#6ec88e"},
+                  {label:"📄 Sense pàgines", val:sensePagines.length, color: sensePagines.length>50?"#c44":"#d4783a"},
+                  {label:"🔤 Sense traductor", val:senseTraductor.length, color:"#c8a868"},
+                  {label:"🔢 Sense ISBN", val:senseIsbn.length, color:"#a89878"},
                   {label:"⚠️ ISBN duplicats", val:isbnDups.length, color: isbnDups.length>0?"#c44":"#6ec88e"},
                   {label:"💰 Venuts sense preu", val:estatRaro.length, color: estatRaro.length>0?"#c44":"#6ec88e"},
                 ].map(s => (
-                  <div key={s.label} style={{background:"#e8e2d4", border:`1px solid ${s.color}44`, borderRadius:4, padding:"10px 12px"}}>
+                  <div key={s.label} style={{background:"#1e1510", border:`1px solid ${s.color}44`, borderRadius:4, padding:"10px 12px"}}>
                     <div style={{fontSize:20, color:s.color, fontWeight:"bold"}}>{s.val}</div>
-                    <div style={{fontSize:11, color:"#8a6a4a", marginTop:2}}>{s.label}</div>
+                    <div style={{fontSize:11, color:"#a89878", marginTop:2}}>{s.label}</div>
                   </div>
                 ))}
               </div>
@@ -1697,7 +1713,7 @@ export default function Biblioteca() {
               <div style={{ display:"flex", gap:6, marginBottom:16 }}>
                 {[{id:"NES",label:"Nesbø"},{id:"LAR",label:"Larsson"},{id:"MAN",label:"Mankell"},{id:"CHR",label:"Christie"}].map(s => (
                   <button key={s.id}
-                    style={{ flex:1, padding:"6px", background:tourSeccio===s.id?"#8b3a1a18":"transparent", border:`1px solid ${tourSeccio===s.id?"#8b3a1a55":"#c8b898"}`, color:tourSeccio===s.id?"#8b3a1a":"#555", cursor:"pointer", fontSize:12, fontFamily:"Georgia, serif", borderRadius:2 }}
+                    style={{ flex:1, padding:"6px", background:tourSeccio===s.id?"#d4783a18":"transparent", border:`1px solid ${tourSeccio===s.id?"#d4783a55":"#4a3828"}`, color:tourSeccio===s.id?"#d4783a":"#555", cursor:"pointer", fontSize:12, fontFamily:"Georgia, serif", borderRadius:2 }}
                     onClick={()=>setTourSeccio(s.id)}>{s.label}</button>
                 ))}
               </div>
@@ -1707,14 +1723,14 @@ export default function Biblioteca() {
                 const llegit = llegits.some(t => t.includes(item.titol.toLowerCase().substring(0,15)));
                 return (
                   <div key={i} style={{ display:"flex", gap:10, padding:"10px 0", borderBottom:"1px solid #1a2540", opacity: llegit ? 0.5 : 1 }}>
-                    <div style={{ flexShrink:0, width:22, height:22, borderRadius:"50%", background: llegit?"#6ec88e22":tinc?"#8b3a1a18":"#c4b090", border:`1px solid ${llegit?"#6ec88e":tinc?"#8b3a1a":"#333"}`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:10, color:llegit?"#6ec88e":tinc?"#8b3a1a":"#555" }}>
+                    <div style={{ flexShrink:0, width:22, height:22, borderRadius:"50%", background: llegit?"#6ec88e22":tinc?"#d4783a18":"#4a3828", border:`1px solid ${llegit?"#6ec88e":tinc?"#d4783a":"#333"}`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:10, color:llegit?"#6ec88e":tinc?"#d4783a":"#555" }}>
                       {llegit ? "✓" : i+1}
                     </div>
                     <div style={{ flex:1 }}>
-                      <div style={{ fontSize:12, color: llegit?"#555":tinc?"#2c1a0a":"#888", marginBottom:2 }}>{item.titol}</div>
+                      <div style={{ fontSize:12, color: llegit?"#555":tinc?"#e8dcc8":"#888", marginBottom:2 }}>{item.titol}</div>
                       <div style={{ fontSize:10, color:"#444", fontStyle:"italic" }}>{item.nota}</div>
                     </div>
-                    <div style={{ flexShrink:0, fontSize:10, color: llegit?"#6ec88e":tinc?"#8b3a1a":"#444" }}>
+                    <div style={{ flexShrink:0, fontSize:10, color: llegit?"#6ec88e":tinc?"#d4783a":"#444" }}>
                       {llegit ? "Llegit" : tinc ? "Tens" : "—"}
                     </div>
                   </div>
@@ -1755,16 +1771,16 @@ export default function Biblioteca() {
           const dataStr = ed.preu_mercat_data ? new Date(ed.preu_mercat_data).toLocaleDateString("ca-ES",{year:"numeric",month:"short"}) : null;
           return (
             <div style={{ display:"flex", gap:10, alignItems:"center", padding:"8px 0", borderBottom:"1px solid #1a2540" }}>
-              <img src={getCover(ed)} style={{ width:28, height:42, objectFit:"cover", flexShrink:0, background:"#ede8de" }} onError={e=>{e.target.src=COVER_FALLBACK;}} />
+              <img src={getCover(ed)} style={{ width:28, height:42, objectFit:"cover", flexShrink:0, background:"#352a1c" }} onError={e=>{e.target.src=COVER_FALLBACK;}} />
               <div style={{ flex:1, minWidth:0 }}>
-                <div style={{ fontSize:12, color:"#2c1a0a", whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis" }}>{ed.titulo_edicion||ed.titulo_original}</div>
+                <div style={{ fontSize:12, color:"#e8dcc8", whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis" }}>{ed.titulo_edicion||ed.titulo_original}</div>
                 <div style={{ fontSize:10, color:"#555" }}>
                   {ed.id_estanteria}
-                  {ed.preu_mercat && <span style={{ color:"#8b3a1a88", marginLeft:6 }}>{ed.preu_mercat}€</span>}
+                  {ed.preu_mercat && <span style={{ color:"#d4783a88", marginLeft:6 }}>{ed.preu_mercat}€</span>}
                   {dataStr && <span style={{ color:"#444", marginLeft:4 }}>· {dataStr}</span>}
                 </div>
               </div>
-              <button style={{ padding:"3px 7px", background:"#ede8de", border:"1px solid #1e3060", color:"#666", cursor:"pointer", fontSize:9, borderRadius:2, flexShrink:0 }}
+              <button style={{ padding:"3px 7px", background:"#352a1c", border:"1px solid #1e3060", color:"#666", cursor:"pointer", fontSize:9, borderRadius:2, flexShrink:0 }}
                 onClick={() => buscarPreu(ed, "iberlibro")}>🔍</button>
               <input
                 type="text"
@@ -1773,9 +1789,9 @@ export default function Biblioteca() {
                 value={val}
                 onChange={e => setRevisioPreusVals(v=>({...v,[ed.edicion_id]:e.target.value}))}
                 onKeyDown={e => { e.stopPropagation(); if (e.key==="Enter") saveNouPreu(ed.edicion_id, val); }}
-                style={{ width:65, background:"#f5f0e8", border:"1px solid #1e3060", color:"#2c1a0a", padding:"4px 6px", fontSize:11, fontFamily:"Georgia, serif", borderRadius:2, textAlign:"right" }} />
+                style={{ width:65, background:"#2a1f14", border:"1px solid #1e3060", color:"#e8dcc8", padding:"4px 6px", fontSize:11, fontFamily:"Georgia, serif", borderRadius:2, textAlign:"right" }} />
               <button
-                style={{ padding:"3px 8px", background: val?"#8b3a1a22":"transparent", border:`1px solid ${val?"#8b3a1a44":"#c8b898"}`, color:val?"#8b3a1a":"#333", cursor:"pointer", fontSize:11, borderRadius:2, flexShrink:0 }}
+                style={{ padding:"3px 8px", background: val?"#d4783a22":"transparent", border:`1px solid ${val?"#d4783a44":"#4a3828"}`, color:val?"#d4783a":"#333", cursor:"pointer", fontSize:11, borderRadius:2, flexShrink:0 }}
                 onClick={() => saveNouPreu(ed.edicion_id, val)}
                 disabled={saving||!val}>
                 {saving ? "…" : "✓"}
@@ -1794,7 +1810,7 @@ export default function Biblioteca() {
 
               {/* Preus antics */}
               {preuAntic.length > 0 && <>
-                <div style={{ fontSize:10, color:"#8b3a1a66", letterSpacing:2, textTransform:"uppercase", marginBottom:8 }}>
+                <div style={{ fontSize:10, color:"#d4783a66", letterSpacing:2, textTransform:"uppercase", marginBottom:8 }}>
                   Preu antic +1 any ({preuAntic.length})
                 </div>
                 {preuAntic.map(ed => <ItemPreu key={ed.edicion_id} ed={ed} />)}
@@ -1802,7 +1818,7 @@ export default function Biblioteca() {
 
               {/* Sense preu */}
               {sensePreu.length > 0 && <>
-                <div style={{ fontSize:10, color:"#8b3a1a66", letterSpacing:2, textTransform:"uppercase", margin:"16px 0 8px" }}>
+                <div style={{ fontSize:10, color:"#d4783a66", letterSpacing:2, textTransform:"uppercase", margin:"16px 0 8px" }}>
                   Sense preu ({sensePreu.length})
                 </div>
                 {sensePreu.map(ed => <ItemPreu key={ed.edicion_id} ed={ed} />)}
@@ -1840,9 +1856,9 @@ export default function Biblioteca() {
             </>}
             <div style={S.modalDivider}/>
             <div style={S.modalSmall}>Fet amb ❤️ · React + Supabase + Vercel</div>
-            <button style={{...S.modalClose, color: "#8b3a1a66", borderColor: "#8b3a1a22"}} onClick={exportCSV}>📤 Exportar CSV</button>
-            <button style={{...S.modalClose, color: "#7a5030", borderColor: "#8899cc44", marginBottom:4}} onClick={() => { setShowAbout(false); setShowTour(true); }}>🗺 Tour de lectura</button>
-            {autenticat && <button style={{...S.modalClose, color: "#8b3a1a", borderColor: "#8b3a1a44", marginBottom:4}} onClick={() => { setShowAbout(false); setShowRevisioPreus(true); }}>💰 Revisar preus</button>}
+            <button style={{...S.modalClose, color: "#d4783a66", borderColor: "#d4783a22"}} onClick={exportCSV}>📤 Exportar CSV</button>
+            <button style={{...S.modalClose, color: "#c8a868", borderColor: "#8899cc44", marginBottom:4}} onClick={() => { setShowAbout(false); setShowTour(true); }}>🗺 Tour de lectura</button>
+            {autenticat && <button style={{...S.modalClose, color: "#d4783a", borderColor: "#d4783a44", marginBottom:4}} onClick={() => { setShowAbout(false); setShowRevisioPreus(true); }}>💰 Revisar preus</button>}
             {autenticat && <button style={{...S.modalClose, color: "#dd6644", borderColor: "#dd664444", marginBottom:4}} onClick={() => { setShowAbout(false); setShowManteniment(true); }}>🔧 Manteniment BD</button>}
             <button style={S.modalClose} onClick={() => setShowAbout(false)}>Tancar</button>
           </div>
@@ -1885,7 +1901,7 @@ export default function Biblioteca() {
             {/* Capçalera */}
             <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:16 }}>
               <div>
-                <div style={{ fontSize:18, color:"#8b3a1a", fontWeight:"bold", letterSpacing:1 }}>{autorModal.autor}</div>
+                <div style={{ fontSize:18, color:"#d4783a", fontWeight:"bold", letterSpacing:1 }}>{autorModal.autor}</div>
                 {autorModal.anys && <div style={{ fontSize:12, color:"#666", marginTop:2 }}>{autorModal.anys} · {autorModal.pais}</div>}
               </div>
               <button style={{ background:"none", border:"none", color:"#555", cursor:"pointer", fontSize:16 }} onClick={() => setShowAutorModal(false)}>✕</button>
@@ -1893,7 +1909,7 @@ export default function Biblioteca() {
 
             {/* Bio */}
             {autorModal.bio
-              ? <p style={{ fontSize:12, color:"#bbb", lineHeight:1.7, marginBottom:14, padding:"10px 12px", background:"#ede8de", borderLeft:"2px solid #8b3a1a44" }}>{autorModal.bio}</p>
+              ? <p style={{ fontSize:12, color:"#bbb", lineHeight:1.7, marginBottom:14, padding:"10px 12px", background:"#352a1c", borderLeft:"2px solid #d4783a44" }}>{autorModal.bio}</p>
               : <div style={{ fontSize:11, color:"#444", fontStyle:"italic", marginBottom:14 }}>Bio no disponible</div>
             }
 
@@ -1918,7 +1934,7 @@ export default function Biblioteca() {
             <div style={S.modalDivider} />
 
             {/* Obra completa */}
-            <div style={{ fontSize:11, color:"#8b3a1a99", letterSpacing:2, textTransform:"uppercase", marginBottom:12 }}>Obra completa</div>
+            <div style={{ fontSize:11, color:"#d4783a99", letterSpacing:2, textTransform:"uppercase", marginBottom:12 }}>Obra completa</div>
             {OBRA_COMPLETA[autorModal.autor_id]
               ? OBRA_COMPLETA[autorModal.autor_id].map(g => {
                   // titols que tenim a la BD per aquest autor
@@ -1927,13 +1943,13 @@ export default function Biblioteca() {
                     .map(e => (e.titulo_edicion||"").toLowerCase());
                   return (
                     <div key={g.grup} style={{ marginBottom:14 }}>
-                      <div style={{ fontSize:10, color:"#8b3a1a55", letterSpacing:2, textTransform:"uppercase", marginBottom:6 }}>{g.grup}</div>
+                      <div style={{ fontSize:10, color:"#d4783a55", letterSpacing:2, textTransform:"uppercase", marginBottom:6 }}>{g.grup}</div>
                       {g.items.map(item => {
                         const tinc = titolsBD.some(t => t.includes(item.titol.toLowerCase().substring(0,12)));
                         return (
                           <div key={item.titol} style={{ display:"flex", alignItems:"center", gap:8, padding:"4px 0", borderBottom:"1px solid #1a254008" }}>
                             <span style={{ fontSize:13, color: tinc ? "#6ec88e" : "#333", flexShrink:0, width:14 }}>{tinc ? "✓" : "■"}</span>
-                            <span style={{ fontSize:12, color: tinc ? "#2c1a0a" : "#555" }}>{item.titol}</span>
+                            <span style={{ fontSize:12, color: tinc ? "#e8dcc8" : "#555" }}>{item.titol}</span>
                             <span style={{ fontSize:10, color:"#333", marginLeft:"auto", flexShrink:0 }}>{item.any}</span>
                           </div>
                         );
@@ -1957,30 +1973,30 @@ export default function Biblioteca() {
       {/* BIBLIOTECA */}
       {view === "biblioteca" && <>
         {/* BARRA ÚNICA: dropdown + cerca + filtres lectura */}
-        <div style={{ display:"flex", alignItems:"center", gap:8, padding:"8px 16px", borderBottom:"1px solid #1a2540", position:"sticky", top:83, zIndex:98, background:"#f5f0e8", overflow:"visible" }}>
+        <div style={{ display:"flex", alignItems:"center", gap:8, padding:"8px 16px", borderBottom:"1px solid #1a2540", position:"sticky", top:83, zIndex:98, background:"#2a1f14", overflow:"visible" }}>
 
           {/* Selector secció — dropdown */}
           <div data-seccio-menu style={{ position:"relative", flexShrink:0, zIndex:500 }}>
             <button
-              style={{ display:"flex", alignItems:"center", gap:6, padding:"6px 12px", background: seccio!=="ALL" ? "#8b3a1a18" : "transparent", border:`1px solid ${seccio!=="ALL" ? "#8b3a1a55" : "#c8b898"}`, color: seccio!=="ALL" ? "#8b3a1a" : "#666", cursor:"pointer", fontSize:11, fontFamily:"Georgia, serif", borderRadius:2, whiteSpace:"nowrap" }}
+              style={{ display:"flex", alignItems:"center", gap:6, padding:"6px 12px", background: seccio!=="ALL" ? "#d4783a18" : "transparent", border:`1px solid ${seccio!=="ALL" ? "#d4783a55" : "#4a3828"}`, color: seccio!=="ALL" ? "#d4783a" : "#666", cursor:"pointer", fontSize:11, fontFamily:"Georgia, serif", borderRadius:2, whiteSpace:"nowrap" }}
               onClick={() => setShowSeccioMenu(m => !m)}>
               {getSeccioLabel(seccio)}
               <span style={{ fontSize:9, opacity:0.6 }}>{showSeccioMenu ? "▲" : "▼"}</span>
             </button>
             {showSeccioMenu && (
-              <div style={{ position:"absolute", top:"calc(100% + 4px)", left:0, background:"#ede8de", border:"1px solid #1e3060", borderRadius:4, zIndex:500, minWidth:220, boxShadow:"0 8px 24px rgba(0,0,0,0.6)", padding:"6px 0" }}
+              <div style={{ position:"absolute", top:"calc(100% + 4px)", left:0, background:"#352a1c", border:"1px solid #1e3060", borderRadius:4, zIndex:500, minWidth:220, boxShadow:"0 8px 24px rgba(0,0,0,0.6)", padding:"6px 0" }}
                 onClick={e => e.stopPropagation()}>
-                <button style={{ display:"block", width:"100%", textAlign:"left", padding:"7px 14px", background: seccio==="ALL" ? "#8b3a1a18" : "none", color: seccio==="ALL" ? "#8b3a1a" : "#aaa", border:"none", cursor:"pointer", fontSize:12, fontFamily:"Georgia, serif" }}
+                <button style={{ display:"block", width:"100%", textAlign:"left", padding:"7px 14px", background: seccio==="ALL" ? "#d4783a18" : "none", color: seccio==="ALL" ? "#d4783a" : "#aaa", border:"none", cursor:"pointer", fontSize:12, fontFamily:"Georgia, serif" }}
                   onClick={() => { setSeccio("ALL"); setFiltreExtra(null); setShowSeccioMenu(false); }}>
                   Tot
                 </button>
                 <div style={{ borderTop:"1px solid #1a2540", margin:"4px 0" }} />
                 {SECCIONS_GRUPS.map(g => (
                   <div key={g.grup}>
-                    <div style={{ padding:"5px 14px 3px", fontSize:9, color:"#8b3a1a55", letterSpacing:2, textTransform:"uppercase" }}>{g.grup}</div>
+                    <div style={{ padding:"5px 14px 3px", fontSize:9, color:"#d4783a55", letterSpacing:2, textTransform:"uppercase" }}>{g.grup}</div>
                     {g.items.map(s => (
                       <button key={s.id}
-                        style={{ display:"block", width:"100%", textAlign:"left", padding:"6px 14px 6px 22px", background: seccio===s.id ? "#8b3a1a18" : "none", color: seccio===s.id ? "#8b3a1a" : "#888", border:"none", cursor:"pointer", fontSize:12, fontFamily:"Georgia, serif" }}
+                        style={{ display:"block", width:"100%", textAlign:"left", padding:"6px 14px 6px 22px", background: seccio===s.id ? "#d4783a18" : "none", color: seccio===s.id ? "#d4783a" : "#888", border:"none", cursor:"pointer", fontSize:12, fontFamily:"Georgia, serif" }}
                         onClick={() => { setSeccio(s.id); setFiltreExtra(null); setShowSeccioMenu(false); }}>
                         {s.label}
                       </button>
@@ -1993,7 +2009,7 @@ export default function Biblioteca() {
 
           {/* Cerca — ocupa l'espai restant */}
           <input
-            style={{ flex:1, background:"#ede8de", border:"1px solid #1e3060", color:"#2c1a0a", padding:"6px 10px", fontSize:12, fontFamily:"Georgia, serif", outline:"none", borderRadius:2, minWidth:0 }}
+            style={{ flex:1, background:"#352a1c", border:"1px solid #1e3060", color:"#e8dcc8", padding:"6px 10px", fontSize:12, fontFamily:"Georgia, serif", outline:"none", borderRadius:2, minWidth:0 }}
             placeholder="Cerca títol, editorial, traductor..."
             value={cerca}
             onChange={e => setCerca(e.target.value)} />
@@ -2007,7 +2023,7 @@ export default function Biblioteca() {
             const active = filtreExtra?.camp==="llegit_rapide" && filtreExtra?.valor===f.val;
             return (
               <button key={f.val} title={f.title}
-                style={{ padding:"4px 8px", background: active ? "#8b3a1a18" : "transparent", border:`1px solid ${active ? "#8b3a1a55" : "#c8b898"}`, color: active ? "#8b3a1a" : "#555", cursor:"pointer", fontSize:13, borderRadius:2, flexShrink:0 }}
+                style={{ padding:"4px 8px", background: active ? "#d4783a18" : "transparent", border:`1px solid ${active ? "#d4783a55" : "#4a3828"}`, color: active ? "#d4783a" : "#555", cursor:"pointer", fontSize:13, borderRadius:2, flexShrink:0 }}
                 onClick={() => {
                   if (active) setFiltreExtra(null);
                   else { setFiltreExtra({camp:"llegit_rapide", valor:f.val}); setSeccio("ALL"); }
@@ -2018,7 +2034,7 @@ export default function Biblioteca() {
         <div style={{ ...S.statsBar, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <span>
             {gridItems.length} obres
-            {filtreExtra && <span style={{ color: "#8b3a1a", marginLeft: 8 }}>· {filtreExtra.valor} <button onClick={() => setFiltreExtra(null)} style={{ background: "none", border: "none", color: "#c44", cursor: "pointer", fontSize: 10 }}>✕</button></span>}
+            {filtreExtra && <span style={{ color: "#d4783a", marginLeft: 8 }}>· {filtreExtra.valor} <button onClick={() => setFiltreExtra(null)} style={{ background: "none", border: "none", color: "#c44", cursor: "pointer", fontSize: 10 }}>✕</button></span>}
           </span>
           <div style={S.viewToggle}>
             <button style={S.viewBtn(!listView)} onClick={() => setListView(false)}>▦</button>
@@ -2045,7 +2061,7 @@ export default function Biblioteca() {
                       </div>
                     )}
                     <div style={{ display:"flex", alignItems:"center", gap:4, flexShrink:0 }}>
-                      {isPrimeraEdicio(ed) && <span style={{ fontSize:8, background:"#8b3a1a", color:"#f5f0e8", padding:"1px 4px", fontWeight:"bold", borderRadius:1 }}>1ª</span>}
+                      {isPrimeraEdicio(ed) && <span style={{ fontSize:8, background:"#d4783a", color:"#2a1f14", padding:"1px 4px", fontWeight:"bold", borderRadius:1 }}>1ª</span>}
                       <div style={S.listShelf}>{ed.id_estanteria}</div>
                     </div>
                     <div style={{...S.listLlegit, color: llegit.color}}>{ed.llegit==="si"?"✓":ed.llegit==="llegint"?"½":"○"}</div>
@@ -2060,15 +2076,15 @@ export default function Biblioteca() {
                       <img src={getCover(ed)} alt={ed.titulo_edicion} style={S.cardImg} onError={e=>{e.target.src=COVER_FALLBACK;}} />
                       <div style={S.cardLlegit}>{ed.llegit==="si"?"✓":ed.llegit==="llegint"?"½":""}</div>
                       {numEds > 1 && <div style={S.multiDot}>{numEds}</div>}
-                      {ed.prestat_a && <div style={{ position:"absolute", top:5, left:5, fontSize:10, background:"rgba(0,0,0,0.7)", color:"#8b3a1a", padding:"1px 4px", borderRadius:2 }}>🔄</div>}
+                      {ed.prestat_a && <div style={{ position:"absolute", top:5, left:5, fontSize:10, background:"rgba(0,0,0,0.7)", color:"#d4783a", padding:"1px 4px", borderRadius:2 }}>🔄</div>}
                       {isEbook(ed) && <div style={{ position:"absolute", bottom:24, right:4, fontSize:9, background:"rgba(0,30,60,0.85)", color:"#4488cc", padding:"1px 4px", borderRadius:2 }}>📱</div>}
-                      {ed.estat_exemplar==="venut" && <div style={{ position:"absolute", top:5, right:5, fontSize:9, background:"rgba(200,169,110,0.9)", color:"#f5f0e8", padding:"1px 5px", borderRadius:2, fontWeight:"bold" }}>💰</div>}
-                      {ed.estat_exemplar==="regalat" && <div style={{ position:"absolute", top:5, right:5, fontSize:9, background:"rgba(136,153,204,0.9)", color:"#f5f0e8", padding:"1px 5px", borderRadius:2, fontWeight:"bold" }}>🎁</div>}
+                      {ed.estat_exemplar==="venut" && <div style={{ position:"absolute", top:5, right:5, fontSize:9, background:"rgba(200,169,110,0.9)", color:"#2a1f14", padding:"1px 5px", borderRadius:2, fontWeight:"bold" }}>💰</div>}
+                      {ed.estat_exemplar==="regalat" && <div style={{ position:"absolute", top:5, right:5, fontSize:9, background:"rgba(136,153,204,0.9)", color:"#2a1f14", padding:"1px 5px", borderRadius:2, fontWeight:"bold" }}>🎁</div>}
                       {isPrimeraEdicio(ed) && (
-                        <div style={{ position:"absolute", inset:0, border:"2px solid #8b3a1a", pointerEvents:"none", borderRadius:0, zIndex:2 }} />
+                        <div style={{ position:"absolute", inset:0, border:"2px solid #d4783a", pointerEvents:"none", borderRadius:0, zIndex:2 }} />
                       )}
                       {isPrimeraEdicio(ed) && (
-                        <div style={{ position:"absolute", bottom:38, left:4, background:"#8b3a1a", color:"#f5f0e8", fontSize:7, fontWeight:"bold", padding:"2px 5px", letterSpacing:0.5, zIndex:3, borderRadius:1 }}>1ª ED</div>
+                        <div style={{ position:"absolute", bottom:38, left:4, background:"#d4783a", color:"#2a1f14", fontSize:7, fontWeight:"bold", padding:"2px 5px", letterSpacing:0.5, zIndex:3, borderRadius:1 }}>1ª ED</div>
                       )}
                       <div style={S.cardOverlay}>
                         <div style={S.cardTitle}>{ed.titulo_edicion||ed.titulo_original}</div>
@@ -2109,15 +2125,15 @@ export default function Biblioteca() {
             <div style={{ flexShrink:0, width:"min(240px, 100%)" }}>
               <div style={S.detallImgWrap}>
                 <img key={activeEd.portada_custom||activeEd.portada_url||activeEd.edicion_id} src={getCover(activeEd)} alt={activeEd.titulo_edicion} style={{...S.detallImg, maxHeight:300}} onError={e=>{e.target.src=COVER_FALLBACK;}} />
-                {isPrimeraEdicio(activeEd) && <div style={{ position:"absolute", top:0, right:0, background:"#8b3a1a", color:"#f5f0e8", fontSize:9, fontWeight:"bold", padding:"3px 7px" }}>1ª ED</div>}
+                {isPrimeraEdicio(activeEd) && <div style={{ position:"absolute", top:0, right:0, background:"#d4783a", color:"#2a1f14", fontSize:9, fontWeight:"bold", padding:"3px 7px" }}>1ª ED</div>}
               </div>
               <div style={S.coverBtns}>
                 {getCover(activeEd) !== COVER_FALLBACK && <button style={S.coverBtn("#6ec88e")} onClick={() => autenticat ? handleConfirmCover(activeEd.edicion_id) : null}>✓ OK</button>}
                 {autenticat && <>
                   {getCover(activeEd) !== COVER_FALLBACK && <button style={S.coverBtn("#c44")} onClick={() => handleRejectCover(activeEd.edicion_id)}>✕ Incorrecta</button>}
-                  <button style={S.coverBtn("#7a5030")} onClick={() => handleAutoFindCover(activeEd)} disabled={autoFindLoading}>{autoFindLoading?"⏳":"🔎 Auto"}</button>
+                  <button style={S.coverBtn("#c8a868")} onClick={() => handleAutoFindCover(activeEd)} disabled={autoFindLoading}>{autoFindLoading?"⏳":"🔎 Auto"}</button>
                   <button style={S.coverBtn("#7799aa")} onClick={() => buscarPortada(activeEd)}>🌐 Google</button>
-                  <button style={S.coverBtn("#8b3a1a")} onClick={() => setShowCoverInput(!showCoverInput)}>🔗 URL</button>
+                  <button style={S.coverBtn("#d4783a")} onClick={() => setShowCoverInput(!showCoverInput)}>🔗 URL</button>
                 </>}
                 {autenticat && (
                   <label style={{...S.coverBtn("#6ec88e"), cursor:"pointer", display:"inline-block"}}>
@@ -2130,7 +2146,7 @@ export default function Biblioteca() {
               {showCoverInput && (
                 <div style={{display:"flex", gap:6, marginBottom:12}}>
                   <input style={{...S.input, flex:1, padding:"6px 10px", fontSize:13}} placeholder="Enganxa URL..." value={coverInputVal} onChange={e => setCoverInputVal(e.target.value)} />
-                  <button style={{padding:"6px 12px", background:"#8b3a1a22", border:"1px solid #8b3a1a44", color:"#8b3a1a", cursor:"pointer", borderRadius:2}} onClick={() => handleSaveCustomCover(activeEd.edicion_id, coverInputVal)}>✓</button>
+                  <button style={{padding:"6px 12px", background:"#d4783a22", border:"1px solid #d4783a44", color:"#d4783a", cursor:"pointer", borderRadius:2}} onClick={() => handleSaveCustomCover(activeEd.edicion_id, coverInputVal)}>✓</button>
                 </div>
               )}
             </div>
@@ -2139,22 +2155,22 @@ export default function Biblioteca() {
             <div style={{flex:1, minWidth:240}}>
               <div style={S.detallTitle}>{activeEd.titulo_edicion||activeEd.titulo_original}</div>
               {activeEd.titulo_original && activeEd.titulo_original !== activeEd.titulo_edicion && <div style={S.detallOrig}>{activeEd.titulo_original}</div>}
-              {activeEd.prestat_a && <div style={{background:"#8b3a1a11", border:"1px solid #8b3a1a33", padding:"6px 12px", borderRadius:2, fontSize:13, color:"#8b3a1a", marginBottom:10}}>🔄 Prestat a <strong>{activeEd.prestat_a}</strong>{activeEd.prestat_data && ` · des de ${new Date(activeEd.prestat_data).toLocaleDateString('ca-ES')}`}</div>}
+              {activeEd.prestat_a && <div style={{background:"#d4783a11", border:"1px solid #d4783a33", padding:"6px 12px", borderRadius:2, fontSize:13, color:"#d4783a", marginBottom:10}}>🔄 Prestat a <strong>{activeEd.prestat_a}</strong>{activeEd.prestat_data && ` · des de ${new Date(activeEd.prestat_data).toLocaleDateString('ca-ES')}`}</div>}
 
               {activeEd.resum && <div style={S.resum}>{activeEd.resum}</div>}
               {!showResumPreview && (
-                <button style={{background:"none", border:"1px solid #8b3a1a22", color:"#8b3a1a66", cursor:"pointer", fontSize:12, padding:"4px 12px", borderRadius:2, fontFamily:"Georgia, serif", marginBottom:12}}
+                <button style={{background:"none", border:"1px solid #d4783a22", color:"#d4783a66", cursor:"pointer", fontSize:12, padding:"4px 12px", borderRadius:2, fontFamily:"Georgia, serif", marginBottom:12}}
                   onClick={() => handleAutoResum(activeEd)} disabled={autoResumLoading}>
                   {autoResumLoading?"⏳ Buscant...":"✨ "+(activeEd.resum?"Actualitzar resum":"Generar resum")}
                 </button>
               )}
               {showResumPreview && autoResumPreview && (
-                <div style={{background:"#e8e2d4", border:"1px solid #8b3a1a33", padding:14, borderRadius:4, marginBottom:12}}>
-                  <div style={{fontSize:12, color:"#8b3a1a66", letterSpacing:1, textTransform:"uppercase", marginBottom:8}}>✨ Resum suggerit</div>
+                <div style={{background:"#1e1510", border:"1px solid #d4783a33", padding:14, borderRadius:4, marginBottom:12}}>
+                  <div style={{fontSize:12, color:"#d4783a66", letterSpacing:1, textTransform:"uppercase", marginBottom:8}}>✨ Resum suggerit</div>
                   <div style={{fontSize:14, color:"#bbb", lineHeight:1.6, marginBottom:10}}>{autoResumPreview}</div>
                   <div style={{display:"flex", gap:8}}>
-                    <button style={{flex:1, padding:"8px", background:"#8b3a1a22", border:"1px solid #8b3a1a44", color:"#8b3a1a", cursor:"pointer", fontSize:13, borderRadius:2, fontFamily:"Georgia, serif"}} onClick={() => handleAcceptResum(activeEd.edicion_id, autoResumPreview)}>✓ Acceptar</button>
-                    <button style={{flex:1, padding:"8px", background:"none", border:"1px solid #2a3a5a", color:"#8a6a4a", cursor:"pointer", fontSize:13, borderRadius:2, fontFamily:"Georgia, serif"}} onClick={() => setShowResumPreview(false)}>✕ Descartar</button>
+                    <button style={{flex:1, padding:"8px", background:"#d4783a22", border:"1px solid #d4783a44", color:"#d4783a", cursor:"pointer", fontSize:13, borderRadius:2, fontFamily:"Georgia, serif"}} onClick={() => handleAcceptResum(activeEd.edicion_id, autoResumPreview)}>✓ Acceptar</button>
+                    <button style={{flex:1, padding:"8px", background:"none", border:"1px solid #2a3a5a", color:"#a89878", cursor:"pointer", fontSize:13, borderRadius:2, fontFamily:"Georgia, serif"}} onClick={() => setShowResumPreview(false)}>✕ Descartar</button>
                   </div>
                 </div>
               )}
@@ -2188,52 +2204,52 @@ export default function Biblioteca() {
 
               {/* Info bibliogràfica */}
               {activeEd.autor_id && (
-                <div style={{fontSize:15, color:"#3a2510", marginBottom:7}}>
-                  <span style={{color:"#8b3a1acc", fontSize:13, letterSpacing:1, textTransform:"uppercase"}}>Autor </span>
-                  <button style={{background:"none", border:"none", color:"#8b3a1a", cursor:"pointer", fontSize:14, fontFamily:"Georgia, serif", padding:0, textDecoration:"underline dotted"}}
+                <div style={{fontSize:15, color:"#d4c8b0", marginBottom:7}}>
+                  <span style={{color:"#d4783acc", fontSize:13, letterSpacing:1, textTransform:"uppercase"}}>Autor </span>
+                  <button style={{background:"none", border:"none", color:"#d4783a", cursor:"pointer", fontSize:14, fontFamily:"Georgia, serif", padding:0, textDecoration:"underline dotted"}}
                     onClick={() => openAutorModal(activeEd.autor_id)}>
                     {[...AUTORS_RELATS, ...AUTORS_FALTEN].find(a=>a.id===activeEd.autor_id)?.label || activeEd.autor_id}
                   </button>
                 </div>
               )}
-              {activeEd.editorial && <div style={{fontSize:15, color:"#3a2510", marginBottom:7}}><span style={{color:"#8b3a1acc", fontSize:13, letterSpacing:1, textTransform:"uppercase"}}>Editorial </span>{activeEd.editorial}{activeEd.coleccion && ` · ${activeEd.coleccion}`}</div>}
-              {(activeEd.ano_edicion||activeEd.ano_obra) && <div style={{fontSize:15, color:"#3a2510", marginBottom:7}}><span style={{color:"#8b3a1acc", fontSize:13, letterSpacing:1, textTransform:"uppercase"}}>Edició </span>{activeEd.ano_edicion||"—"}{activeEd.ano_obra && ` · Obra: ${activeEd.ano_obra}`}</div>}
+              {activeEd.editorial && <div style={{fontSize:15, color:"#d4c8b0", marginBottom:7}}><span style={{color:"#d4783acc", fontSize:13, letterSpacing:1, textTransform:"uppercase"}}>Editorial </span>{activeEd.editorial}{activeEd.coleccion && ` · ${activeEd.coleccion}`}</div>}
+              {(activeEd.ano_edicion||activeEd.ano_obra) && <div style={{fontSize:15, color:"#d4c8b0", marginBottom:7}}><span style={{color:"#d4783acc", fontSize:13, letterSpacing:1, textTransform:"uppercase"}}>Edició </span>{activeEd.ano_edicion||"—"}{activeEd.ano_obra && ` · Obra: ${activeEd.ano_obra}`}</div>}
               {(activeEd.edicio_numero||activeEd.edicio_especial||activeEd.numeracio) && (
                 <div style={{display:"flex", gap:6, flexWrap:"wrap", marginBottom:8}}>
-                  {activeEd.edicio_numero && <span style={{fontSize:12, background:"#8b3a1a18", border:"1px solid #8b3a1a33", color:"#8b3a1a", padding:"2px 8px", borderRadius:2}}>#{activeEd.edicio_numero}ª edició</span>}
-                  {activeEd.edicio_especial && <span style={{fontSize:12, background:"#8899cc18", border:"1px solid #8899cc33", color:"#7a5030", padding:"2px 8px", borderRadius:2}}>✦ {activeEd.edicio_especial}</span>}
-                  {activeEd.numeracio && <span style={{fontSize:12, background:"#8b3a1a18", border:"1px solid #8b3a1a33", color:"#8b3a1a99", padding:"2px 8px", borderRadius:2}}>Nº {activeEd.numeracio}</span>}
+                  {activeEd.edicio_numero && <span style={{fontSize:12, background:"#d4783a18", border:"1px solid #d4783a33", color:"#d4783a", padding:"2px 8px", borderRadius:2}}>#{activeEd.edicio_numero}ª edició</span>}
+                  {activeEd.edicio_especial && <span style={{fontSize:12, background:"#8899cc18", border:"1px solid #8899cc33", color:"#c8a868", padding:"2px 8px", borderRadius:2}}>✦ {activeEd.edicio_especial}</span>}
+                  {activeEd.numeracio && <span style={{fontSize:12, background:"#d4783a18", border:"1px solid #d4783a33", color:"#d4783a99", padding:"2px 8px", borderRadius:2}}>Nº {activeEd.numeracio}</span>}
                 </div>
               )}
 
               {/* Valor mercat */}
-              <div style={{display:"flex", justifyContent:"space-between", alignItems:"center", margin:"16px 0 8px", padding:"14px 16px", background:"#ede8de", borderRadius:4}}>
+              <div style={{display:"flex", justifyContent:"space-between", alignItems:"center", margin:"16px 0 8px", padding:"14px 16px", background:"#352a1c", borderRadius:4}}>
                 <div>
-                  <div style={{fontSize:12, color:"#8b3a1acc", letterSpacing:1, textTransform:"uppercase", marginBottom:4}}>Valor mercat</div>
-                  <div style={{fontSize:28, color:"#8b3a1a", fontWeight:"bold"}}>{activeEd.preu_mercat?`${activeEd.preu_mercat}€`:"—"}</div>
-                  {activeEd.preu_mercat_anterior && <div style={{fontSize:12, color:"#8a6a4a"}}>Anterior: {activeEd.preu_mercat_anterior}€</div>}
+                  <div style={{fontSize:12, color:"#d4783acc", letterSpacing:1, textTransform:"uppercase", marginBottom:4}}>Valor mercat</div>
+                  <div style={{fontSize:28, color:"#d4783a", fontWeight:"bold"}}>{activeEd.preu_mercat?`${activeEd.preu_mercat}€`:"—"}</div>
+                  {activeEd.preu_mercat_anterior && <div style={{fontSize:12, color:"#a89878"}}>Anterior: {activeEd.preu_mercat_anterior}€</div>}
                 </div>
                 <div style={{display:"flex", flexDirection:"column", gap:8}}>
-                  <button style={{padding:"10px 16px", background:"#8b3a1a22", border:"1px solid #8b3a1a44", color:"#8b3a1a", cursor:"pointer", borderRadius:4, fontFamily:"Georgia, serif", fontSize:14}}
+                  <button style={{padding:"10px 16px", background:"#d4783a22", border:"1px solid #d4783a44", color:"#d4783a", cursor:"pointer", borderRadius:4, fontFamily:"Georgia, serif", fontSize:14}}
                     onClick={() => requireAuth(() => setShowRevaluar(true))}>💰 Revaluar</button>
-                  <button style={{padding:"10px 16px", background:"none", border:"1px solid #2a3a5a", color:"#7a5a3a", cursor:"pointer", borderRadius:4, fontFamily:"Georgia, serif", fontSize:14}}
+                  <button style={{padding:"10px 16px", background:"none", border:"1px solid #2a3a5a", color:"#b8a888", cursor:"pointer", borderRadius:4, fontFamily:"Georgia, serif", fontSize:14}}
                     onClick={() => setShowPreuMenu(!showPreuMenu)}>🔍 Buscar preu</button>
                 </div>
               </div>
               {showRevaluar && (
                 <div style={{display:"flex", gap:8, marginBottom:12}}>
                   <input type="text" inputMode="decimal" placeholder="Nou preu €" value={nouPreu} onChange={e => setNouPreu(e.target.value)}
-                    style={{flex:1, background:"#f5f0e8", border:"1px solid #2a3a5a", color:"#2c1a0a", padding:"8px 12px", fontSize:14, fontFamily:"Georgia, serif", borderRadius:2}} />
-                  <button style={{padding:"8px 14px", background:"#8b3a1a22", border:"1px solid #8b3a1a44", color:"#8b3a1a", cursor:"pointer", borderRadius:2, fontFamily:"Georgia, serif"}}
+                    style={{flex:1, background:"#2a1f14", border:"1px solid #2a3a5a", color:"#e8dcc8", padding:"8px 12px", fontSize:14, fontFamily:"Georgia, serif", borderRadius:2}} />
+                  <button style={{padding:"8px 14px", background:"#d4783a22", border:"1px solid #d4783a44", color:"#d4783a", cursor:"pointer", borderRadius:2, fontFamily:"Georgia, serif"}}
                     onClick={() => handleRevaluar(activeEd.edicion_id, nouPreu)} disabled={savingPreu}>{savingPreu?"...":"✓"}</button>
-                  <button style={{padding:"8px 12px", background:"none", border:"1px solid #2a3a5a", color:"#8a6a4a", cursor:"pointer", borderRadius:2}}
+                  <button style={{padding:"8px 12px", background:"none", border:"1px solid #2a3a5a", color:"#a89878", cursor:"pointer", borderRadius:2}}
                     onClick={() => setShowRevaluar(false)}>✕</button>
                 </div>
               )}
               {showPreuMenu && (
                 <div style={{display:"flex", gap:6, flexWrap:"wrap", marginBottom:12}}>
                   {[{label:"📚 Iberlibro",plat:"iberlibro"},{label:"🏷️ Wallapop",plat:"wallapop"},{label:"👗 Vinted",plat:"vinted"},{label:"📦 Amazon",plat:"amazon"}].map(p => (
-                    <button key={p.plat} style={{padding:"8px 12px", background:"#ede8de", border:"1px solid #2a3a5a", color:"#7a5a3a", cursor:"pointer", fontSize:13, borderRadius:2, fontFamily:"Georgia, serif"}}
+                    <button key={p.plat} style={{padding:"8px 12px", background:"#352a1c", border:"1px solid #2a3a5a", color:"#b8a888", cursor:"pointer", fontSize:13, borderRadius:2, fontFamily:"Georgia, serif"}}
                       onClick={() => buscarPreu(activeEd, p.plat)}>{p.label}</button>
                   ))}
                 </div>
@@ -2241,7 +2257,7 @@ export default function Biblioteca() {
 
               {/* Botons acció — grans i llegibles */}
               <div style={{display:"flex", flexDirection:"column", gap:8, marginTop:16}}>
-                <button style={{padding:"14px 18px", background:"#ede8de", border:"1px solid #2a3a5a", color:"#c8d8ee", cursor:"pointer", borderRadius:6, fontFamily:"Georgia, serif", fontSize:15, textAlign:"left", display:"flex", alignItems:"center", gap:10}}
+                <button style={{padding:"14px 18px", background:"#352a1c", border:"1px solid #2a3a5a", color:"#c8d8ee", cursor:"pointer", borderRadius:6, fontFamily:"Georgia, serif", fontSize:15, textAlign:"left", display:"flex", alignItems:"center", gap:10}}
                   onClick={() => requireAuth(() => setShowPrestat(!showPrestat))}>
                   <span style={{fontSize:20}}>🔄</span>
                   <span>{activeEd.prestat_a?`Prestat a ${activeEd.prestat_a}`:"Marcar com a prestat"}</span>
@@ -2249,19 +2265,19 @@ export default function Biblioteca() {
                 {showPrestat && (
                   <div style={{display:"flex", gap:8, marginBottom:4}}>
                     <input placeholder="Nom de la persona..." value={prestatNom} onChange={e => setPrestatNom(e.target.value)}
-                      style={{flex:1, background:"#f5f0e8", border:"1px solid #2a3a5a", color:"#2c1a0a", padding:"8px 12px", fontSize:14, fontFamily:"Georgia, serif", borderRadius:2}} />
-                    <button style={{padding:"8px 14px", background:"#8b3a1a22", border:"1px solid #8b3a1a44", color:"#8b3a1a", cursor:"pointer", borderRadius:2, fontFamily:"Georgia, serif"}}
+                      style={{flex:1, background:"#2a1f14", border:"1px solid #2a3a5a", color:"#e8dcc8", padding:"8px 12px", fontSize:14, fontFamily:"Georgia, serif", borderRadius:2}} />
+                    <button style={{padding:"8px 14px", background:"#d4783a22", border:"1px solid #d4783a44", color:"#d4783a", cursor:"pointer", borderRadius:2, fontFamily:"Georgia, serif"}}
                       onClick={() => handlePrestar(activeEd.edicion_id, prestatNom)}>✓</button>
                     {activeEd.prestat_a && <button style={{padding:"8px 12px", background:"none", border:"1px solid #c4444433", color:"#c44", cursor:"pointer", borderRadius:2}}
                       onClick={() => handleRetornar(activeEd.edicion_id)}>Retornat</button>}
                   </div>
                 )}
-                <button style={{padding:"14px 18px", background:"#ede8de", border:"1px solid #2a3a5a", color:"#c8d8ee", cursor:"pointer", borderRadius:6, fontFamily:"Georgia, serif", fontSize:15, textAlign:"left", display:"flex", alignItems:"center", gap:10}}
+                <button style={{padding:"14px 18px", background:"#352a1c", border:"1px solid #2a3a5a", color:"#c8d8ee", cursor:"pointer", borderRadius:6, fontFamily:"Georgia, serif", fontSize:15, textAlign:"left", display:"flex", alignItems:"center", gap:10}}
                   onClick={() => requireAuth(() => { setShowEdit(!showEdit); setShowExtra(false); })}>
                   <span style={{fontSize:18}}>✎</span>
                   <span>{showEdit?"Tancar edició":"Editar camps"}</span>
                 </button>
-                <button style={{padding:"14px 18px", background:"#ede8de", border:"1px solid #2a3a5a", color:"#c8d8ee", cursor:"pointer", borderRadius:6, fontFamily:"Georgia, serif", fontSize:15, textAlign:"left", display:"flex", alignItems:"center", gap:10}}
+                <button style={{padding:"14px 18px", background:"#352a1c", border:"1px solid #2a3a5a", color:"#c8d8ee", cursor:"pointer", borderRadius:6, fontFamily:"Georgia, serif", fontSize:15, textAlign:"left", display:"flex", alignItems:"center", gap:10}}
                   onClick={() => { setShowExtra(!showExtra); setShowEdit(false); }}>
                   <span style={{fontSize:16}}>{showExtra?"▲":"▼"}</span>
                   <span>{showExtra?"Menys informació":"Més informació"}</span>
@@ -2274,7 +2290,7 @@ export default function Biblioteca() {
 
           {/* EDITAR CAMPS */}
           {showEdit && (
-            <div style={{ background: "#e8e2d4", padding: 14, borderRadius: 4, marginBottom: 12 }}>
+            <div style={{ background: "#1e1510", padding: 14, borderRadius: 4, marginBottom: 12 }}>
               <EditField label="Títol edició" value={activeEd.titulo_edicion} onSave={v => updateEd(activeEd.edicion_id, { titulo_edicion: v })} />
               <EditField label="Títol original" value={activeEd.titulo_original} onSave={v => updateEd(activeEd.edicion_id, { titulo_original: v })} />
               <EditField label="Editorial" value={activeEd.editorial} onSave={v => updateEd(activeEd.edicion_id, { editorial: v })} />
@@ -2301,13 +2317,13 @@ export default function Biblioteca() {
           {/* MÉS INFORMACIÓ */}
 
           {showExtra && (
-            <div style={{ marginBottom: 12, padding: "12px 14px", background: "#e8e2d4", borderRadius: 2 }}>
-              {activeEd.traduccion && <div style={{ fontSize: 15, color: "#3a2510", marginBottom: 7 }}><span style={{ color: "#8b3a1acc", fontSize: 13, letterSpacing: 1, textTransform: "uppercase" }}>Traducció </span>{activeEd.traduccion}</div>}
-              {activeEd.isbn && <div style={{ fontSize: 15, color: "#3a2510", marginBottom: 7 }}><span style={{ color: "#8b3a1acc", fontSize: 13, letterSpacing: 1, textTransform: "uppercase" }}>ISBN </span>{activeEd.isbn}</div>}
-              {activeEd.pagines && <div style={{ fontSize: 15, color: "#3a2510", marginBottom: 7 }}><span style={{ color: "#8b3a1acc", fontSize: 13, letterSpacing: 1, textTransform: "uppercase" }}>Pàgines </span>{activeEd.pagines}</div>}
-              {activeEd.origen && <div style={{ fontSize: 15, color: "#3a2510", marginBottom: 7 }}><span style={{ color: "#8b3a1acc", fontSize: 13, letterSpacing: 1, textTransform: "uppercase" }}>Origen </span>{activeEd.origen}</div>}
-              {activeEd.preu_pagat && <div style={{ fontSize: 15, color: "#3a2510", marginBottom: 7 }}><span style={{ color: "#8b3a1acc", fontSize: 13, letterSpacing: 1, textTransform: "uppercase" }}>Preu pagat </span>{activeEd.preu_pagat} €</div>}
-              <div style={{ fontSize: 15, color: "#3a2510", marginBottom: 7 }}><span style={{ color: "#8b3a1acc", fontSize: 13, letterSpacing: 1, textTransform: "uppercase" }}>ID </span>{activeEd.edicion_id}</div>
+            <div style={{ marginBottom: 12, padding: "12px 14px", background: "#1e1510", borderRadius: 2 }}>
+              {activeEd.traduccion && <div style={{ fontSize: 15, color: "#d4c8b0", marginBottom: 7 }}><span style={{ color: "#d4783acc", fontSize: 13, letterSpacing: 1, textTransform: "uppercase" }}>Traducció </span>{activeEd.traduccion}</div>}
+              {activeEd.isbn && <div style={{ fontSize: 15, color: "#d4c8b0", marginBottom: 7 }}><span style={{ color: "#d4783acc", fontSize: 13, letterSpacing: 1, textTransform: "uppercase" }}>ISBN </span>{activeEd.isbn}</div>}
+              {activeEd.pagines && <div style={{ fontSize: 15, color: "#d4c8b0", marginBottom: 7 }}><span style={{ color: "#d4783acc", fontSize: 13, letterSpacing: 1, textTransform: "uppercase" }}>Pàgines </span>{activeEd.pagines}</div>}
+              {activeEd.origen && <div style={{ fontSize: 15, color: "#d4c8b0", marginBottom: 7 }}><span style={{ color: "#d4783acc", fontSize: 13, letterSpacing: 1, textTransform: "uppercase" }}>Origen </span>{activeEd.origen}</div>}
+              {activeEd.preu_pagat && <div style={{ fontSize: 15, color: "#d4c8b0", marginBottom: 7 }}><span style={{ color: "#d4783acc", fontSize: 13, letterSpacing: 1, textTransform: "uppercase" }}>Preu pagat </span>{activeEd.preu_pagat} €</div>}
+              <div style={{ fontSize: 15, color: "#d4c8b0", marginBottom: 7 }}><span style={{ color: "#d4783acc", fontSize: 13, letterSpacing: 1, textTransform: "uppercase" }}>ID </span>{activeEd.edicion_id}</div>
             </div>
           )}
 
@@ -2338,14 +2354,14 @@ export default function Biblioteca() {
             <div style={{ display:"flex", gap:6, flexWrap:"wrap" }}>
               {[
                 {val:"actiu",   label:"✓ Actiu",    color:"#6ec88e"},
-                {val:"venut",   label:"💰 Venut",    color:"#8b3a1a"},
-                {val:"regalat", label:"🎁 Regalat",  color:"#7a5030"},
+                {val:"venut",   label:"💰 Venut",    color:"#d4783a"},
+                {val:"regalat", label:"🎁 Regalat",  color:"#c8a868"},
                 {val:"perdut",  label:"✕ Perdut",    color:"#c44"},
               ].map(e => {
                 const active = (activeEd.estat_exemplar||"actiu") === e.val;
                 return (
                   <button key={e.val}
-                    style={{ padding:"7px 14px", background:active?e.color+"22":"transparent", border:`1px solid ${active?e.color+"66":"#c8b898"}`, color:active?e.color:"#555", cursor:"pointer", fontSize:11, borderRadius:2, fontFamily:"Georgia, serif" }}
+                    style={{ padding:"7px 14px", background:active?e.color+"22":"transparent", border:`1px solid ${active?e.color+"66":"#4a3828"}`, color:active?e.color:"#555", cursor:"pointer", fontSize:11, borderRadius:2, fontFamily:"Georgia, serif" }}
                     onClick={() => autenticat && supaUpdate("edicion","edicion_id",activeEd.edicion_id,{estat_exemplar:e.val}).then(()=>setEdicions(prev=>prev.map(ed=>ed.edicion_id===activeEd.edicion_id?{...ed,estat_exemplar:e.val}:ed)))}>
                     {e.label}
                   </button>
@@ -2368,11 +2384,11 @@ export default function Biblioteca() {
           {/* Primera edició toggle */}
           <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"8px 0", borderBottom:"1px solid #1a2540", marginBottom:8 }}>
             <div>
-              <span style={{ fontSize:10, color:"#8b3a1a66", textTransform:"uppercase", letterSpacing:1 }}>Primera edició </span>
-              {isPrimeraEdicio(activeEd) && <span style={{ fontSize:9, background:"#8b3a1a", color:"#f5f0e8", padding:"1px 5px", fontWeight:"bold", marginLeft:6 }}>1ª ED</span>}
+              <span style={{ fontSize:10, color:"#d4783a66", textTransform:"uppercase", letterSpacing:1 }}>Primera edició </span>
+              {isPrimeraEdicio(activeEd) && <span style={{ fontSize:9, background:"#d4783a", color:"#2a1f14", padding:"1px 5px", fontWeight:"bold", marginLeft:6 }}>1ª ED</span>}
             </div>
             <button
-              style={{ padding:"4px 12px", background: activeEd.primera_edicio===true?"#8b3a1a22": activeEd.primera_edicio===false?"#c4444422":"transparent", border:`1px solid ${activeEd.primera_edicio===true?"#8b3a1a55":activeEd.primera_edicio===false?"#c4444444":"#c8b898"}`, color: activeEd.primera_edicio===true?"#8b3a1a":activeEd.primera_edicio===false?"#c44":"#555", cursor:"pointer", fontSize:10, borderRadius:2, fontFamily:"Georgia, serif" }}
+              style={{ padding:"4px 12px", background: activeEd.primera_edicio===true?"#d4783a22": activeEd.primera_edicio===false?"#c4444422":"transparent", border:`1px solid ${activeEd.primera_edicio===true?"#d4783a55":activeEd.primera_edicio===false?"#c4444444":"#4a3828"}`, color: activeEd.primera_edicio===true?"#d4783a":activeEd.primera_edicio===false?"#c44":"#555", cursor:"pointer", fontSize:10, borderRadius:2, fontFamily:"Georgia, serif" }}
               onClick={() => {
                 if (!autenticat) return;
                 // Cicle: null→true→false→null
@@ -2405,7 +2421,7 @@ export default function Biblioteca() {
       {view === "prestatge" && <>
         <div style={{...S.statsBar, display:"flex", justifyContent:"space-between", alignItems:"center"}}>
           <span>{edicions.length} llibres per prestatge</span>
-          <span style={{ fontSize:10, color:"#8a6a4a" }}>● color = saga</span>
+          <span style={{ fontSize:10, color:"#a89878" }}>● color = saga</span>
         </div>
         {loading ? <div style={S.loader}>CARREGANT · · ·</div>
           : Object.entries(prestatge).map(([prefix, eds]) => (
@@ -2457,7 +2473,7 @@ export default function Biblioteca() {
                         </div>
                         <div style={{ display:"flex", flexDirection:"column", gap:4, alignItems:"flex-end" }}>
                           <span style={S.tipusBadge}>{o.tipo}</span>
-                          <button style={{ background:"none", border:"1px solid #8b3a1a33", color:"#8b3a1a66", cursor:"pointer", fontSize:9, padding:"2px 6px", borderRadius:2, fontFamily:"Georgia, serif" }}
+                          <button style={{ background:"none", border:"1px solid #d4783a33", color:"#d4783a66", cursor:"pointer", fontSize:9, padding:"2px 6px", borderRadius:2, fontFamily:"Georgia, serif" }}
                             onClick={() => addFaltaToWishlist(o)}>♡ Wishlist</button>
                         </div>
                       </div>
@@ -2512,13 +2528,13 @@ export default function Biblioteca() {
         <div>
           <div style={{ ...S.statsBar, display:"flex", justifyContent:"space-between", alignItems:"center" }}>
             <span>♡ {wishlistItems.length} llibres desitjats</span>
-            <button style={{ background:"#8b3a1a22", border:"1px solid #8b3a1a44", color:"#8b3a1a", cursor:"pointer", fontSize:11, padding:"3px 10px", borderRadius:2, fontFamily:"Georgia, serif" }}
+            <button style={{ background:"#d4783a22", border:"1px solid #d4783a44", color:"#d4783a", cursor:"pointer", fontSize:11, padding:"3px 10px", borderRadius:2, fontFamily:"Georgia, serif" }}
               onClick={() => requireAuth(() => setShowWishlistForm(!showWishlistForm))}>+ Afegir</button>
           </div>
 
           {/* Formulari afegir */}
           {showWishlistForm && (
-            <div style={{ padding:"14px 16px", background:"#e8e2d4", borderBottom:"1px solid #1a2540" }}>
+            <div style={{ padding:"14px 16px", background:"#1e1510", borderBottom:"1px solid #1a2540" }}>
               <input style={{...S.input, marginBottom:8}} placeholder="Títol *" value={wishlistForm.titulo} onChange={e => setWishlistForm(f=>({...f,titulo:e.target.value}))} />
               <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:8, marginBottom:8 }}>
                 <input style={S.input} placeholder="Autor" value={wishlistForm.autor} onChange={e => setWishlistForm(f=>({...f,autor:e.target.value}))} />
@@ -2531,12 +2547,12 @@ export default function Biblioteca() {
               <input style={{...S.input, marginBottom:8}} placeholder="Notes (edició, col·lecció...)" value={wishlistForm.notes} onChange={e => setWishlistForm(f=>({...f,notes:e.target.value}))} />
               <div style={{ display:"flex", gap:6, marginBottom:8 }}>
                 {[{v:1,label:"🔴 Alta"},{v:2,label:"🟡 Normal"},{v:3,label:"🟢 Baixa"}].map(p => (
-                  <button key={p.v} style={{ flex:1, padding:"5px", background:wishlistForm.prioritat===p.v?"#8b3a1a22":"transparent", border:`1px solid ${wishlistForm.prioritat===p.v?"#8b3a1a44":"#c8b898"}`, color:wishlistForm.prioritat===p.v?"#8b3a1a":"#555", cursor:"pointer", fontSize:10, borderRadius:2, fontFamily:"Georgia, serif" }}
+                  <button key={p.v} style={{ flex:1, padding:"5px", background:wishlistForm.prioritat===p.v?"#d4783a22":"transparent", border:`1px solid ${wishlistForm.prioritat===p.v?"#d4783a44":"#4a3828"}`, color:wishlistForm.prioritat===p.v?"#d4783a":"#555", cursor:"pointer", fontSize:10, borderRadius:2, fontFamily:"Georgia, serif" }}
                     onClick={() => setWishlistForm(f=>({...f,prioritat:p.v}))}>{p.label}</button>
                 ))}
               </div>
               <div style={{ display:"flex", gap:8 }}>
-                <button style={{ flex:1, padding:"8px", background:"#8b3a1a22", border:"1px solid #8b3a1a44", color:"#8b3a1a", cursor:"pointer", borderRadius:2, fontFamily:"Georgia, serif", fontSize:12 }}
+                <button style={{ flex:1, padding:"8px", background:"#d4783a22", border:"1px solid #d4783a44", color:"#d4783a", cursor:"pointer", borderRadius:2, fontFamily:"Georgia, serif", fontSize:12 }}
                   onClick={handleAddWishlist} disabled={savingWishlist}>{savingWishlist?"Desant...":"✓ Afegir a la wishlist"}</button>
                 <button style={{ padding:"8px 12px", background:"none", border:"1px solid #1e3060", color:"#555", cursor:"pointer", borderRadius:2 }}
                   onClick={() => setShowWishlistForm(false)}>✕</button>
@@ -2548,14 +2564,14 @@ export default function Biblioteca() {
           {wishlistItems.length === 0
             ? <div style={S.empty}>Cap llibre a la wishlist 🙂</div>
             : wishlistItems.map(w => {
-                const prioritatColor = w.prioritat===1?"#c44":w.prioritat===3?"#6ec88e":"#8b3a1a";
+                const prioritatColor = w.prioritat===1?"#c44":w.prioritat===3?"#6ec88e":"#d4783a";
                 const showBuscar = wishlistBuscarId === w.wishlist_id;
                 return (
                   <div key={w.wishlist_id} style={{ padding:"14px 16px", borderBottom:"1px solid #1a2540" }}>
                     <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", gap:8 }}>
                       <div style={{ flex:1 }}>
-                        <div style={{ fontSize:14, color:"#2c1a0a", marginBottom:2 }}>{w.titulo}</div>
-                        {w.autor && <div style={{ fontSize:11, color:"#8b3a1a88", marginBottom:2 }}>{w.autor}{w.editorial && ` · ${w.editorial}`}{w.any_aprox && ` · ${w.any_aprox}`}</div>}
+                        <div style={{ fontSize:14, color:"#e8dcc8", marginBottom:2 }}>{w.titulo}</div>
+                        {w.autor && <div style={{ fontSize:11, color:"#d4783a88", marginBottom:2 }}>{w.autor}{w.editorial && ` · ${w.editorial}`}{w.any_aprox && ` · ${w.any_aprox}`}</div>}
                         {w.notes && <div style={{ fontSize:11, color:"#555", fontStyle:"italic" }}>{w.notes}</div>}
                         <div style={{ fontSize:9, color:"#333", marginTop:4 }}>Afegit: {w.data_afegit}</div>
                       </div>
@@ -2563,7 +2579,7 @@ export default function Biblioteca() {
                         <span style={{ fontSize:9, color:prioritatColor, border:`1px solid ${prioritatColor}44`, padding:"1px 6px", borderRadius:2 }}>
                           {w.prioritat===1?"🔴 Alta":w.prioritat===3?"🟢 Baixa":"🟡 Normal"}
                         </span>
-                        <button style={{ background:"none", border:"1px solid #8899cc33", color:"#7a5030", cursor:"pointer", fontSize:9, padding:"2px 6px", borderRadius:2, fontFamily:"Georgia, serif" }}
+                        <button style={{ background:"none", border:"1px solid #8899cc33", color:"#c8a868", cursor:"pointer", fontSize:9, padding:"2px 6px", borderRadius:2, fontFamily:"Georgia, serif" }}
                           onClick={() => setWishlistBuscarId(showBuscar ? null : w.wishlist_id)}>🔍 Buscar</button>
                         <button style={{ background:"none", border:"none", color:"#c44", cursor:"pointer", fontSize:10 }}
                           onClick={() => handleDeleteWishlist(w.wishlist_id)}>🗑</button>
@@ -2577,7 +2593,7 @@ export default function Biblioteca() {
                           {label:"👗 Vinted", plat:"vinted"},
                           {label:"📦 Amazon", plat:"amazon"},
                         ].map(p => (
-                          <button key={p.plat} style={{ padding:"4px 8px", background:"#ede8de", border:"1px solid #1e3060", color:"#888", cursor:"pointer", fontSize:10, borderRadius:2, fontFamily:"Georgia, serif" }}
+                          <button key={p.plat} style={{ padding:"4px 8px", background:"#352a1c", border:"1px solid #1e3060", color:"#888", cursor:"pointer", fontSize:10, borderRadius:2, fontFamily:"Georgia, serif" }}
                             onClick={() => buscarWishlist(w, p.plat)}>{p.label}</button>
                         ))}
                       </div>
@@ -2604,9 +2620,9 @@ export default function Biblioteca() {
               {stats.totalPagat > 0 && <div style={S.statCard}><div style={S.statNum}>{stats.totalPagat.toFixed(0)}€</div><div style={S.statLabel}>💸 Invertit</div></div>}
               {stats.totalMercat > 0 && <div style={S.statCard}><div style={S.statNum}>{stats.totalMercat.toFixed(0)}€</div><div style={S.statLabel}>💰 Valor mercat</div></div>}
               {stats.totalEbooks > 0 && <div style={{...S.statCard, border: "1px solid #4488cc33"}} onClick={() => filtrarPerStat("format","ebook")}><div style={{...S.statNum, color:"#4488cc"}}>{stats.totalEbooks}</div><div style={S.statLabel}>📱 eBooks</div></div>}
-              {stats.venuts > 0 && <div style={{...S.statCard, border:"1px solid #8b3a1a33"}}><div style={{...S.statNum, color:"#8b3a1a"}}>{stats.venuts}</div><div style={S.statLabel}>💰 Venuts</div></div>}
-              {stats.regalats > 0 && <div style={{...S.statCard, border:"1px solid #8899cc33"}}><div style={{...S.statNum, color:"#7a5030"}}>{stats.regalats}</div><div style={S.statLabel}>🎁 Regalats</div></div>}
-              {stats.totalVenut > 0 && <div style={{...S.statCard, border:"1px solid #8b3a1a33"}}><div style={{...S.statNum, color:"#8b3a1a"}}>{stats.totalVenut.toFixed(0)}€</div><div style={S.statLabel}>💸 Recaptat vendes</div></div>}
+              {stats.venuts > 0 && <div style={{...S.statCard, border:"1px solid #d4783a33"}}><div style={{...S.statNum, color:"#d4783a"}}>{stats.venuts}</div><div style={S.statLabel}>💰 Venuts</div></div>}
+              {stats.regalats > 0 && <div style={{...S.statCard, border:"1px solid #8899cc33"}}><div style={{...S.statNum, color:"#c8a868"}}>{stats.regalats}</div><div style={S.statLabel}>🎁 Regalats</div></div>}
+              {stats.totalVenut > 0 && <div style={{...S.statCard, border:"1px solid #d4783a33"}}><div style={{...S.statNum, color:"#d4783a"}}>{stats.totalVenut.toFixed(0)}€</div><div style={S.statLabel}>💸 Recaptat vendes</div></div>}
             </div>
 
             {/* Portades dashboard */}
@@ -2614,9 +2630,9 @@ export default function Biblioteca() {
               {[
                 { label: "✅ Amb portada", val: stats.ambPortada, color: "#6ec88e" },
                 { label: "❌ Sense portada", val: stats.total - stats.ambPortada, color: "#c44" },
-                { label: "📌 Customs", val: edicions.filter(e => e.portada_custom).length, color: "#8b3a1a" },
+                { label: "📌 Customs", val: edicions.filter(e => e.portada_custom).length, color: "#d4783a" },
               ].map(s => (
-                <div key={s.label} style={{ background: "#ede8de", border: `1px solid ${s.color}33`, borderRadius: 4, padding: "10px 12px", textAlign: "center" }}>
+                <div key={s.label} style={{ background: "#352a1c", border: `1px solid ${s.color}33`, borderRadius: 4, padding: "10px 12px", textAlign: "center" }}>
                   <div style={{ fontSize: 20, color: s.color, fontWeight: "bold" }}>{s.val}</div>
                   <div style={{ fontSize: 9, color: "#555", marginTop: 2 }}>{s.label}</div>
                 </div>
@@ -2633,15 +2649,15 @@ export default function Biblioteca() {
             {stats.adquisiciosBars?.length > 0 && <BarChart data={stats.adquisiciosBars} title="📦 Incorporacions per any" />}
             {stats.topLectures?.length > 0 && (
               <div style={{ marginTop:8 }}>
-                <div style={{ fontSize:11, color:"#8b3a1a99", letterSpacing:1, textTransform:"uppercase", marginBottom:12 }}>⭐ Top lectures (valoració ≥ 4)</div>
+                <div style={{ fontSize:11, color:"#d4783a99", letterSpacing:1, textTransform:"uppercase", marginBottom:12 }}>⭐ Top lectures (valoració ≥ 4)</div>
                 {stats.topLectures.map((e,i) => (
                   <div key={e.edicion_id} style={{ display:"flex", justifyContent:"space-between", alignItems:"center", padding:"6px 0", borderBottom:"1px solid #111", cursor:"pointer" }} onClick={() => openObra(e)}>
                     <div style={{ flex:1, minWidth:0 }}>
-                      <span style={{ color:"#8b3a1a44", marginRight:8, fontSize:11 }}>#{i+1}</span>
+                      <span style={{ color:"#d4783a44", marginRight:8, fontSize:11 }}>#{i+1}</span>
                       <span style={{ fontSize:12, color:"#bbb" }}>{e.titulo_edicion||e.titulo_original}</span>
                     </div>
                     <div style={{ display:"flex", gap:8, alignItems:"center", flexShrink:0 }}>
-                      <span style={{ fontSize:11, color:"#8b3a1a" }}>{"★".repeat(e.valoracio)}</span>
+                      <span style={{ fontSize:11, color:"#d4783a" }}>{"★".repeat(e.valoracio)}</span>
                       {e.data_lectura && <span style={{ fontSize:10, color:"#444" }}>{new Date(e.data_lectura).getFullYear()}</span>}
                     </div>
                   </div>
@@ -2652,11 +2668,11 @@ export default function Biblioteca() {
             {/* Top valor */}
             {stats.topValor?.length > 0 && (
               <div style={{ marginTop: 8 }}>
-                <div style={{ fontSize: 11, color: "#8b3a1a99", letterSpacing: 1, textTransform: "uppercase", marginBottom: 12 }}>💎 Top valor estimat</div>
+                <div style={{ fontSize: 11, color: "#d4783a99", letterSpacing: 1, textTransform: "uppercase", marginBottom: 12 }}>💎 Top valor estimat</div>
                 {stats.topValor.map((e, i) => (
                   <div key={e.edicion_id} style={{ display: "flex", justifyContent: "space-between", padding: "6px 0", borderBottom: "1px solid #111", cursor: "pointer" }} onClick={() => openObra(e)}>
-                    <span style={{ fontSize: 12, color: "#bbb" }}><span style={{ color: "#8b3a1a44", marginRight: 8 }}>#{i+1}</span>{e.titulo_edicion}</span>
-                    <span style={{ fontSize: 12, color: "#8b3a1a", flexShrink: 0 }}>{e.preu_mercat}€</span>
+                    <span style={{ fontSize: 12, color: "#bbb" }}><span style={{ color: "#d4783a44", marginRight: 8 }}>#{i+1}</span>{e.titulo_edicion}</span>
+                    <span style={{ fontSize: 12, color: "#d4783a", flexShrink: 0 }}>{e.preu_mercat}€</span>
                   </div>
                 ))}
               </div>
@@ -2665,11 +2681,11 @@ export default function Biblioteca() {
             {/* Prestats */}
             {stats.prestats?.length > 0 && (
               <div style={{ marginTop: 20 }}>
-                <div style={{ fontSize: 11, color: "#8b3a1a99", letterSpacing: 1, textTransform: "uppercase", marginBottom: 12 }}>🔄 Llibres prestats ({stats.prestats.length})</div>
+                <div style={{ fontSize: 11, color: "#d4783a99", letterSpacing: 1, textTransform: "uppercase", marginBottom: 12 }}>🔄 Llibres prestats ({stats.prestats.length})</div>
                 {stats.prestats.map(e => (
                   <div key={e.edicion_id} style={{ display: "flex", justifyContent: "space-between", padding: "6px 0", borderBottom: "1px solid #111", cursor: "pointer" }} onClick={() => openObra(e)}>
                     <span style={{ fontSize: 12, color: "#bbb" }}>{e.titulo_edicion}</span>
-                    <span style={{ fontSize: 11, color: "#8b3a1a" }}>{e.prestat_a}</span>
+                    <span style={{ fontSize: 11, color: "#d4783a" }}>{e.prestat_a}</span>
                   </div>
                 ))}
               </div>
