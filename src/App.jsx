@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 
-// TODO: Canviar per la BD de l'Anna
 const SUPABASE_URL = "https://ptmartuivivhavzgbnvw.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB0bWFydHVpdml2aGF2emdibnZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ3MzA1MzUsImV4cCI6MjA5MDMwNjUzNX0.hPxV1P-YyIIv4ErA-jEdKLLQTPG2L747WkVsI56gQVs";
 const ANTHROPIC_KEY = ""; // deixar buit — s'usa via proxy de Vercel si es configura
@@ -142,7 +141,7 @@ const LLEGIT_OPTIONS = [
   { val: "si", icon: "✓", label: "Llegit", color: "#6ec88e" },
 ];
 const STARS = [1,2,3,4,5];
-const APP_VERSION = "1.1.0";
+const APP_VERSION = "1.2.0";
 
 const getGridCols = () => {
   const w = window.innerWidth;
@@ -316,19 +315,40 @@ const FormNouLlibre = ({ onClose, onSaved }) => {
 
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
 
-  // Mapa autor → prefix estanteria
+  // Mapa autor → prefix estanteria (novel·la negra)
   const AUTOR_SECCIO = {
-    'asimov': 'ASI', 'isaac asimov': 'ASI',
-    'dick': 'PKD-A', 'philip k. dick': 'PKD-A', 'philip dick': 'PKD-A',
-    'lem': 'LEM', 'stanislaw lem': 'LEM',
-    'herbert': 'HER', 'frank herbert': 'HER',
-    'clarke': 'CLA', 'arthur c. clarke': 'CLA', 'arthur clarke': 'CLA',
-    'tolkien': 'TOL', 'j.r.r. tolkien': 'TOL',
-    'huxley': 'HUX', 'aldous huxley': 'HUX',
-    'le guin': 'LEG', 'ursula k. le guin': 'LEG',
-    'bradbury': 'BRA', 'ray bradbury': 'BRA',
-    'orwell': 'ORW', 'george orwell': 'ORW',
-    'pratchett': 'PRA', 'terry pratchett': 'PRA',
+    // Escandinava
+    'larsson': 'SCA', 'stieg larsson': 'SCA',
+    'nesbø': 'SCA', 'nesbo': 'SCA', 'jo nesbø': 'SCA',
+    'läckberg': 'SCA', 'lackberg': 'SCA', 'camilla läckberg': 'SCA',
+    'mankell': 'SCA', 'henning mankell': 'SCA',
+    'tursten': 'SCA', 'helene tursten': 'SCA',
+    'indridason': 'SCA', 'arnaldur indriðason': 'SCA',
+    // Anglesa / Britànica
+    'christie': 'ANG', 'agatha christie': 'ANG',
+    'james': 'ANG', 'p.d. james': 'ANG',
+    'rankin': 'ANG', 'ian rankin': 'ANG',
+    'james ellroy': 'ANG', 'ellroy': 'ANG',
+    // Nord-americana
+    'cornwell': 'USA', 'patricia cornwell': 'USA',
+    'connelly': 'USA', 'michael connelly': 'USA',
+    'slaughter': 'USA', 'karin slaughter': 'USA',
+    'chandler': 'USA', 'raymond chandler': 'USA',
+    'grafton': 'USA', 'sue grafton': 'USA',
+    // Italiana
+    'leon': 'ITA', 'donna leon': 'ITA',
+    'camilleri': 'ITA', 'andrea camilleri': 'ITA',
+    // Francesa
+    'vargas': 'FRA', 'fred vargas': 'FRA',
+    'pennac': 'FRA', 'daniel pennac': 'FRA',
+    // Espanyola
+    'vázquez montalbán': 'ESP', 'montalbán': 'ESP', 'vazquez montalban': 'ESP',
+    'villar': 'ESP', 'domingo villar': 'ESP',
+    'redondo': 'ESP', 'dolores redondo': 'ESP',
+    'silva': 'ESP', 'lorenzo silva': 'ESP',
+    // Catalana
+    'fuster': 'CAT', 'jaume fuster': 'CAT',
+    'solana': 'CAT', 'teresa solana': 'CAT',
   };
 
   const suggerirEstanteria = async (autorNom) => {
