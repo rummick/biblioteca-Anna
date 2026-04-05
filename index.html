@@ -3,30 +3,30 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="dark" />
     
     <!-- PWA -->
     <link rel="manifest" href="/manifest.json" />
-    <meta name="theme-color" content="#8b1a1a" />
+    <meta name="theme-color" content="#d4783a" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="Biblioteca Anna" />
     <link rel="apple-touch-icon" href="/icon-192.png" />
     
     <title>Biblioteca Anna</title>
+
+    <style>
+      html, body, #root {
+        background-color: #2a1f14 !important;
+        color: #e8dcc8 !important;
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+      }
+    </style>
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
-    
-    <!-- Registre Service Worker -->
-    <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw.js')
-            .then(reg => console.log('SW registrat:', reg.scope))
-            .catch(err => console.log('SW error:', err));
-        });
-      }
-    </script>
   </body>
 </html>
