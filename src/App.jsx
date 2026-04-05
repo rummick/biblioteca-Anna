@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 
 const SUPABASE_URL = "https://ptmartuivivhavzgbnvw.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB0bWFydHVpdml2aGF2emdibnZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM3MDI1ODMsImV4cCI6MjA1OTI3ODU4M30.s8F3YM7Hn4L9vK2pX1mQwRjNtDcEuAoB6iZlGsPbVYk";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB0bWFydHVpdml2aGF2emdibnZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM3MDI1ODMsImV4cCI6MjA1OTI3ODU4M30.Xk9vP2mN8qL5rT3wA7uYjB4cDsEiFlGhJoKnMpQtRvU";
 const ANTHROPIC_KEY = ""; // deixar buit — s'usa via proxy de Vercel si es configura
 
 // ── CLOUDINARY ──
@@ -119,37 +119,61 @@ const fetchGoogleBooksCover = async (isbn) => {
 };
 
 // ── CONSTANTS ──
-// Sèries de novel·la negra per color
+// Mapa id_estanteria prefix → saga i color
 const SAGA_MAP = {
-  // Nesbo — Harry Hole
-  'NOR-001': {saga:'Harry Hole', color:'#8b1a1a'},
-  'NOR-002': {saga:'Harry Hole', color:'#8b1a1a'},
-  'NOR-003': {saga:'Harry Hole', color:'#8b1a1a'},
-  'NOR-004': {saga:'Harry Hole', color:'#8b1a1a'},
-  'NOR-005': {saga:'Harry Hole', color:'#8b1a1a'},
-  'NOR-006': {saga:'Harry Hole', color:'#8b1a1a'},
-  // Larsson — Millennium
-  'SWE-001': {saga:'Millennium', color:'#1a4a8b'},
-  'SWE-002': {saga:'Millennium', color:'#1a4a8b'},
-  'SWE-003': {saga:'Millennium', color:'#1a4a8b'},
-  // Mankell — Wallander
-  'SWE-010': {saga:'Wallander', color:'#2a6a2a'},
-  'SWE-011': {saga:'Wallander', color:'#2a6a2a'},
-  'SWE-012': {saga:'Wallander', color:'#2a6a2a'},
-  // Vargas
-  'FRA-001': {saga:'Adamsberg', color:'#6a2a6a'},
-  'FRA-002': {saga:'Adamsberg', color:'#6a2a6a'},
-  // Redondo — Baztan
-  'ESP-001': {saga:'Baztan', color:'#6a4a1a'},
-  'ESP-002': {saga:'Baztan', color:'#6a4a1a'},
-  'ESP-003': {saga:'Baztan', color:'#6a4a1a'},
-  // Montalbán — Pepe Carvalho  
-  'ESP-010': {saga:'Carvalho', color:'#8b6a1a'},
-  'ESP-011': {saga:'Carvalho', color:'#8b6a1a'},
-  'ESP-012': {saga:'Carvalho', color:'#8b6a1a'},
+  // Asimov — Fundació
+  'ASI-014': {saga:'Fundació', color:'#1a6644'},
+  'ASI-017': {saga:'Fundació', color:'#1a6644'},
+  'ASI-019': {saga:'Fundació', color:'#1a6644'},
+  'ASI-026': {saga:'Fundació', color:'#1a6644'},
+  'ASI-028': {saga:'Fundació', color:'#1a6644'},
+  // Asimov — Robots
+  'ASI-004': {saga:'Robots', color:'#1a4466'},
+  'ASI-008': {saga:'Robots', color:'#1a4466'},
+  'ASI-015': {saga:'Robots', color:'#1a4466'},
+  'ASI-016': {saga:'Robots', color:'#1a4466'},
+  'ASI-025': {saga:'Robots', color:'#1a4466'},
+  'ASI-029': {saga:'Robots', color:'#1a4466'},
+  // Asimov — Galàctic (Pebble, Stars, Currents)
+  'ASI-001': {saga:'Galàctic', color:'#443366'},
+  'ASI-002': {saga:'Galàctic', color:'#443366'},
+  'ASI-003': {saga:'Galàctic', color:'#443366'},
+  // Dune
+  'HER-001': {saga:'Dune', color:'#885522'},
+  'HER-001b': {saga:'Dune', color:'#885522'},
+  'HER-002': {saga:'Dune', color:'#885522'},
+  'HER-002b': {saga:'Dune', color:'#885522'},
+  'HER-003': {saga:'Dune', color:'#885522'},
+  'HER-003b': {saga:'Dune', color:'#885522'},
+  'HER-004': {saga:'Dune', color:'#885522'},
+  'HER-004b': {saga:'Dune', color:'#885522'},
+  'HER-005': {saga:'Dune', color:'#885522'},
+  'HER-005b': {saga:'Dune', color:'#885522'},
+  // Lem — Pilot Pirx
+  'LEM-010': {saga:'Pilot Pirx', color:'#334466'},
+  'LEM-013': {saga:'Pilot Pirx', color:'#334466'},
+  // Lem — Ijon Tichy
+  'LEM-012': {saga:'Ijon Tichy', color:'#1a5533'},
+  'LEM-012b': {saga:'Ijon Tichy', color:'#1a5533'},
+  'LEM-015': {saga:'Ijon Tichy', color:'#1a5533'},
+  // Lem — Trurl i Klapaucius (Ciberiada)
+  'LEM-006': {saga:'Trurl & Klapaucius', color:'#665522'},
+  'LEM-008': {saga:'Trurl & Klapaucius', color:'#665522'},
+  // PKD — VALIS
+  'PKD-A-029': {saga:'VALIS', color:'#6633aa'},
+  'PKD-A-029b': {saga:'VALIS', color:'#6633aa'},
+  'PKD-A-028': {saga:'VALIS', color:'#6633aa'},
+  'PKD-A-030': {saga:'VALIS', color:'#6633aa'},
+  'PKD-A-030b': {saga:'VALIS', color:'#6633aa'},
+  // PKD — Androides
+  'PKD-A-018': {saga:'Androides', color:'#1a6644'},
+  'PKD-A-018b': {saga:'Androides', color:'#1a6644'},
+  'PKD-A-019': {saga:'Androides', color:'#1a6644'},
+  'PKD-A-039': {saga:'Androides', color:'#1a6644'},
+  // PKD — Ubik
+  'PKD-A-021': {saga:'Ubik', color:'#1a5577'},
+  'PKD-A-021b': {saga:'Ubik', color:'#1a5577'},
 };
-// DUMMY per compatibilitat (no s'usa a Anna)
-
 
 const getSaga = (id_estanteria) => SAGA_MAP[id_estanteria] || null;
 
@@ -160,72 +184,6 @@ const UNIVERS_NOMS = {
   'UNI-PKD-10':'Gnosi / Realitat','UNI-LEM-01':'Ijon Tichy','UNI-LEM-02':'Pilot Pirx',
   'UNI-LEM-03':'Trurl i Klapaucius','UNI-LEM-04':'Independent','UNI-ASI-01':'Robots',
   'UNI-ASI-02':'Fundació','UNI-ASI-03':'Galàctic','UNI-ASI-04':'Independent',
-};
-const AUTORS_RELATS = [
-  { id: "AUT001", label: "Christie" },
-  { id: "AUT002", label: "Larsson" },
-  { id: "AUT003", label: "Nesbø" },
-  { id: "AUT004", label: "Läckberg" },
-  { id: "AUT005", label: "Vargas" },
-  { id: "AUT007", label: "Mankell" },
-  { id: "AUT008", label: "Montalbán" },
-  { id: "AUT010", label: "Redondo" },
-];
-
-// ── PRIMERA EDICIÓ ──
-const isPrimeraEdicio = (ed) => {
-  if (ed?.primera_edicio === true) return true;
-  if (ed?.primera_edicio === false) return false; // correcció manual
-  // Auto: any_edicion dins ±1 any de ano_obra
-  if (ed?.ano_edicion && ed?.ano_obra) return ed.ano_edicion <= ed.ano_obra + 1;
-  return false;
-};
-
-// ── OBRA COMPLETA HARDCODED (per autors principals) ──────────
-const OBRA_COMPLETA = {
-  'NES': [ // Jo Nesbø
-    { grup: "Harry Hole", items: [
-      {any:1997, titol:"El murciélago"}, {any:1997, titol:"Cucarachas"},
-      {any:1998, titol:"El hombre murciélago"}, {any:2000, titol:"Petirrojo"},
-      {any:2002, titol:"Némesis"}, {any:2003, titol:"El diablo de Oslo"},
-      {any:2005, titol:"El redentor"}, {any:2007, titol:"El muñeco de nieve"},
-      {any:2009, titol:"El leopardo"}, {any:2011, titol:"Fantasma"},
-      {any:2013, titol:"Policía"}, {any:2015, titol:"Sed"},
-      {any:2017, titol:"Cuchillo"}, {any:2021, titol:"Matadero 12"},
-    ]},
-    { grup: "Standalone", items: [
-      {any:2002, titol:"El reino"}, {any:2014, titol:"Sangre"},
-    ]},
-  ],
-  'LAR': [ // Stieg Larsson
-    { grup: "Millennium", items: [
-      {any:2005, titol:"Los hombres que no amaban a las mujeres"},
-      {any:2006, titol:"La chica que soñaba con una cerilla y un bidón de gasolina"},
-      {any:2007, titol:"La reina en el palacio de las corrientes de aire"},
-    ]},
-  ],
-  'MAN': [ // Henning Mankell
-    { grup: "Wallander", items: [
-      {any:1991, titol:"Asesinos sin rostro"}, {any:1992, titol:"Los perros de Riga"},
-      {any:1993, titol:"La leona blanca"}, {any:1994, titol:"El hombre sonriente"},
-      {any:1995, titol:"La falsa pista"}, {any:1996, titol:"La quinta mujer"},
-      {any:1997, titol:"Pisando los talones"}, {any:1998, titol:"Cortafuegos"},
-      {any:2002, titol:"Antes de que hiele"}, {any:2009, titol:"El hombre inquieto"},
-    ]},
-  ],
-  'CHR': [ // Agatha Christie
-    { grup: "Hèrcules Poirot", items: [
-      {any:1920, titol:"El misterioso caso de Styles"}, {any:1926, titol:"El asesinato de Roger Ackroyd"},
-      {any:1934, titol:"Asesinato en el Orient Express"}, {any:1936, titol:"Muerte en el Nilo"},
-      {any:1939, titol:"Diez negritos"}, {any:1952, titol:"Los testigos mudos"},
-    ]},
-    { grup: "Miss Marple", items: [
-      {any:1930, titol:"El misterio de la guía de ferrocarriles"},
-      {any:1942, titol:"El cuerpo en la biblioteca"},
-      {any:1950, titol:"Un cadáver en la biblioteca"},
-    ]},
-  ],
-}
 };
 const AUTORS_RELATS = [
   { id: "AUT013", label: "Dick" },
@@ -430,7 +388,6 @@ const SECCIONS_GRUPS = [
     { id: "NEG-ESP", label: "Espanyola" }, { id: "NEG-CAT", label: "Catalana" },
     { id: "NEG-USA", label: "Nord-americana" }, { id: "NEG-FRA", label: "Francesa" },
     { id: "NEG-ITA", label: "Italiana" }, { id: "NEG-ALE", label: "Alemanya" },
-    { id: "NEG-LAT", label: "Llatinoamericana" },
   ]},
   { grup: "Thriller / Policial", items: [
     { id: "THR", label: "Thriller" }, { id: "POL", label: "Policial Clàssic" },
@@ -448,14 +405,9 @@ const getSeccioLabel = (id) => {
   return found ? found.label : id;
 };
 const AUTORS_FALTEN = [
-  { id: "AUT003", label: "Nesbø" },
-  { id: "AUT002", label: "Larsson" },
-  { id: "AUT007", label: "Mankell" },
-  { id: "AUT001", label: "Christie" },
-  { id: "AUT004", label: "Läckberg" },
-  { id: "AUT005", label: "Vargas" },
-  { id: "AUT008", label: "Montalbán" },
-  { id: "AUT010", label: "Redondo" },
+  { id: "AUT013", label: "Dick" }, { id: "AUT001", label: "Asimov" },
+  { id: "AUT028", label: "Lem" }, { id: "AUT024", label: "Herbert" },
+  { id: "AUT010", label: "Clarke" },
 ];
 const LLEGIT_OPTIONS = [
   { val: "no", icon: "○", label: "No llegit", color: "#555" },
@@ -463,7 +415,7 @@ const LLEGIT_OPTIONS = [
   { val: "si", icon: "✓", label: "Llegit", color: "#6ec88e" },
 ];
 const STARS = [1,2,3,4,5];
-const APP_VERSION = "1.2.3";
+const APP_VERSION = "1.2.0";
 
 const getGridCols = () => {
   const w = window.innerWidth;
@@ -527,21 +479,21 @@ const EditField = ({ label, value, onSave, multiline = false, type = "text" }) =
 
 // ── STYLES ──
 const S = {
-  app: { minHeight: "100vh", background: "#2a1f14", color: "#e8dcc8", fontFamily: "Georgia, serif", colorScheme: "light", maxWidth: "100%", fontSize: 16 },
+  app: { minHeight: "100vh", background: "#2a1f14", color: "#e8dcc8", fontFamily: "Georgia, serif", maxWidth: "100%", fontSize: 16 },
   header: { padding: "14px 16px 0", background: "#2a1f14", borderBottom: "1px solid #1a2540", position: "sticky", top: 0, zIndex: 100 },
   headerTop: { display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 },
   title: { fontSize: 17, fontWeight: "bold", letterSpacing: 3, color: "#d4783a", textTransform: "uppercase", margin: 0, display: "flex", alignItems: "center" },
   headerRight: { display: "flex", gap: 8, alignItems: "center" },
-  iconBtn: { background: "none", border: "1px solid #2a3a5a", color: "#b8a888", cursor: "pointer", fontSize: 13, padding: "3px 9px", borderRadius: 12, fontFamily: "Georgia, serif" },
+  iconBtn: { background: "none", border: "1px solid #2a3a5a", color: "#b0a080", cursor: "pointer", fontSize: 13, padding: "3px 9px", borderRadius: 12, fontFamily: "Georgia, serif" },
   nav: { display: "flex" },
-  navBtn: (a) => ({ flex: 1, padding: "9px 4px", background: "none", color: a ? "#d4783a" : "#a89878", border: "none", borderBottom: `2px solid ${a ? "#d4783a" : "transparent"}`, cursor: "pointer", fontSize: 13, fontFamily: "Georgia, serif", letterSpacing: 1, textTransform: "uppercase" }),
+  navBtn: (a) => ({ flex: 1, padding: "9px 4px", background: "none", color: a ? "#d4783a" : "#a09070", border: "none", borderBottom: `2px solid ${a ? "#d4783a" : "transparent"}`, cursor: "pointer", fontSize: 13, fontFamily: "Georgia, serif", letterSpacing: 1, textTransform: "uppercase" }),
   searchWrap: { padding: "10px 16px", background: "#2a1f14", borderBottom: "1px solid #1a2540", position: "sticky", top: 83, zIndex: 99 },
   input: { width: "100%", background: "#352a1c", border: "1px solid #2a3a5a", color: "#e8dcc8", padding: "9px 12px", fontSize: 15, fontFamily: "Georgia, serif", outline: "none", boxSizing: "border-box", borderRadius: 2 },
   pills: { display: "flex", gap: 6, overflowX: "auto", padding: "8px 16px", scrollbarWidth: "none", borderBottom: "1px solid #1a2540" },
-  pill: (a) => ({ padding: "4px 10px", background: a ? "#d4783a18" : "transparent", color: a ? "#d4783a" : "#a89878", border: `1px solid ${a ? "#d4783a55" : "#5a4838"}`, cursor: "pointer", fontSize: 11, whiteSpace: "nowrap", fontFamily: "Georgia, serif", borderRadius: 2 }),
-  statsBar: { padding: "6px 16px", fontSize: 13, color: "#a89878", borderBottom: "1px solid #111", background: "#1e1510" },
+  pill: (a) => ({ padding: "4px 10px", background: a ? "#d4783a18" : "transparent", color: a ? "#d4783a" : "#a09070", border: `1px solid ${a ? "#d4783a55" : "#4a3828"}`, cursor: "pointer", fontSize: 11, whiteSpace: "nowrap", fontFamily: "Georgia, serif", borderRadius: 2 }),
+  statsBar: { padding: "6px 16px", fontSize: 13, color: "#a09070", borderBottom: "1px solid #111", background: "#1e1510" },
   viewToggle: { display: "flex", gap: 4 },
-  viewBtn: (a) => ({ padding: "3px 8px", background: a ? "#d4783a22" : "transparent", color: a ? "#d4783a" : "#a89878", border: `1px solid ${a ? "#d4783a44" : "#5a4838"}`, cursor: "pointer", fontSize: 11, borderRadius: 2 }),
+  viewBtn: (a) => ({ padding: "3px 8px", background: a ? "#d4783a22" : "transparent", color: a ? "#d4783a" : "#a09070", border: `1px solid ${a ? "#d4783a44" : "#4a3828"}`, cursor: "pointer", fontSize: 11, borderRadius: 2 }),
   grid: (cols) => ({ display: "grid", gridTemplateColumns: `repeat(${cols}, 1fr)`, gap: 2, padding: 2 }),
   card: { position: "relative", aspectRatio: "2/3", overflow: "hidden", cursor: "pointer", background: "#352a1c" },
   cardImg: { width: "100%", height: "100%", objectFit: "cover" },
@@ -554,45 +506,45 @@ const S = {
   listImg: { width: 38, height: 57, objectFit: "cover", background: "#352a1c", flexShrink: 0 },
   listInfo: { flex: 1, minWidth: 0 },
   listTitle: { fontSize: 16, color: "#e8dcc8", marginBottom: 3, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" },
-  listMeta: { fontSize: 13, color: "#a89878" },
+  listMeta: { fontSize: 13, color: "#a09070" },
   listShelf: { fontSize: 12, color: "#d4783a", fontFamily: "monospace", flexShrink: 0 },
   listLlegit: { fontSize: 14, flexShrink: 0 },
-  loader: { textAlign: "center", padding: 60, color: "#a89878", fontSize: 12, letterSpacing: 3 },
-  empty: { textAlign: "center", padding: 40, color: "#a89878", fontSize: 14 },
+  loader: { textAlign: "center", padding: 60, color: "#a09070", fontSize: 12, letterSpacing: 3 },
+  empty: { textAlign: "center", padding: 40, color: "#a09070", fontSize: 14 },
   errMsg: { textAlign: "center", padding: 30, color: "#c44", fontSize: 13, lineHeight: 1.5 },
   detall: { padding: 20 },
   backBtn: { background: "none", border: "none", color: "#d4783a", cursor: "pointer", fontSize: 14, fontFamily: "Georgia, serif", padding: "0 0 14px 0" },
   edTabs: { display: "flex", gap: 4, marginBottom: 16, flexWrap: "wrap" },
-  edTab: (a) => ({ padding: "5px 12px", background: a ? "#d4783a18" : "transparent", color: a ? "#d4783a" : "#a89878", border: `1px solid ${a ? "#d4783a55" : "#5a4838"}`, cursor: "pointer", fontSize: 11, fontFamily: "Georgia, serif", borderRadius: 2 }),
+  edTab: (a) => ({ padding: "5px 12px", background: a ? "#d4783a18" : "transparent", color: a ? "#d4783a" : "#a09070", border: `1px solid ${a ? "#d4783a55" : "#4a3828"}`, cursor: "pointer", fontSize: 11, fontFamily: "Georgia, serif", borderRadius: 2 }),
   detallImgWrap: { position: "relative", marginBottom: 12 },
   detallImg: { width: "100%", maxHeight: 280, objectFit: "contain", background: "#352a1c", display: "block" },
   coverBtns: { display: "flex", gap: 4, flexWrap: "wrap", marginBottom: 10 },
   coverBtn: (color) => ({ background: "none", border: `1px solid ${color}55`, color, cursor: "pointer", fontSize: 11, padding: "4px 10px", borderRadius: 2, fontFamily: "Georgia, serif" }),
   detallTitle: { fontSize: 24, color: "#d4b878", marginBottom: 6, lineHeight: 1.3, fontWeight: "bold" },
-  detallOrig: { fontSize: 16, color: "#b8a888", fontStyle: "italic", marginBottom: 10 },
+  detallOrig: { fontSize: 16, color: "#b0a080", fontStyle: "italic", marginBottom: 10 },
   resum: { fontSize: 15, color: "#c0b498", lineHeight: 1.7, marginBottom: 12, padding: "14px 16px", background: "#352a1c", borderLeft: "3px solid #d4783a55" },
   llegitRow: { display: "flex", gap: 6, alignItems: "center", marginBottom: 16, padding: "10px 14px", background: "#352a1c", borderRadius: 2, flexWrap: "wrap" },
-  llegitBtn: (active, color) => ({ padding: "5px 12px", background: active ? color + "22" : "transparent", color: active ? color : "#a89878", border: `1px solid ${active ? color + "66" : "#5a4838"}`, cursor: "pointer", fontSize: 13, borderRadius: 2, fontFamily: "Georgia, serif" }),
+  llegitBtn: (active, color) => ({ padding: "5px 12px", background: active ? color + "22" : "transparent", color: active ? color : "#a09070", border: `1px solid ${active ? color + "66" : "#4a3828"}`, cursor: "pointer", fontSize: 13, borderRadius: 2, fontFamily: "Georgia, serif" }),
   starsRow: { display: "flex", gap: 4, alignItems: "center", marginLeft: "auto" },
-  star: (active) => ({ fontSize: 18, cursor: "pointer", color: active ? "#d4783a" : "#5a4838" }),
+  star: (active) => ({ fontSize: 18, cursor: "pointer", color: active ? "#d4783a" : "#4a3828" }),
   sectionTitle: { fontSize: 13, color: "#d4783acc", letterSpacing: 2, textTransform: "uppercase", margin: "20px 0 10px", borderBottom: "1px solid #2a3a5a", paddingBottom: 6 },
   badge: { display: "inline-block", padding: "3px 8px", background: "#d4783a12", border: "1px solid #d4783a44", color: "#d4783a", fontSize: 13, marginRight: 4, marginBottom: 4, letterSpacing: 0.5, borderRadius: 2 },
   notesArea: { width: "100%", background: "#352a1c", border: "1px solid #2a3a5a", color: "#e8dcc8", padding: "10px 12px", fontSize: 13, fontFamily: "Georgia, serif", borderRadius: 2, resize: "vertical", boxSizing: "border-box", minHeight: 80 },
   deleteBtn: { width: "100%", marginTop: 24, padding: "10px", background: "none", border: "1px solid #c4444455", color: "#dd4444", cursor: "pointer", fontFamily: "Georgia, serif", fontSize: 12, borderRadius: 2 },
   selectorRow: { display: "flex", gap: 6, flexWrap: "wrap", padding: "10px 16px", borderBottom: "1px solid #1a2540" },
-  selBtn: (a) => ({ padding: "5px 10px", background: a ? "#d4783a" : "transparent", color: a ? "#2a1f14" : "#b8a888", border: `1px solid ${a ? "#d4783a" : "#5a4838"}`, cursor: "pointer", fontSize: 11, fontFamily: "Georgia, serif", borderRadius: 2 }),
+  selBtn: (a) => ({ padding: "5px 10px", background: a ? "#d4783a" : "transparent", color: a ? "#2a1f14" : "#b0a080", border: `1px solid ${a ? "#d4783a" : "#4a3828"}`, cursor: "pointer", fontSize: 11, fontFamily: "Georgia, serif", borderRadius: 2 }),
   faltenList: { padding: "0 16px" },
   faltenItem: { padding: "12px 0", borderBottom: "1px solid #1a2540", display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 8 },
   faltenTitle: { fontSize: 14, color: "#e8dcc8", marginBottom: 2 },
   faltenCast: { fontSize: 12, color: "#d4783a99", fontStyle: "italic", marginBottom: 2 },
-  faltenYear: { fontSize: 13, color: "#a89878" },
+  faltenYear: { fontSize: 13, color: "#a09070" },
   tipusBadge: { fontSize: 10, color: "#d4783a", border: "1px solid #d4783a55", padding: "2px 7px", whiteSpace: "nowrap", borderRadius: 2, flexShrink: 0 },
   relatItem: { padding: "14px 16px", borderBottom: "1px solid #1a2540" },
   relatTitle: { fontSize: 14, color: "#e8dcc8", marginBottom: 4, fontStyle: "italic" },
-  relatMeta: { fontSize: 12, color: "#a89878", marginBottom: 5 },
-  relatResum: { fontSize: 12, color: "#a09078", lineHeight: 1.6, marginBottom: 6 },
+  relatMeta: { fontSize: 12, color: "#a09070", marginBottom: 5 },
+  relatResum: { fontSize: 12, color: "#aaa8a0", lineHeight: 1.6, marginBottom: 6 },
   relatBooks: { display: "flex", flexWrap: "wrap", gap: 4, marginTop: 4 },
-  relatBook: { fontSize: 10, color: "#c8a868", border: "1px solid #8899cc44", padding: "2px 7px", borderRadius: 2 },
+  relatBook: { fontSize: 10, color: "#c0a070", border: "1px solid #8899cc44", padding: "2px 7px", borderRadius: 2 },
   relatNoDisp: { fontSize: 10, color: "#c44", border: "1px solid #c4444433", padding: "2px 7px", borderRadius: 2, display: "inline-block", marginTop: 4 },
   univers: { display: "inline-block", fontSize: 9, color: "#d4783a99", border: "1px solid #d4783a22", padding: "1px 6px", marginLeft: 6, borderRadius: 2 },
   prestSection: { padding: "14px 16px 5px", borderBottom: "1px solid #1a2540" },
@@ -606,15 +558,15 @@ const S = {
   statGrid: { display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 10, marginBottom: 24 },
   statCard: { background: "#352a1c", border: "1px solid #1a2540", borderRadius: 4, padding: "14px 16px", cursor: "pointer" },
   statNum: { fontSize: 28, color: "#d4783a", fontWeight: "bold", lineHeight: 1 },
-  statLabel: { fontSize: 13, color: "#a89878", marginTop: 4 },
+  statLabel: { fontSize: 13, color: "#a09070", marginTop: 4 },
   modalOverlay: { position: "fixed", inset: 0, background: "rgba(0,0,0,0.88)", zIndex: 200, display: "flex", alignItems: "center", justifyContent: "center", padding: 20, overflowY: "auto" },
   modal: { background: "#352a1c", border: "1px solid #2a3a5a", borderRadius: 6, padding: 24, maxWidth: 480, width: "100%", maxHeight: "90vh", overflowY: "auto" },
   modalTitle: { fontSize: 16, color: "#d4783a", letterSpacing: 2, textTransform: "uppercase", marginBottom: 16, marginTop: 0 },
   modalRow: { fontSize: 15, color: "#aab0c0", marginBottom: 8, display: "flex", justifyContent: "space-between" },
   modalVal: { color: "#e8dcc8", fontWeight: "bold" },
-  modalClose: { width: "100%", marginTop: 8, padding: "10px", background: "none", border: "1px solid #2a3a5a", color: "#b8a888", cursor: "pointer", fontFamily: "Georgia, serif", fontSize: 12, borderRadius: 2 },
+  modalClose: { width: "100%", marginTop: 8, padding: "10px", background: "none", border: "1px solid #2a3a5a", color: "#b0a080", cursor: "pointer", fontFamily: "Georgia, serif", fontSize: 12, borderRadius: 2 },
   modalDivider: { borderTop: "1px solid #1a2540", margin: "14px 0" },
-  modalSmall: { fontSize: 10, color: "#a89878", textAlign: "center", marginTop: 8 },
+  modalSmall: { fontSize: 10, color: "#a09070", textAlign: "center", marginTop: 8 },
   formGroup: { marginBottom: 14 },
   formLabel: { fontSize: 12, color: "#d4783aaa", textTransform: "uppercase", letterSpacing: 1, display: "block", marginBottom: 4 },
   formInput: { width: "100%", background: "#2a1f14", border: "1px solid #2a3a5a", color: "#e8dcc8", padding: "8px 10px", fontSize: 15, fontFamily: "Georgia, serif", borderRadius: 2, boxSizing: "border-box", outline: "none" },
@@ -954,7 +906,7 @@ const FormNouLlibre = ({ onClose, onSaved }) => {
             <label style={S.formLabel}>Format</label>
             <div style={{ display: "flex", gap: 6 }}>
               {["paper","ebook"].map(f => (
-                <button key={f} style={{ flex:1, padding:"6px", background: form.format===f?"#d4783a22":"transparent", border:`1px solid ${form.format===f?"#d4783a44":"#4a3828"}`, color: form.format===f?"#d4783a":"#555", cursor:"pointer", fontSize:11, borderRadius:2, fontFamily:"Georgia, serif" }}
+                <button key={f} style={{ flex:1, padding:"6px", background: form.format===f?"#d4783a22":"transparent", border:`1px solid ${form.format===f?"#d4783a44":"#3a2818"}`, color: form.format===f?"#d4783a":"#555", cursor:"pointer", fontSize:11, borderRadius:2, fontFamily:"Georgia, serif" }}
                   onClick={() => set("format", f)}>{f==="paper"?"📚 Paper":"📱 eBook"}</button>
               ))}
             </div>
@@ -1130,20 +1082,8 @@ export default function Biblioteca() {
 
   useEffect(() => { loadEdicions(); }, [loadEdicions]);
   useEffect(() => {
-    document.body.style.background = "#2a1f14";
-    document.body.style.color = "#e8dcc8";
-    document.documentElement.style.background = "#2a1f14";
-    document.documentElement.style.colorScheme = "light";
-    // Injectar estil global per forçar mode clar
-    const style = document.createElement("style");
-    style.innerHTML = `
-      *, *::before, *::after { color-scheme: light !important; }
-      html, body { background: #2a1f14 !important; color: #e8dcc8 !important; }
-      @media (prefers-color-scheme: dark) {
-        html, body { background: #2a1f14 !important; color: #e8dcc8 !important; }
-      }
-    `;
-    document.head.appendChild(style);
+    document.body.style.setProperty('background', '#2a1f14', 'important');
+    document.body.style.setProperty('color', '#e8dcc8', 'important');
   }, []);
 
   // Stats
@@ -1646,14 +1586,14 @@ export default function Biblioteca() {
                 {[
                   {label:"📸 Sense preu", val:sensePreu.length, color: sensePreu.length>0?"#d4783a":"#6ec88e"},
                   {label:"📄 Sense pàgines", val:sensePagines.length, color: sensePagines.length>50?"#c44":"#d4783a"},
-                  {label:"🔤 Sense traductor", val:senseTraductor.length, color:"#c8a868"},
-                  {label:"🔢 Sense ISBN", val:senseIsbn.length, color:"#a89878"},
+                  {label:"🔤 Sense traductor", val:senseTraductor.length, color:"#c0a070"},
+                  {label:"🔢 Sense ISBN", val:senseIsbn.length, color:"#a09070"},
                   {label:"⚠️ ISBN duplicats", val:isbnDups.length, color: isbnDups.length>0?"#c44":"#6ec88e"},
                   {label:"💰 Venuts sense preu", val:estatRaro.length, color: estatRaro.length>0?"#c44":"#6ec88e"},
                 ].map(s => (
                   <div key={s.label} style={{background:"#1e1510", border:`1px solid ${s.color}44`, borderRadius:4, padding:"10px 12px"}}>
                     <div style={{fontSize:20, color:s.color, fontWeight:"bold"}}>{s.val}</div>
-                    <div style={{fontSize:11, color:"#a89878", marginTop:2}}>{s.label}</div>
+                    <div style={{fontSize:11, color:"#a09070", marginTop:2}}>{s.label}</div>
                   </div>
                 ))}
               </div>
@@ -1696,10 +1636,10 @@ export default function Biblioteca() {
       {showTour && (() => {
         const tourActual = TOUR_LECTURA[tourSeccio] || [];
         const titolsBD = edicions
-          .filter(e => e.autor_id === {NES:"AUT003",LAR:"AUT002",MAN:"AUT007",CHR:"AUT001"}[tourSeccio])
+          .filter(e => e.autor_id === {PKD:"AUT013",ASI:"AUT001",LEM:"AUT028",HER:"AUT024",CLA:"AUT010",TOL:"AUT050"}[tourSeccio])
           .map(e => (e.titulo_edicion||"").toLowerCase());
         const llegits = edicions
-          .filter(e => e.autor_id === {NES:"AUT003",LAR:"AUT002",MAN:"AUT007",CHR:"AUT001"}[tourSeccio] && e.llegit==="si")
+          .filter(e => e.autor_id === {PKD:"AUT013",ASI:"AUT001",LEM:"AUT028",HER:"AUT024",CLA:"AUT010",TOL:"AUT050"}[tourSeccio] && e.llegit==="si")
           .map(e => (e.titulo_edicion||"").toLowerCase());
 
         return (
@@ -1711,9 +1651,9 @@ export default function Biblioteca() {
               </div>
               {/* Selector secció */}
               <div style={{ display:"flex", gap:6, marginBottom:16 }}>
-                {[{id:"NES",label:"Nesbø"},{id:"LAR",label:"Larsson"},{id:"MAN",label:"Mankell"},{id:"CHR",label:"Christie"}].map(s => (
+                {[{id:"PKD",label:"Dick"},{id:"ASI",label:"Asimov"},{id:"LEM",label:"Lem"},{id:"HER",label:"Herbert"},{id:"CLA",label:"Clarke"},{id:"TOL",label:"Tolkien"}].map(s => (
                   <button key={s.id}
-                    style={{ flex:1, padding:"6px", background:tourSeccio===s.id?"#d4783a18":"transparent", border:`1px solid ${tourSeccio===s.id?"#d4783a55":"#4a3828"}`, color:tourSeccio===s.id?"#d4783a":"#555", cursor:"pointer", fontSize:12, fontFamily:"Georgia, serif", borderRadius:2 }}
+                    style={{ flex:1, padding:"6px", background:tourSeccio===s.id?"#d4783a18":"transparent", border:`1px solid ${tourSeccio===s.id?"#d4783a55":"#3a2818"}`, color:tourSeccio===s.id?"#d4783a":"#555", cursor:"pointer", fontSize:12, fontFamily:"Georgia, serif", borderRadius:2 }}
                     onClick={()=>setTourSeccio(s.id)}>{s.label}</button>
                 ))}
               </div>
@@ -1791,7 +1731,7 @@ export default function Biblioteca() {
                 onKeyDown={e => { e.stopPropagation(); if (e.key==="Enter") saveNouPreu(ed.edicion_id, val); }}
                 style={{ width:65, background:"#2a1f14", border:"1px solid #1e3060", color:"#e8dcc8", padding:"4px 6px", fontSize:11, fontFamily:"Georgia, serif", borderRadius:2, textAlign:"right" }} />
               <button
-                style={{ padding:"3px 8px", background: val?"#d4783a22":"transparent", border:`1px solid ${val?"#d4783a44":"#4a3828"}`, color:val?"#d4783a":"#333", cursor:"pointer", fontSize:11, borderRadius:2, flexShrink:0 }}
+                style={{ padding:"3px 8px", background: val?"#d4783a22":"transparent", border:`1px solid ${val?"#d4783a44":"#3a2818"}`, color:val?"#d4783a":"#333", cursor:"pointer", fontSize:11, borderRadius:2, flexShrink:0 }}
                 onClick={() => saveNouPreu(ed.edicion_id, val)}
                 disabled={saving||!val}>
                 {saving ? "…" : "✓"}
@@ -1857,7 +1797,7 @@ export default function Biblioteca() {
             <div style={S.modalDivider}/>
             <div style={S.modalSmall}>Fet amb ❤️ · React + Supabase + Vercel</div>
             <button style={{...S.modalClose, color: "#d4783a66", borderColor: "#d4783a22"}} onClick={exportCSV}>📤 Exportar CSV</button>
-            <button style={{...S.modalClose, color: "#c8a868", borderColor: "#8899cc44", marginBottom:4}} onClick={() => { setShowAbout(false); setShowTour(true); }}>🗺 Tour de lectura</button>
+            <button style={{...S.modalClose, color: "#c0a070", borderColor: "#8899cc44", marginBottom:4}} onClick={() => { setShowAbout(false); setShowTour(true); }}>🗺 Tour de lectura</button>
             {autenticat && <button style={{...S.modalClose, color: "#d4783a", borderColor: "#d4783a44", marginBottom:4}} onClick={() => { setShowAbout(false); setShowRevisioPreus(true); }}>💰 Revisar preus</button>}
             {autenticat && <button style={{...S.modalClose, color: "#dd6644", borderColor: "#dd664444", marginBottom:4}} onClick={() => { setShowAbout(false); setShowManteniment(true); }}>🔧 Manteniment BD</button>}
             <button style={S.modalClose} onClick={() => setShowAbout(false)}>Tancar</button>
@@ -1978,7 +1918,7 @@ export default function Biblioteca() {
           {/* Selector secció — dropdown */}
           <div data-seccio-menu style={{ position:"relative", flexShrink:0, zIndex:500 }}>
             <button
-              style={{ display:"flex", alignItems:"center", gap:6, padding:"6px 12px", background: seccio!=="ALL" ? "#d4783a18" : "transparent", border:`1px solid ${seccio!=="ALL" ? "#d4783a55" : "#4a3828"}`, color: seccio!=="ALL" ? "#d4783a" : "#666", cursor:"pointer", fontSize:11, fontFamily:"Georgia, serif", borderRadius:2, whiteSpace:"nowrap" }}
+              style={{ display:"flex", alignItems:"center", gap:6, padding:"6px 12px", background: seccio!=="ALL" ? "#d4783a18" : "transparent", border:`1px solid ${seccio!=="ALL" ? "#d4783a55" : "#3a2818"}`, color: seccio!=="ALL" ? "#d4783a" : "#666", cursor:"pointer", fontSize:11, fontFamily:"Georgia, serif", borderRadius:2, whiteSpace:"nowrap" }}
               onClick={() => setShowSeccioMenu(m => !m)}>
               {getSeccioLabel(seccio)}
               <span style={{ fontSize:9, opacity:0.6 }}>{showSeccioMenu ? "▲" : "▼"}</span>
@@ -2023,7 +1963,7 @@ export default function Biblioteca() {
             const active = filtreExtra?.camp==="llegit_rapide" && filtreExtra?.valor===f.val;
             return (
               <button key={f.val} title={f.title}
-                style={{ padding:"4px 8px", background: active ? "#d4783a18" : "transparent", border:`1px solid ${active ? "#d4783a55" : "#4a3828"}`, color: active ? "#d4783a" : "#555", cursor:"pointer", fontSize:13, borderRadius:2, flexShrink:0 }}
+                style={{ padding:"4px 8px", background: active ? "#d4783a18" : "transparent", border:`1px solid ${active ? "#d4783a55" : "#3a2818"}`, color: active ? "#d4783a" : "#555", cursor:"pointer", fontSize:13, borderRadius:2, flexShrink:0 }}
                 onClick={() => {
                   if (active) setFiltreExtra(null);
                   else { setFiltreExtra({camp:"llegit_rapide", valor:f.val}); setSeccio("ALL"); }
@@ -2131,7 +2071,7 @@ export default function Biblioteca() {
                 {getCover(activeEd) !== COVER_FALLBACK && <button style={S.coverBtn("#6ec88e")} onClick={() => autenticat ? handleConfirmCover(activeEd.edicion_id) : null}>✓ OK</button>}
                 {autenticat && <>
                   {getCover(activeEd) !== COVER_FALLBACK && <button style={S.coverBtn("#c44")} onClick={() => handleRejectCover(activeEd.edicion_id)}>✕ Incorrecta</button>}
-                  <button style={S.coverBtn("#c8a868")} onClick={() => handleAutoFindCover(activeEd)} disabled={autoFindLoading}>{autoFindLoading?"⏳":"🔎 Auto"}</button>
+                  <button style={S.coverBtn("#c0a070")} onClick={() => handleAutoFindCover(activeEd)} disabled={autoFindLoading}>{autoFindLoading?"⏳":"🔎 Auto"}</button>
                   <button style={S.coverBtn("#7799aa")} onClick={() => buscarPortada(activeEd)}>🌐 Google</button>
                   <button style={S.coverBtn("#d4783a")} onClick={() => setShowCoverInput(!showCoverInput)}>🔗 URL</button>
                 </>}
@@ -2170,7 +2110,7 @@ export default function Biblioteca() {
                   <div style={{fontSize:14, color:"#bbb", lineHeight:1.6, marginBottom:10}}>{autoResumPreview}</div>
                   <div style={{display:"flex", gap:8}}>
                     <button style={{flex:1, padding:"8px", background:"#d4783a22", border:"1px solid #d4783a44", color:"#d4783a", cursor:"pointer", fontSize:13, borderRadius:2, fontFamily:"Georgia, serif"}} onClick={() => handleAcceptResum(activeEd.edicion_id, autoResumPreview)}>✓ Acceptar</button>
-                    <button style={{flex:1, padding:"8px", background:"none", border:"1px solid #2a3a5a", color:"#a89878", cursor:"pointer", fontSize:13, borderRadius:2, fontFamily:"Georgia, serif"}} onClick={() => setShowResumPreview(false)}>✕ Descartar</button>
+                    <button style={{flex:1, padding:"8px", background:"none", border:"1px solid #2a3a5a", color:"#a09070", cursor:"pointer", fontSize:13, borderRadius:2, fontFamily:"Georgia, serif"}} onClick={() => setShowResumPreview(false)}>✕ Descartar</button>
                   </div>
                 </div>
               )}
@@ -2217,7 +2157,7 @@ export default function Biblioteca() {
               {(activeEd.edicio_numero||activeEd.edicio_especial||activeEd.numeracio) && (
                 <div style={{display:"flex", gap:6, flexWrap:"wrap", marginBottom:8}}>
                   {activeEd.edicio_numero && <span style={{fontSize:12, background:"#d4783a18", border:"1px solid #d4783a33", color:"#d4783a", padding:"2px 8px", borderRadius:2}}>#{activeEd.edicio_numero}ª edició</span>}
-                  {activeEd.edicio_especial && <span style={{fontSize:12, background:"#8899cc18", border:"1px solid #8899cc33", color:"#c8a868", padding:"2px 8px", borderRadius:2}}>✦ {activeEd.edicio_especial}</span>}
+                  {activeEd.edicio_especial && <span style={{fontSize:12, background:"#8899cc18", border:"1px solid #8899cc33", color:"#c0a070", padding:"2px 8px", borderRadius:2}}>✦ {activeEd.edicio_especial}</span>}
                   {activeEd.numeracio && <span style={{fontSize:12, background:"#d4783a18", border:"1px solid #d4783a33", color:"#d4783a99", padding:"2px 8px", borderRadius:2}}>Nº {activeEd.numeracio}</span>}
                 </div>
               )}
@@ -2227,12 +2167,12 @@ export default function Biblioteca() {
                 <div>
                   <div style={{fontSize:12, color:"#d4783acc", letterSpacing:1, textTransform:"uppercase", marginBottom:4}}>Valor mercat</div>
                   <div style={{fontSize:28, color:"#d4783a", fontWeight:"bold"}}>{activeEd.preu_mercat?`${activeEd.preu_mercat}€`:"—"}</div>
-                  {activeEd.preu_mercat_anterior && <div style={{fontSize:12, color:"#a89878"}}>Anterior: {activeEd.preu_mercat_anterior}€</div>}
+                  {activeEd.preu_mercat_anterior && <div style={{fontSize:12, color:"#a09070"}}>Anterior: {activeEd.preu_mercat_anterior}€</div>}
                 </div>
                 <div style={{display:"flex", flexDirection:"column", gap:8}}>
                   <button style={{padding:"10px 16px", background:"#d4783a22", border:"1px solid #d4783a44", color:"#d4783a", cursor:"pointer", borderRadius:4, fontFamily:"Georgia, serif", fontSize:14}}
                     onClick={() => requireAuth(() => setShowRevaluar(true))}>💰 Revaluar</button>
-                  <button style={{padding:"10px 16px", background:"none", border:"1px solid #2a3a5a", color:"#b8a888", cursor:"pointer", borderRadius:4, fontFamily:"Georgia, serif", fontSize:14}}
+                  <button style={{padding:"10px 16px", background:"none", border:"1px solid #2a3a5a", color:"#b0a080", cursor:"pointer", borderRadius:4, fontFamily:"Georgia, serif", fontSize:14}}
                     onClick={() => setShowPreuMenu(!showPreuMenu)}>🔍 Buscar preu</button>
                 </div>
               </div>
@@ -2242,14 +2182,14 @@ export default function Biblioteca() {
                     style={{flex:1, background:"#2a1f14", border:"1px solid #2a3a5a", color:"#e8dcc8", padding:"8px 12px", fontSize:14, fontFamily:"Georgia, serif", borderRadius:2}} />
                   <button style={{padding:"8px 14px", background:"#d4783a22", border:"1px solid #d4783a44", color:"#d4783a", cursor:"pointer", borderRadius:2, fontFamily:"Georgia, serif"}}
                     onClick={() => handleRevaluar(activeEd.edicion_id, nouPreu)} disabled={savingPreu}>{savingPreu?"...":"✓"}</button>
-                  <button style={{padding:"8px 12px", background:"none", border:"1px solid #2a3a5a", color:"#a89878", cursor:"pointer", borderRadius:2}}
+                  <button style={{padding:"8px 12px", background:"none", border:"1px solid #2a3a5a", color:"#a09070", cursor:"pointer", borderRadius:2}}
                     onClick={() => setShowRevaluar(false)}>✕</button>
                 </div>
               )}
               {showPreuMenu && (
                 <div style={{display:"flex", gap:6, flexWrap:"wrap", marginBottom:12}}>
                   {[{label:"📚 Iberlibro",plat:"iberlibro"},{label:"🏷️ Wallapop",plat:"wallapop"},{label:"👗 Vinted",plat:"vinted"},{label:"📦 Amazon",plat:"amazon"}].map(p => (
-                    <button key={p.plat} style={{padding:"8px 12px", background:"#352a1c", border:"1px solid #2a3a5a", color:"#b8a888", cursor:"pointer", fontSize:13, borderRadius:2, fontFamily:"Georgia, serif"}}
+                    <button key={p.plat} style={{padding:"8px 12px", background:"#352a1c", border:"1px solid #2a3a5a", color:"#b0a080", cursor:"pointer", fontSize:13, borderRadius:2, fontFamily:"Georgia, serif"}}
                       onClick={() => buscarPreu(activeEd, p.plat)}>{p.label}</button>
                   ))}
                 </div>
@@ -2355,13 +2295,13 @@ export default function Biblioteca() {
               {[
                 {val:"actiu",   label:"✓ Actiu",    color:"#6ec88e"},
                 {val:"venut",   label:"💰 Venut",    color:"#d4783a"},
-                {val:"regalat", label:"🎁 Regalat",  color:"#c8a868"},
+                {val:"regalat", label:"🎁 Regalat",  color:"#c0a070"},
                 {val:"perdut",  label:"✕ Perdut",    color:"#c44"},
               ].map(e => {
                 const active = (activeEd.estat_exemplar||"actiu") === e.val;
                 return (
                   <button key={e.val}
-                    style={{ padding:"7px 14px", background:active?e.color+"22":"transparent", border:`1px solid ${active?e.color+"66":"#4a3828"}`, color:active?e.color:"#555", cursor:"pointer", fontSize:11, borderRadius:2, fontFamily:"Georgia, serif" }}
+                    style={{ padding:"7px 14px", background:active?e.color+"22":"transparent", border:`1px solid ${active?e.color+"66":"#3a2818"}`, color:active?e.color:"#555", cursor:"pointer", fontSize:11, borderRadius:2, fontFamily:"Georgia, serif" }}
                     onClick={() => autenticat && supaUpdate("edicion","edicion_id",activeEd.edicion_id,{estat_exemplar:e.val}).then(()=>setEdicions(prev=>prev.map(ed=>ed.edicion_id===activeEd.edicion_id?{...ed,estat_exemplar:e.val}:ed)))}>
                     {e.label}
                   </button>
@@ -2388,7 +2328,7 @@ export default function Biblioteca() {
               {isPrimeraEdicio(activeEd) && <span style={{ fontSize:9, background:"#d4783a", color:"#2a1f14", padding:"1px 5px", fontWeight:"bold", marginLeft:6 }}>1ª ED</span>}
             </div>
             <button
-              style={{ padding:"4px 12px", background: activeEd.primera_edicio===true?"#d4783a22": activeEd.primera_edicio===false?"#c4444422":"transparent", border:`1px solid ${activeEd.primera_edicio===true?"#d4783a55":activeEd.primera_edicio===false?"#c4444444":"#4a3828"}`, color: activeEd.primera_edicio===true?"#d4783a":activeEd.primera_edicio===false?"#c44":"#555", cursor:"pointer", fontSize:10, borderRadius:2, fontFamily:"Georgia, serif" }}
+              style={{ padding:"4px 12px", background: activeEd.primera_edicio===true?"#d4783a22": activeEd.primera_edicio===false?"#c4444422":"transparent", border:`1px solid ${activeEd.primera_edicio===true?"#d4783a55":activeEd.primera_edicio===false?"#c4444444":"#3a2818"}`, color: activeEd.primera_edicio===true?"#d4783a":activeEd.primera_edicio===false?"#c44":"#555", cursor:"pointer", fontSize:10, borderRadius:2, fontFamily:"Georgia, serif" }}
               onClick={() => {
                 if (!autenticat) return;
                 // Cicle: null→true→false→null
@@ -2421,7 +2361,7 @@ export default function Biblioteca() {
       {view === "prestatge" && <>
         <div style={{...S.statsBar, display:"flex", justifyContent:"space-between", alignItems:"center"}}>
           <span>{edicions.length} llibres per prestatge</span>
-          <span style={{ fontSize:10, color:"#a89878" }}>● color = saga</span>
+          <span style={{ fontSize:10, color:"#a09070" }}>● color = saga</span>
         </div>
         {loading ? <div style={S.loader}>CARREGANT · · ·</div>
           : Object.entries(prestatge).map(([prefix, eds]) => (
@@ -2547,7 +2487,7 @@ export default function Biblioteca() {
               <input style={{...S.input, marginBottom:8}} placeholder="Notes (edició, col·lecció...)" value={wishlistForm.notes} onChange={e => setWishlistForm(f=>({...f,notes:e.target.value}))} />
               <div style={{ display:"flex", gap:6, marginBottom:8 }}>
                 {[{v:1,label:"🔴 Alta"},{v:2,label:"🟡 Normal"},{v:3,label:"🟢 Baixa"}].map(p => (
-                  <button key={p.v} style={{ flex:1, padding:"5px", background:wishlistForm.prioritat===p.v?"#d4783a22":"transparent", border:`1px solid ${wishlistForm.prioritat===p.v?"#d4783a44":"#4a3828"}`, color:wishlistForm.prioritat===p.v?"#d4783a":"#555", cursor:"pointer", fontSize:10, borderRadius:2, fontFamily:"Georgia, serif" }}
+                  <button key={p.v} style={{ flex:1, padding:"5px", background:wishlistForm.prioritat===p.v?"#d4783a22":"transparent", border:`1px solid ${wishlistForm.prioritat===p.v?"#d4783a44":"#3a2818"}`, color:wishlistForm.prioritat===p.v?"#d4783a":"#555", cursor:"pointer", fontSize:10, borderRadius:2, fontFamily:"Georgia, serif" }}
                     onClick={() => setWishlistForm(f=>({...f,prioritat:p.v}))}>{p.label}</button>
                 ))}
               </div>
@@ -2579,7 +2519,7 @@ export default function Biblioteca() {
                         <span style={{ fontSize:9, color:prioritatColor, border:`1px solid ${prioritatColor}44`, padding:"1px 6px", borderRadius:2 }}>
                           {w.prioritat===1?"🔴 Alta":w.prioritat===3?"🟢 Baixa":"🟡 Normal"}
                         </span>
-                        <button style={{ background:"none", border:"1px solid #8899cc33", color:"#c8a868", cursor:"pointer", fontSize:9, padding:"2px 6px", borderRadius:2, fontFamily:"Georgia, serif" }}
+                        <button style={{ background:"none", border:"1px solid #8899cc33", color:"#c0a070", cursor:"pointer", fontSize:9, padding:"2px 6px", borderRadius:2, fontFamily:"Georgia, serif" }}
                           onClick={() => setWishlistBuscarId(showBuscar ? null : w.wishlist_id)}>🔍 Buscar</button>
                         <button style={{ background:"none", border:"none", color:"#c44", cursor:"pointer", fontSize:10 }}
                           onClick={() => handleDeleteWishlist(w.wishlist_id)}>🗑</button>
@@ -2621,7 +2561,7 @@ export default function Biblioteca() {
               {stats.totalMercat > 0 && <div style={S.statCard}><div style={S.statNum}>{stats.totalMercat.toFixed(0)}€</div><div style={S.statLabel}>💰 Valor mercat</div></div>}
               {stats.totalEbooks > 0 && <div style={{...S.statCard, border: "1px solid #4488cc33"}} onClick={() => filtrarPerStat("format","ebook")}><div style={{...S.statNum, color:"#4488cc"}}>{stats.totalEbooks}</div><div style={S.statLabel}>📱 eBooks</div></div>}
               {stats.venuts > 0 && <div style={{...S.statCard, border:"1px solid #d4783a33"}}><div style={{...S.statNum, color:"#d4783a"}}>{stats.venuts}</div><div style={S.statLabel}>💰 Venuts</div></div>}
-              {stats.regalats > 0 && <div style={{...S.statCard, border:"1px solid #8899cc33"}}><div style={{...S.statNum, color:"#c8a868"}}>{stats.regalats}</div><div style={S.statLabel}>🎁 Regalats</div></div>}
+              {stats.regalats > 0 && <div style={{...S.statCard, border:"1px solid #8899cc33"}}><div style={{...S.statNum, color:"#c0a070"}}>{stats.regalats}</div><div style={S.statLabel}>🎁 Regalats</div></div>}
               {stats.totalVenut > 0 && <div style={{...S.statCard, border:"1px solid #d4783a33"}}><div style={{...S.statNum, color:"#d4783a"}}>{stats.totalVenut.toFixed(0)}€</div><div style={S.statLabel}>💸 Recaptat vendes</div></div>}
             </div>
 
