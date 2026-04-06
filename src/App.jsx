@@ -291,28 +291,32 @@ const ordenarBooks = (books, ordre) => {
   });
 };
 
-// ── Generar resum IA via Claude API ───────────────────────
+// ── Generar resum IA via /api/claude (Vercel Edge proxy) ──
 const generarResumIA = async (titol, autor, serie, numSerie) => {
-  const context = [
-    titol && `Títol: ${titol}`,
+  const ctx = [
+    titol && `Titol: ${titol}`,
     autor && `Autor/a: ${autor}`,
-    serie && `Sèrie: ${serie}${numSerie ? ` (núm. ${numSerie})` : ""}`,
+    serie && `Serie: ${serie}${numSerie ? ` (num. ${numSerie})` : ""}`,
   ].filter(Boolean).join("\n");
 
-  const prompt = `Ets un expert en novel·la negra i literatura de gènere. Escriu un resum breu (màxim 3 frases, uns 80-100 paraules) d'aquest llibre en català. Ha de ser informatiu, sense revelar el desenllaç, i capturar l'atmosfera noir. Respon NOMÉS amb el resum, sense títol ni explicacions addicionals.\n\n${context}`;
+  const prompt = `Ets un expert en novella negra. Escriu un resum breu (max 3 frases, ~80 paraules) d'aquest llibre en catala. Informatiu, sense revelar el desenllas, atmosfera noir. Respon NOMES amb el resum.\n\n${ctx}`;
 
-  const res = await fetch("https://api.anthropic.com/v1/messages", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      model: "claude-sonnet-4-20250514",
-      max_tokens: 1000,
-      messages: [{ role: "user", content: prompt }],
-    }),
-  });
-  const data = await res.json();
-  return data.content?.[0]?.text?.trim() || null;
+  try {
+    const res = await fetch("/api/claude", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-20250514",
+        max_tokens: 300,
+        messages: [{ role: "user", content: prompt }],
+      }),
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data.content?.[0]?.text?.trim() || null;
+  } catch { return null; }
 };
+
 
 export default function App() {
   const [logat, setLogat]       = useState(false);
@@ -388,11 +392,11 @@ export default function App() {
   const llegits = books.filter(b=>b.estat==="Llegit").length;
   const llegint = books.filter(b=>b.estat==="Llegint").length;
 
-  const formBuit = {titol:"",autor:"",any_publicacio:"",seccio:"Negre",estat:"No llegit",puntuacio:null,isbn:"",format:"Paper",notes:"",resum:"",foto_url:"",serie:"",num_serie:""};
+  const formBuit = {titol:"",autor:"",any_publicacio:"",seccio:"Negre",estat:"No llegit",puntuacio:null,isbn:"",format:"Paper",notes:"",resum:"",foto_url:"",serie:"",num_serie:"",diposit_legal:""};
 
   const obrirAfegir = () => { setForm(formBuit); setLookupStatus(null); setModal("add"); };
   const obrirDetall = (b) => { setSelected(b); setShowUrlInput(false); setUrlInputVal(""); setModal("detail"); };
-  const obrirEditar = () => { setForm({...selected, num_serie: selected.num_serie||""}); setLookupStatus(null); setModal("edit"); };
+  const obrirEditar = () => { setForm({...selected, num_serie: selected.num_serie||"", diposit_legal: selected.diposit_legal||""}); setLookupStatus(null); setModal("edit"); };
   const tancar = () => { stopScanner(); setModal(null); setSelected(null); setForm({}); setLookupStatus(null); setShowUrlInput(false); };
 
   // ── ISBN Lookup ───────────────────────────────────────────
@@ -401,25 +405,49 @@ export default function App() {
     if (!isbn) return;
     setLookupStatus(null); setLookupMsg("Buscant...");
 
+    // Helper: buscar sèrie via OpenLibrary Works API
+    const buscarSerie = async (workKey) => {
+      if (!workKey) return { serie:"", numSerie:"" };
+      try {
+        const r = await fetch(`https://openlibrary.org${workKey}/editions.json?limit=1`);
+        const d = await r.json();
+        // Buscar sèrie via /series
+        const r2 = await fetch(`https://openlibrary.org${workKey}.json`);
+        const d2 = await r2.json();
+        const serie = d2.series?.[0] || d2.subject_places?.[0] || "";
+        const numSerie = d2.series_statement?.match(/\d+/)?.[0] || "";
+        return { serie, numSerie };
+      } catch { return { serie:"", numSerie:"" }; }
+    };
+
     // 1) Google Books
     try {
       const res  = await fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`);
       const data = await res.json();
       if (data.items?.length) {
-        const info = data.items[0].volumeInfo;
-        // Intentem extreure sèrie del títol (ex: "Wallander 3: El guerrer blanc")
-        const serieMatch = info.title?.match(/^(.+?)\s*[\d]+[:·]/);
-        const serie = info.seriesInfo?.bookDisplayNumber
-          ? info.seriesInfo.canonicalVolumeLink
-          : (serieMatch?.[1] || "");
-        const numSerie = info.seriesInfo?.bookDisplayNumber || "";
+        const info    = data.items[0].volumeInfo;
+        const selfLink = data.items[0].selfLink;
+        // Sèrie des de Google Books (volumeInfo.seriesInfo)
+        let serie    = info.seriesInfo?.bookSeries?.[0]?.seriesId ? "" : "";
+        let numSerie = "";
+        if (info.seriesInfo) {
+          // Fetch extra per sèrie
+          try {
+            const sr = await fetch(`${selfLink}?fields=volumeInfo/seriesInfo`);
+            const sd = await sr.json();
+            serie    = sd.volumeInfo?.seriesInfo?.bookSeries?.[0]?.seriesBookType === "IN_SERIES"
+                     ? sd.volumeInfo?.seriesInfo?.bookSeries?.[0]?.seriesId || ""
+                     : "";
+            numSerie = sd.volumeInfo?.seriesInfo?.bookDisplayNumber || "";
+          } catch {}
+        }
         setForm(f=>({
           ...f, isbn,
           titol:          info.title                         || f.titol,
           autor:          info.authors?.[0]                  || f.autor,
           any_publicacio: info.publishedDate?.substring(0,4) || f.any_publicacio,
           resum:          info.description?.substring(0,400) || f.resum,
-          serie:          serie || f.serie,
+          serie:          serie    || f.serie,
           num_serie:      numSerie || f.num_serie,
         }));
         setLookupStatus("ok"); setLookupMsg(`Google Books: ${info.title}`);
@@ -427,17 +455,21 @@ export default function App() {
       }
     } catch {}
 
-    // 2) OpenLibrary
+    // 2) OpenLibrary amb sèries via Works API
     try {
       const res  = await fetch(`https://openlibrary.org/api/books?bibkeys=ISBN:${isbn}&format=json&jscmd=data`);
       const data = await res.json();
       const key  = `ISBN:${isbn}`;
       if (data[key]) {
-        const info  = data[key];
-        const autor = info.authors?.[0]?.name || "";
-        const any   = info.publish_date?.match(/\d{4}/)?.[0] || "";
-        const resum = typeof info.excerpts?.[0]?.text === "string" ? info.excerpts[0].text.substring(0,400) : "";
-        const serie = info.subjects?.find(s=>s.name?.toLowerCase().includes("series"))?.name || "";
+        const info     = data[key];
+        const autor    = info.authors?.[0]?.name || "";
+        const any      = info.publish_date?.match(/\d{4}/)?.[0] || "";
+        const resum    = typeof info.excerpts?.[0]?.text === "string" ? info.excerpts[0].text.substring(0,400) : "";
+        const workKey  = info.works?.[0]?.key || "";
+
+        // Buscar sèrie via Works API
+        const { serie, numSerie } = await buscarSerie(workKey);
+
         setForm(f=>({
           ...f, isbn,
           titol:          info.title || f.titol,
@@ -445,6 +477,7 @@ export default function App() {
           any_publicacio: any        || f.any_publicacio,
           resum:          resum      || f.resum,
           serie:          serie      || f.serie,
+          num_serie:      numSerie   || f.num_serie,
         }));
         setLookupStatus("ok"); setLookupMsg(`OpenLibrary: ${info.title}`);
         return;
@@ -601,6 +634,7 @@ export default function App() {
       foto_url:form.foto_url?.trim()||null,
       serie:form.serie?.trim()||null,
       num_serie:form.num_serie?parseInt(form.num_serie):null,
+      diposit_legal:form.diposit_legal?.trim()||null,
     };
     if (modal==="add") {
       if (payload.isbn) {
@@ -671,6 +705,11 @@ export default function App() {
           </>
         )}
         <input ref={isbnInputRef} type="file" accept="image/*" capture="environment" style={{display:"none"}} onChange={handleIsbnPhoto}/>
+      </div>
+
+      <div className="form-group">
+        <label className="form-label">Dipòsit legal <span style={{color:"var(--text-muted)",fontWeight:400}}>(si no té ISBN)</span></label>
+        <input className="form-input" value={form.diposit_legal||""} onChange={e=>setForm(f=>({...f,diposit_legal:e.target.value}))} placeholder="Ex: B-12345-2003"/>
       </div>
 
       <div className="form-group"><label className="form-label">Títol *</label><input className="form-input" value={form.titol||""} onChange={e=>setForm(f=>({...f,titol:e.target.value}))} placeholder="Títol del llibre"/></div>
@@ -771,6 +810,7 @@ export default function App() {
           <span className="detail-tag">{b.format}</span>
           <span className="detail-tag" style={{color:ec,borderColor:ec}}>{b.estat}</span>
           {b.isbn&&<span className="detail-tag">ISBN {b.isbn}</span>}
+          {!b.isbn&&b.diposit_legal&&<span className="detail-tag">DL {b.diposit_legal}</span>}
         </div>
         {b.puntuacio&&<div className="detail-stars"><Stars n={b.puntuacio}/></div>}
 
@@ -903,7 +943,7 @@ export default function App() {
         {showDiag && (() => {
           // Càlculs
           const sensePor  = books.filter(b => !b.foto_url && !b.isbn);
-          const senseIsbn = books.filter(b => !b.isbn);
+          const senseIsbn = books.filter(b => !b.isbn && !b.diposit_legal);
           const senseRes  = books.filter(b => !b.resum);
           // Duplicats per ISBN
           const isbnCount = {};
