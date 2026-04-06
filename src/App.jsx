@@ -7,9 +7,19 @@ const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // ── Constants ─────────────────────────────────────────────
-const SECCIONS = ["Negre", "Policial", "Thriller", "Nòrdic", "Històric", "Altres"];
-const ESTATS   = ["Llegit", "Llegint", "Pendent", "No llegit"];
-const FORMATS  = ["Paper", "eBook", "Audiollibre"];
+const SECCIONS   = ["Negre", "Policial", "Thriller", "Nòrdic", "Històric", "Altres"];
+const ESTATS     = ["Llegit", "Llegint", "Pendent", "No llegit"];
+const FORMATS    = ["Paper", "eBook", "Audiollibre"];
+const ORDRES     = [
+  { valor: "titol_asc",      label: "Títol A→Z" },
+  { valor: "titol_desc",     label: "Títol Z→A" },
+  { valor: "autor_asc",      label: "Autor A→Z" },
+  { valor: "autor_desc",     label: "Autor Z→A" },
+  { valor: "any_desc",       label: "Any ↓" },
+  { valor: "any_asc",        label: "Any ↑" },
+  { valor: "puntuacio_desc", label: "Puntuació ↓" },
+  { valor: "puntuacio_asc",  label: "Puntuació ↑" },
+];
 
 const ESTAT_COLORS = {
   "Llegit":    "#c8a96e",
@@ -18,16 +28,6 @@ const ESTAT_COLORS = {
   "No llegit": "#5a5a5a",
 };
 
-const SECCIO_COLORS = {
-  "Negre":    "#1a1a2e",
-  "Policial": "#2d2d44",
-  "Thriller": "#3d1a1a",
-  "Nòrdic":   "#1a2d3d",
-  "Històric": "#2d2010",
-  "Altres":   "#2a2a2a",
-};
-
-// ── Portada via ISBN ──────────────────────────────────────
 const getPortadaUrl = (isbn) =>
   isbn ? `https://covers.openlibrary.org/b/isbn/${isbn}-M.jpg` : null;
 
@@ -148,19 +148,24 @@ const styles = `
     font-weight: 500;
   }
 
-  /* Filtre secció */
-  .seccio-select {
+  /* Fila filtres inferiors */
+  .filters-row {
+    display: flex;
+    gap: 8px;
+  }
+  .filter-select {
+    flex: 1;
     background: var(--bg3);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    padding: 7px 12px;
+    padding: 7px 10px;
     color: var(--text);
     font-size: 13px;
-    width: 100%;
     outline: none;
     cursor: pointer;
+    min-width: 0;
   }
-  .seccio-select:focus { border-color: var(--gold-dim); }
+  .filter-select:focus { border-color: var(--gold-dim); }
 
   /* Stats bar */
   .stats-bar {
@@ -220,6 +225,7 @@ const styles = `
     display: flex; align-items: center; justify-content: center;
     font-size: 22px;
     color: var(--text-muted);
+    background: var(--bg3);
   }
 
   .book-info { flex: 1; min-width: 0; }
@@ -263,6 +269,13 @@ const styles = `
     border-radius: 10px;
   }
   .stars { color: var(--gold); font-size: 11px; letter-spacing: 1px; }
+
+  /* Resultat count */
+  .results-count {
+    padding: 6px 16px 0;
+    font-size: 11px;
+    color: var(--text-muted);
+  }
 
   /* Empty state */
   .empty {
@@ -484,26 +497,48 @@ const Stars = ({ n }) => {
   return <span className="stars">{"★".repeat(n)}{"☆".repeat(5 - n)}</span>;
 };
 
+// ── Ordenació ─────────────────────────────────────────────
+const ordenarBooks = (books, ordre) => {
+  const [camp, dir] = ordre.split("_");
+  return [...books].sort((a, b) => {
+    let va = a[camp === "titol" ? "titol" : camp === "autor" ? "autor" : camp === "any" ? "any_publicacio" : "puntuacio"];
+    let vb = b[camp === "titol" ? "titol" : camp === "autor" ? "autor" : camp === "any" ? "any_publicacio" : "puntuacio"];
+
+    // Nulls sempre al final
+    if (va == null && vb == null) return 0;
+    if (va == null) return 1;
+    if (vb == null) return -1;
+
+    if (typeof va === "string") va = va.toLowerCase();
+    if (typeof vb === "string") vb = vb.toLowerCase();
+
+    if (va < vb) return dir === "asc" ? -1 : 1;
+    if (va > vb) return dir === "asc" ? 1 : -1;
+    return 0;
+  });
+};
+
 // ── Component principal ───────────────────────────────────
 export default function App() {
-  const [books, setBooks]           = useState([]);
-  const [loading, setLoading]       = useState(true);
-  const [cerca, setCerca]           = useState("");
+  const [books, setBooks]             = useState([]);
+  const [loading, setLoading]         = useState(true);
+  const [cerca, setCerca]             = useState("");
   const [filtreEstat, setFiltreEstat] = useState("Tots");
   const [filtreSeccio, setFiltreSeccio] = useState("Totes");
-  const [modal, setModal]           = useState(null); // null | 'add' | 'edit' | 'detail'
-  const [selected, setSelected]     = useState(null);
-  const [form, setForm]             = useState({});
-  const [saving, setSaving]         = useState(false);
-  const [toast, setToast]           = useState(null);
-  const [confirm, setConfirm]       = useState(false);
+  const [ordre, setOrdre]             = useState("titol_asc");
+  const [modal, setModal]             = useState(null);
+  const [selected, setSelected]       = useState(null);
+  const [form, setForm]               = useState({});
+  const [saving, setSaving]           = useState(false);
+  const [toast, setToast]             = useState(null);
+  const [confirm, setConfirm]         = useState(false);
+  const [portadaError, setPortadaError] = useState(false);
 
   // Carregar llibres
   const fetchBooks = useCallback(async () => {
     const { data, error } = await supabase
       .from("books")
-      .select("*")
-      .order("titol", { ascending: true });
+      .select("*");
     if (!error) setBooks(data || []);
     setLoading(false);
   }, []);
@@ -515,54 +550,41 @@ export default function App() {
     setTimeout(() => setToast(null), 2600);
   };
 
-  // ── Filtrat ─────────────────────────────────────────────
-  const booksFiltrats = books.filter((b) => {
-    const q = cerca.toLowerCase();
-    const matchCerca =
-      !cerca ||
-      b.titol?.toLowerCase().includes(q) ||
-      b.autor?.toLowerCase().includes(q);
-    const matchEstat =
-      filtreEstat === "Tots" || b.estat === filtreEstat;
-    const matchSeccio =
-      filtreSeccio === "Totes" || b.seccio === filtreSeccio;
-    return matchCerca && matchEstat && matchSeccio;
-  });
+  // ── Filtrat + Ordenació ──────────────────────────────────
+  const booksFiltrats = ordenarBooks(
+    books.filter((b) => {
+      const q = cerca.toLowerCase();
+      const matchCerca =
+        !cerca ||
+        b.titol?.toLowerCase().includes(q) ||
+        b.autor?.toLowerCase().includes(q);
+      const matchEstat =
+        filtreEstat === "Tots" || b.estat === filtreEstat;
+      const matchSeccio =
+        filtreSeccio === "Totes" || b.seccio === filtreSeccio;
+      return matchCerca && matchEstat && matchSeccio;
+    }),
+    ordre
+  );
 
-  // ── Stats ────────────────────────────────────────────────
+  // ── Stats ─────────────────────────────────────────────────
   const total   = books.length;
   const llegits = books.filter((b) => b.estat === "Llegit").length;
   const llegint = books.filter((b) => b.estat === "Llegint").length;
 
-  // ── Formulari ────────────────────────────────────────────
+  // ── Formulari ─────────────────────────────────────────────
   const formBuit = {
     titol: "", autor: "", any_publicacio: "",
     seccio: "Negre", estat: "No llegit",
     puntuacio: null, isbn: "", format: "Paper", notes: ""
   };
 
-  const obrirAfegir = () => {
-    setForm(formBuit);
-    setModal("add");
-  };
+  const obrirAfegir = () => { setForm(formBuit); setModal("add"); };
+  const obrirDetall = (book) => { setSelected(book); setPortadaError(false); setModal("detail"); };
+  const obrirEditar = () => { setForm({ ...selected }); setPortadaError(false); setModal("edit"); };
+  const tancar = () => { setModal(null); setSelected(null); setForm({}); };
 
-  const obrirDetall = (book) => {
-    setSelected(book);
-    setModal("detail");
-  };
-
-  const obrirEditar = () => {
-    setForm({ ...selected });
-    setModal("edit");
-  };
-
-  const tancar = () => {
-    setModal(null);
-    setSelected(null);
-    setForm({});
-  };
-
-  // ── CRUD ─────────────────────────────────────────────────
+  // ── CRUD ──────────────────────────────────────────────────
   const desar = async () => {
     if (!form.titol?.trim() || !form.autor?.trim()) {
       showToast("Títol i autor són obligatoris");
@@ -586,11 +608,11 @@ export default function App() {
       if (payload.isbn) {
         const { data: dup } = await supabase
           .from("books")
-          .select("id")
+          .select("id, titol")
           .eq("isbn", payload.isbn)
           .maybeSingle();
         if (dup) {
-          showToast("Ja tens aquest llibre (ISBN duplicat)");
+          showToast(`ISBN duplicat: "${dup.titol}"`);
           setSaving(false);
           return;
         }
@@ -615,15 +637,12 @@ export default function App() {
 
   const eliminar = async () => {
     setConfirm(false);
-    const { error } = await supabase
-      .from("books")
-      .delete()
-      .eq("id", selected.id);
+    const { error } = await supabase.from("books").delete().eq("id", selected.id);
     if (!error) { showToast("Llibre eliminat"); fetchBooks(); tancar(); }
     else showToast("Error en eliminar");
   };
 
-  // ── Render form ──────────────────────────────────────────
+  // ── Render form ───────────────────────────────────────────
   const renderForm = () => (
     <>
       <div className="modal-handle" />
@@ -677,7 +696,8 @@ export default function App() {
         <label className="form-label">Puntuació</label>
         <div className="stars-input">
           {[1,2,3,4,5].map(n => (
-            <button key={n} className="star-btn" onClick={() => setForm(f => ({...f, puntuacio: f.puntuacio === n ? null : n}))}>
+            <button key={n} className="star-btn"
+              onClick={() => setForm(f => ({...f, puntuacio: f.puntuacio === n ? null : n}))}>
               {(form.puntuacio || 0) >= n ? "★" : "☆"}
             </button>
           ))}
@@ -698,7 +718,7 @@ export default function App() {
     </>
   );
 
-  // ── Render detail ────────────────────────────────────────
+  // ── Render detail ─────────────────────────────────────────
   const renderDetail = () => {
     const b = selected;
     if (!b) return null;
@@ -707,8 +727,9 @@ export default function App() {
     return (
       <>
         <div className="modal-handle" />
-        {portadaUrl
-          ? <img src={portadaUrl} alt={b.titol} className="detail-cover" onError={e => { e.target.style.display='none'; }} />
+        {portadaUrl && !portadaError
+          ? <img src={portadaUrl} alt={b.titol} className="detail-cover"
+              onError={() => setPortadaError(true)} />
           : <div className="detail-cover-placeholder">🔍</div>
         }
         <div className="detail-titol">{b.titol}</div>
@@ -733,7 +754,7 @@ export default function App() {
     );
   };
 
-  // ── Render principal ─────────────────────────────────────
+  // ── Render principal ──────────────────────────────────────
   return (
     <>
       <style>{styles}</style>
@@ -760,14 +781,19 @@ export default function App() {
               >{e}</button>
             ))}
           </div>
-          <select
-            className="seccio-select"
-            value={filtreSeccio}
-            onChange={e => setFiltreSeccio(e.target.value)}
-          >
-            <option value="Totes">Totes les seccions</option>
-            {SECCIONS.map(s => <option key={s}>{s}</option>)}
-          </select>
+          <div className="filters-row">
+            <select className="filter-select" value={filtreSeccio}
+              onChange={e => setFiltreSeccio(e.target.value)}>
+              <option value="Totes">Totes les seccions</option>
+              {SECCIONS.map(s => <option key={s}>{s}</option>)}
+            </select>
+            <select className="filter-select" value={ordre}
+              onChange={e => setOrdre(e.target.value)}>
+              {ORDRES.map(o => (
+                <option key={o.valor} value={o.valor}>{o.label}</option>
+              ))}
+            </select>
+          </div>
         </header>
 
         {/* Stats */}
@@ -790,6 +816,13 @@ export default function App() {
           </div>
         </div>
 
+        {/* Recompte resultats */}
+        {(cerca || filtreEstat !== "Tots" || filtreSeccio !== "Totes") && (
+          <div className="results-count">
+            {booksFiltrats.length} {booksFiltrats.length === 1 ? "resultat" : "resultats"}
+          </div>
+        )}
+
         {/* Llista */}
         <div className="books-list">
           {loading ? (
@@ -798,7 +831,9 @@ export default function App() {
             <div className="empty">
               <div className="empty-icon">🔍</div>
               <div className="empty-text">
-                {books.length === 0 ? "Encara no hi ha llibres. Afegeix el primer!" : "Cap resultat"}
+                {books.length === 0
+                  ? "Encara no hi ha llibres. Afegeix el primer!"
+                  : "Cap resultat per a aquesta cerca"}
               </div>
             </div>
           ) : booksFiltrats.map(b => {
@@ -807,17 +842,17 @@ export default function App() {
             return (
               <div key={b.id} className="book-card" onClick={() => obrirDetall(b)}>
                 {portadaUrl
-                  ? <img src={portadaUrl} alt={b.titol} className="book-cover" onError={e => { e.target.style.display='none'; }} />
-                  : <div className="book-cover-placeholder">🔍</div>
+                  ? <img src={portadaUrl} alt={b.titol} className="book-cover"
+                      onError={e => { e.target.style.display = "none"; e.target.nextSibling.style.display = "flex"; }} />
+                  : null
                 }
+                <div className="book-cover-placeholder" style={{ display: portadaUrl ? "none" : "flex" }}>🔍</div>
                 <div className="book-info">
                   <div className="book-titol">{b.titol}</div>
                   <div className="book-autor">{b.autor}{b.any_publicacio ? ` · ${b.any_publicacio}` : ""}</div>
                   <div className="book-meta">
                     <span className="tag">{b.seccio}</span>
-                    <span className="tag-estat" style={{ color: estatColor }}>
-                      ● {b.estat}
-                    </span>
+                    <span className="tag-estat" style={{ color: estatColor }}>● {b.estat}</span>
                     {b.puntuacio && <Stars n={b.puntuacio} />}
                   </div>
                 </div>
