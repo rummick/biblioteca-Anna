@@ -247,6 +247,27 @@ const styles = `
   .confirm-box{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:24px 20px;max-width:320px;width:100%;text-align:center;}
   .confirm-box p{font-size:15px;color:var(--text);margin-bottom:20px;line-height:1.5;}
   .confirm-row{display:flex;gap:10px;}
+
+  /* Diagnòstic */
+  .btn-diag{width:32px;height:32px;background:transparent;color:var(--text-muted);border:1px solid var(--border);border-radius:50%;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:color 0.15s,border-color 0.15s;}
+  .btn-diag:hover{color:var(--gold);border-color:var(--gold-dim);}
+  .diag-summary{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px;}
+  .diag-stat{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:12px;text-align:center;}
+  .diag-stat-num{font-size:28px;font-weight:700;line-height:1;}
+  .diag-stat-num.ok{color:var(--green);}
+  .diag-stat-num.warn{color:#e8a020;}
+  .diag-stat-num.err{color:var(--red);}
+  .diag-stat-label{font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-top:4px;}
+  .diag-section{margin-bottom:18px;}
+  .diag-section-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;display:flex;align-items:center;gap:6px;}
+  .diag-section-title.err{color:var(--red);}
+  .diag-section-title.warn{color:#e8a020;}
+  .diag-item{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:9px 12px;margin-bottom:6px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:border-color 0.15s;}
+  .diag-item:hover{border-color:var(--gold-dim);}
+  .diag-item-titol{font-size:13px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;}
+  .diag-item-autor{font-size:11px;color:var(--text-muted);flex-shrink:0;margin-left:8px;}
+  .diag-empty{font-size:12px;color:var(--green);padding:6px 0;}
+  .diag-divider{border:none;border-top:1px solid var(--border);margin:16px 0;}
 `;
 
 const Stars = ({ n, mini }) => {
@@ -317,6 +338,7 @@ export default function App() {
   const [scanning, setScanning]         = useState(false);
   const [uploadingFoto, setUploadingFoto] = useState(false);
   const [generantResum, setGenerantResum] = useState(false);
+  const [showDiag, setShowDiag] = useState(false);
   const [toast, setToast] = useState(null);
   const [cols, setCols]   = useState(1);
 
@@ -822,6 +844,7 @@ export default function App() {
           <div className="header-top">
             <div className="header-logo"><LogoSVG/></div>
             <div className="header-actions">
+              <button className="btn-diag" onClick={()=>setShowDiag(true)} title="Diagnòstic">🔧</button>
               <button className="btn-add" onClick={obrirAfegir}>+</button>
               <button className="btn-logout" onClick={()=>setLogat(false)}>↩</button>
             </div>
@@ -875,6 +898,142 @@ export default function App() {
             </div>
           </div>
         )}
+
+        {/* Modal diagnòstic */}
+        {showDiag && (() => {
+          // Càlculs
+          const sensePor  = books.filter(b => !b.foto_url && !b.isbn);
+          const senseIsbn = books.filter(b => !b.isbn);
+          const senseRes  = books.filter(b => !b.resum);
+          // Duplicats per ISBN
+          const isbnCount = {};
+          books.forEach(b => { if (b.isbn) isbnCount[b.isbn] = (isbnCount[b.isbn]||0)+1; });
+          const duplicats = books.filter(b => b.isbn && isbnCount[b.isbn] > 1);
+          // Duplicats per títol+autor
+          const titolCount = {};
+          books.forEach(b => {
+            const k = `${b.titol?.toLowerCase().trim()}||${b.autor?.toLowerCase().trim()}`;
+            titolCount[k] = (titolCount[k]||0)+1;
+          });
+          const dupTitol = books.filter(b => {
+            const k = `${b.titol?.toLowerCase().trim()}||${b.autor?.toLowerCase().trim()}`;
+            return titolCount[k] > 1;
+          });
+          const totalProblemes = duplicats.length + dupTitol.length + sensePor.length + senseRes.length;
+
+          const anarA = (b) => { setShowDiag(false); obrirDetall(b); };
+
+          return (
+            <div className="modal-overlay" onClick={e=>{if(e.target===e.currentTarget)setShowDiag(false);}}>
+              <div className="modal">
+                <div className="modal-handle"/>
+                <div className="modal-title">🔧 Diagnòstic</div>
+
+                {/* Resum numèric */}
+                <div className="diag-summary">
+                  <div className="diag-stat">
+                    <div className={`diag-stat-num ${duplicats.length+dupTitol.length>0?"err":"ok"}`}>
+                      {duplicats.length+dupTitol.length}
+                    </div>
+                    <div className="diag-stat-label">Duplicats</div>
+                  </div>
+                  <div className="diag-stat">
+                    <div className={`diag-stat-num ${senseIsbn.length>0?"warn":"ok"}`}>
+                      {senseIsbn.length}
+                    </div>
+                    <div className="diag-stat-label">Sense ISBN</div>
+                  </div>
+                  <div className="diag-stat">
+                    <div className={`diag-stat-num ${sensePor.length>0?"warn":"ok"}`}>
+                      {sensePor.length}
+                    </div>
+                    <div className="diag-stat-label">Sense portada</div>
+                  </div>
+                  <div className="diag-stat">
+                    <div className={`diag-stat-num ${senseRes.length>0?"warn":"ok"}`}>
+                      {senseRes.length}
+                    </div>
+                    <div className="diag-stat-label">Sense resum</div>
+                  </div>
+                </div>
+
+                {totalProblemes === 0 && (
+                  <div style={{textAlign:"center",color:"var(--green)",padding:"12px 0 20px",fontSize:"14px"}}>
+                    ✓ Tot correcte! Cap problema detectat.
+                  </div>
+                )}
+
+                {/* Duplicats ISBN */}
+                {duplicats.length > 0 && (
+                  <div className="diag-section">
+                    <div className="diag-section-title err">🔴 Duplicats per ISBN ({duplicats.length})</div>
+                    {duplicats.map(b=>(
+                      <div key={b.id} className="diag-item" onClick={()=>anarA(b)}>
+                        <span className="diag-item-titol">{b.titol}</span>
+                        <span className="diag-item-autor">ISBN {b.isbn}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Duplicats títol */}
+                {dupTitol.length > 0 && (
+                  <div className="diag-section">
+                    <div className="diag-section-title err">🔴 Duplicats per títol+autor ({dupTitol.length})</div>
+                    {dupTitol.map(b=>(
+                      <div key={b.id} className="diag-item" onClick={()=>anarA(b)}>
+                        <span className="diag-item-titol">{b.titol}</span>
+                        <span className="diag-item-autor">{b.autor}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Sense ISBN */}
+                {senseIsbn.length > 0 && (
+                  <div className="diag-section">
+                    <div className="diag-section-title warn">🟡 Sense ISBN ({senseIsbn.length})</div>
+                    {senseIsbn.map(b=>(
+                      <div key={b.id} className="diag-item" onClick={()=>anarA(b)}>
+                        <span className="diag-item-titol">{b.titol}</span>
+                        <span className="diag-item-autor">{b.autor}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Sense portada */}
+                {sensePor.length > 0 && (
+                  <div className="diag-section">
+                    <div className="diag-section-title warn">🟡 Sense portada ni ISBN ({sensePor.length})</div>
+                    {sensePor.map(b=>(
+                      <div key={b.id} className="diag-item" onClick={()=>anarA(b)}>
+                        <span className="diag-item-titol">{b.titol}</span>
+                        <span className="diag-item-autor">{b.autor}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Sense resum */}
+                {senseRes.length > 0 && (
+                  <div className="diag-section">
+                    <div className="diag-section-title warn">🟡 Sense resum ({senseRes.length})</div>
+                    {senseRes.map(b=>(
+                      <div key={b.id} className="diag-item" onClick={()=>anarA(b)}>
+                        <span className="diag-item-titol">{b.titol}</span>
+                        <span className="diag-item-autor">{b.autor}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                <hr className="diag-divider"/>
+                <button className="btn btn-secondary" style={{width:"100%"}} onClick={()=>setShowDiag(false)}>Tancar</button>
+              </div>
+            </div>
+          );
+        })()}
 
         {toast&&<div className="toast">{toast}</div>}
       </div>
