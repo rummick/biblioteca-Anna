@@ -76,11 +76,8 @@ const LogoSVG = () => (
       [387,52,18,78,"#4a2a5a","#331a40"],[409,68,14,62,"#3a3a4a","#2a2a3a"],
       [427,58,17,72,"#6a3010","#4a2008"],[448,70,15,60,"#3a4a1a","#283410"],
       [467,62,16,68,"#5a2a1a","#3a1a08"],[487,74,14,56,"#1a3a4a","#102a3a"],
-    ].map(([x,y,w,h,f,s],i) => (
-      <g key={i}>
-        <rect x={x} y={y} width={w} height={h} rx="2" fill={f}/>
-        <rect x={x} y={y} width="3" height={h} fill={s}/>
-      </g>
+    ].map(([x,y,w,h,f,s],i)=>(
+      <g key={i}><rect x={x} y={y} width={w} height={h} rx="2" fill={f}/><rect x={x} y={y} width="3" height={h} fill={s}/></g>
     ))}
     <text x="510" y="122" fontFamily="Georgia,'Times New Roman',serif" fontSize="68" fontWeight="700" fill="#c8a96e" letterSpacing="6" opacity="0.95">NOIR</text>
   </svg>
@@ -94,13 +91,12 @@ const styles = `
     --bg:#0f0f0f;--bg2:#1a1a1a;--bg3:#242424;--border:#333;
     --gold:#c8a96e;--gold-dim:#8a7050;
     --text:#e8e0d0;--text-dim:#888880;--text-muted:#555550;
-    --red:#c0392b;--green:#7a9e7e;--radius:8px;
+    --red:#c0392b;--green:#7a9e7e;--purple:#9b7ec8;--radius:8px;
     --shadow:0 4px 24px rgba(0,0,0,0.6);
   }
   html,body,#root{height:100%;background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:15px;-webkit-font-smoothing:antialiased;}
   .app{width:100%;min-height:100dvh;display:flex;flex-direction:column;background:var(--bg);}
 
-  /* Login */
   .login-screen{min-height:100dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 32px;}
   .login-logo{width:min(380px,90vw);margin-bottom:32px;}
   .login-sub{font-size:11px;color:var(--text-muted);letter-spacing:3px;text-transform:uppercase;margin-bottom:40px;}
@@ -109,7 +105,6 @@ const styles = `
   .login-btn{width:100%;max-width:260px;background:var(--gold);color:#000;border:none;border-radius:var(--radius);padding:14px;font-size:14px;font-weight:700;letter-spacing:2px;cursor:pointer;text-transform:uppercase;}
   .login-error{color:var(--red);font-size:12px;margin-top:10px;}
 
-  /* Header */
   .header{background:var(--bg2);border-bottom:1px solid var(--border);padding:12px 20px 10px;position:sticky;top:0;z-index:100;}
   .header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;gap:12px;}
   .header-logo{flex:1;max-width:280px;height:44px;}
@@ -127,14 +122,12 @@ const styles = `
   .filter-select{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:7px 10px;color:var(--text);font-size:13px;outline:none;cursor:pointer;min-width:0;}
   .filter-select:focus{border-color:var(--gold-dim);}
 
-  /* Stats */
   .stats-bar{display:flex;gap:16px;padding:10px 20px;background:var(--bg2);border-bottom:1px solid var(--border);}
   .stat-item{display:flex;flex-direction:column;align-items:center;}
   .stat-num{font-size:18px;font-weight:600;color:var(--gold);line-height:1;}
   .stat-label{font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-top:2px;}
   .results-count{padding:8px 20px 0;font-size:11px;color:var(--text-muted);}
 
-  /* Graella */
   .books-grid{flex:1;padding:16px 20px;display:grid;gap:16px;align-content:start;}
   .book-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;overflow:hidden;display:flex;flex-direction:column;transition:border-color 0.15s,transform 0.1s;position:relative;}
   .book-card:hover{border-color:var(--gold-dim);transform:translateY(-2px);}
@@ -144,20 +137,21 @@ const styles = `
   .book-card-body{padding:10px;flex:1;display:flex;flex-direction:column;gap:4px;}
   .book-card-titol{font-family:'Playfair Display',serif;font-size:13px;color:var(--text);line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
   .book-card-autor{font-size:11px;color:var(--text-dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .book-card-serie{font-size:10px;color:var(--purple);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
   .book-card-meta{display:flex;align-items:center;gap:4px;flex-wrap:wrap;margin-top:2px;}
   .tag-mini{padding:1px 6px;border-radius:8px;font-size:9px;font-weight:500;background:var(--bg3);color:var(--text-muted);border:1px solid var(--border);}
   .stars-mini{color:var(--gold);font-size:9px;letter-spacing:0.5px;}
   .estat-badge{position:absolute;top:6px;left:6px;padding:2px 7px;border-radius:8px;font-size:9px;font-weight:600;background:rgba(15,15,15,0.85);}
 
-  /* Llista (1 col) */
   .book-card-list{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);display:flex;gap:12px;padding:12px;cursor:pointer;position:relative;overflow:hidden;transition:background 0.15s;}
   .book-card-list::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--gold);opacity:0.5;}
   .book-card-list:active{background:var(--bg3);}
   .book-cover-sm{width:52px;height:72px;border-radius:4px;object-fit:cover;flex-shrink:0;background:var(--bg3);}
   .book-cover-sm-ph{width:52px;height:72px;border-radius:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--text-muted);background:var(--bg3);}
   .book-info{flex:1;min-width:0;}
-  .book-titol{font-family:'Playfair Display',serif;font-size:15px;color:var(--text);line-height:1.3;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-  .book-autor{font-size:12px;color:var(--text-dim);margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .book-titol{font-family:'Playfair Display',serif;font-size:15px;color:var(--text);line-height:1.3;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .book-serie-tag{font-size:11px;color:var(--purple);margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .book-autor{font-size:12px;color:var(--text-dim);margin-bottom:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
   .book-meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
   .tag{padding:2px 8px;border-radius:10px;font-size:10px;font-weight:500;background:var(--bg3);color:var(--text-dim);border:1px solid var(--border);}
   .tag-estat{font-weight:600;font-size:10px;padding:2px 8px;border-radius:10px;}
@@ -167,13 +161,11 @@ const styles = `
   .empty-icon{font-size:48px;margin-bottom:12px;}
   .empty-text{font-size:14px;}
 
-  /* Modal */
   .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:200;display:flex;align-items:flex-end;justify-content:center;}
   .modal{background:var(--bg2);border-top:1px solid var(--border);border-radius:16px 16px 0 0;width:100%;max-width:560px;max-height:92dvh;overflow-y:auto;padding:24px 20px 40px;}
   .modal-handle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 20px;}
   .modal-title{font-family:'Playfair Display',serif;font-size:20px;color:var(--gold);margin-bottom:20px;}
 
-  /* Form */
   .form-group{margin-bottom:14px;}
   .form-label{display:block;font-size:11px;font-weight:500;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;}
   .form-input,.form-select,.form-textarea{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px;color:var(--text);font-size:14px;font-family:'Inter',sans-serif;outline:none;}
@@ -182,7 +174,6 @@ const styles = `
   .form-row{display:flex;gap:10px;}
   .form-row .form-group{flex:1;}
 
-  /* ISBN */
   .isbn-row{display:flex;gap:8px;align-items:center;margin-bottom:6px;}
   .isbn-row input{flex:1;}
   .btn-scan{height:42px;width:42px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);color:var(--gold);font-size:18px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
@@ -191,64 +182,67 @@ const styles = `
   .lookup-ok{background:#1a3a1a;color:var(--green);}
   .lookup-err{background:#3a1a1a;color:#e07070;}
 
-  /* Scanner dins modal */
   .scanner-wrapper{position:relative;width:100%;background:#000;border-radius:var(--radius);overflow:hidden;margin-bottom:14px;}
   .scanner-wrapper video{width:100%;display:block;max-height:280px;object-fit:cover;}
   .scanner-frame-inner{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:220px;height:90px;border:2px solid var(--gold);border-radius:8px;pointer-events:none;}
   .scanner-hint{font-size:12px;color:var(--text-muted);text-align:center;margin-bottom:10px;}
   .btn-stop-scan{width:100%;padding:10px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);color:var(--text-dim);font-size:13px;cursor:pointer;margin-bottom:14px;}
 
-  /* Stars */
   .stars-input{display:flex;gap:6px;margin-top:4px;}
   .star-btn{background:none;border:none;cursor:pointer;font-size:22px;padding:2px;transition:transform 0.1s;}
   .star-btn:active{transform:scale(1.2);}
+
+  /* Resum IA */
+  .resum-row{display:flex;gap:8px;align-items:flex-start;margin-bottom:6px;}
+  .resum-box{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px;font-size:12px;color:var(--text-dim);line-height:1.6;font-style:italic;}
+  .btn-ia{padding:8px 12px;background:#2a1a3a;border:1px solid var(--purple);border-radius:var(--radius);color:var(--purple);font-size:12px;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:background 0.15s;}
+  .btn-ia:hover{background:#3a2a4a;}
+  .btn-ia:disabled{opacity:0.5;cursor:wait;}
+  .btn-ia-inline{display:block;width:100%;padding:9px;background:#2a1a3a;border:1px solid var(--purple);border-radius:var(--radius);color:var(--purple);font-size:12px;cursor:pointer;text-align:center;margin-bottom:14px;}
+  .btn-ia-inline:disabled{opacity:0.5;cursor:wait;}
+
+  /* Sèrie */
+  .serie-tag{display:inline-block;padding:3px 10px;background:#1a1a2e;border:1px solid var(--purple);border-radius:12px;font-size:11px;color:var(--purple);margin-bottom:12px;}
 
   /* Portada botons (detall) */
   .portada-btns{display:flex;gap:8px;justify-content:center;margin-bottom:16px;flex-wrap:wrap;}
   .portada-btn{padding:6px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:20px;color:var(--text-dim);font-size:12px;cursor:pointer;display:flex;align-items:center;gap:5px;transition:border-color 0.15s,color 0.15s;}
   .portada-btn:hover{border-color:var(--gold-dim);color:var(--gold);}
-  .portada-btn.uploading{opacity:0.6;cursor:wait;}
-
-  /* Input URL portada */
+  .portada-btn:disabled{opacity:0.5;cursor:wait;}
   .url-input-row{display:flex;gap:8px;margin-bottom:12px;}
   .url-input-row input{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:8px 12px;color:var(--text);font-size:13px;outline:none;}
   .url-input-row input:focus{border-color:var(--gold-dim);}
   .url-input-row button{padding:8px 14px;background:var(--gold-dim);border:none;border-radius:var(--radius);color:#fff;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;}
 
-  /* Foto portada (form) */
   .foto-row{display:flex;gap:10px;align-items:center;}
   .foto-preview{width:60px;height:84px;border-radius:4px;object-fit:cover;background:var(--bg3);border:1px solid var(--border);flex-shrink:0;}
   .foto-preview-ph{width:60px;height:84px;border-radius:4px;background:var(--bg3);border:1px dashed var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:24px;color:var(--text-muted);}
   .foto-btns{flex:1;display:flex;flex-direction:column;gap:6px;}
   .btn-foto{padding:10px;background:var(--bg3);border:1px dashed var(--gold-dim);border-radius:var(--radius);color:var(--gold);font-size:13px;cursor:pointer;text-align:center;width:100%;}
   .btn-foto-sec{padding:7px;background:transparent;border:1px solid var(--border);border-radius:var(--radius);color:var(--text-muted);font-size:12px;cursor:pointer;text-align:center;width:100%;}
-  .resum-box{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px;font-size:12px;color:var(--text-dim);line-height:1.6;font-style:italic;margin-bottom:6px;}
 
-  /* Btns */
   .btn-row{display:flex;gap:10px;margin-top:20px;}
   .btn{flex:1;padding:13px;border-radius:var(--radius);border:none;font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;}
   .btn-primary{background:var(--gold);color:#000;}
   .btn-secondary{background:var(--bg3);color:var(--text);border:1px solid var(--border);}
   .btn-danger{background:var(--red);color:#fff;}
 
-  /* Detail */
   .detail-cover{width:120px;height:168px;border-radius:6px;object-fit:cover;margin:0 auto 12px;display:block;box-shadow:var(--shadow);}
   .detail-cover-ph{width:120px;height:168px;background:var(--bg3);border-radius:6px;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-size:48px;}
   .detail-titol{font-family:'Playfair Display',serif;font-size:22px;color:var(--gold);text-align:center;margin-bottom:4px;line-height:1.3;}
-  .detail-autor{font-size:14px;color:var(--text-dim);text-align:center;margin-bottom:16px;}
+  .detail-autor{font-size:14px;color:var(--text-dim);text-align:center;margin-bottom:8px;}
+  .detail-serie{text-align:center;margin-bottom:14px;}
   .detail-tags{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:16px;}
   .detail-tag{padding:4px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:12px;font-size:12px;color:var(--text-dim);}
   .detail-stars{text-align:center;font-size:20px;color:var(--gold);margin-bottom:16px;}
   .detail-sec-label{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-bottom:4px;}
-  .detail-resum{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:12px;font-size:12px;color:var(--text-muted);line-height:1.6;margin-bottom:16px;}
+  .detail-resum{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:12px;font-size:12px;color:var(--text-muted);line-height:1.6;margin-bottom:8px;}
   .detail-notes{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:12px;font-size:13px;color:var(--text-dim);line-height:1.6;margin-bottom:16px;font-style:italic;}
   .detail-divider{border:none;border-top:1px solid var(--border);margin:16px 0;}
 
-  /* Toast */
   .toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:var(--gold);color:#000;padding:10px 20px;border-radius:20px;font-size:13px;font-weight:600;z-index:999;white-space:nowrap;box-shadow:var(--shadow);animation:fadeInOut 2.5s ease forwards;}
   @keyframes fadeInOut{0%{opacity:0;transform:translateX(-50%) translateY(10px);}15%{opacity:1;transform:translateX(-50%) translateY(0);}75%{opacity:1;}100%{opacity:0;transform:translateX(-50%) translateY(-4px);}}
 
-  /* Confirm */
   .confirm-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:300;display:flex;align-items:center;justify-content:center;padding:20px;}
   .confirm-box{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:24px 20px;max-width:320px;width:100%;text-align:center;}
   .confirm-box p{font-size:15px;color:var(--text);margin-bottom:20px;line-height:1.5;}
@@ -267,14 +261,36 @@ const ordenarBooks = (books, ordre) => {
   return [...books].sort((a, b) => {
     let va = a[key], vb = b[key];
     if (va==null&&vb==null) return 0;
-    if (va==null) return 1;
-    if (vb==null) return -1;
+    if (va==null) return 1; if (vb==null) return -1;
     if (typeof va==="string") va=va.toLowerCase();
     if (typeof vb==="string") vb=vb.toLowerCase();
     if (va<vb) return dir==="asc"?-1:1;
     if (va>vb) return dir==="asc"?1:-1;
     return 0;
   });
+};
+
+// ── Generar resum IA via Claude API ───────────────────────
+const generarResumIA = async (titol, autor, serie, numSerie) => {
+  const context = [
+    titol && `Títol: ${titol}`,
+    autor && `Autor/a: ${autor}`,
+    serie && `Sèrie: ${serie}${numSerie ? ` (núm. ${numSerie})` : ""}`,
+  ].filter(Boolean).join("\n");
+
+  const prompt = `Ets un expert en novel·la negra i literatura de gènere. Escriu un resum breu (màxim 3 frases, uns 80-100 paraules) d'aquest llibre en català. Ha de ser informatiu, sense revelar el desenllaç, i capturar l'atmosfera noir. Respon NOMÉS amb el resum, sense títol ni explicacions addicionals.\n\n${context}`;
+
+  const res = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      model: "claude-sonnet-4-20250514",
+      max_tokens: 1000,
+      messages: [{ role: "user", content: prompt }],
+    }),
+  });
+  const data = await res.json();
+  return data.content?.[0]?.text?.trim() || null;
 };
 
 export default function App() {
@@ -293,37 +309,29 @@ export default function App() {
   const [saving, setSaving]     = useState(false);
   const [confirm, setConfirm]   = useState(false);
   const [portadaKey, setPortadaKey] = useState(0);
-
-  // Portada detall
   const [showUrlInput, setShowUrlInput] = useState(false);
   const [urlInputVal, setUrlInputVal]   = useState("");
   const [uploadingPortada, setUploadingPortada] = useState(false);
-
-  // ISBN / scanner
   const [lookupStatus, setLookupStatus] = useState(null);
   const [lookupMsg, setLookupMsg]       = useState("");
   const [scanning, setScanning]         = useState(false);
-
-  // Foto form
   const [uploadingFoto, setUploadingFoto] = useState(false);
-
+  const [generantResum, setGenerantResum] = useState(false);
   const [toast, setToast] = useState(null);
   const [cols, setCols]   = useState(1);
 
-  const videoRef     = useRef(null);
-  const streamRef    = useRef(null);
-  const rafRef       = useRef(null);
-  const fotoInputRef = useRef(null);
-  const isbnInputRef = useRef(null);
+  const videoRef        = useRef(null);
+  const streamRef       = useRef(null);
+  const rafRef          = useRef(null);
+  const fotoInputRef    = useRef(null);
+  const isbnInputRef    = useRef(null);
   const portadaInputRef = useRef(null);
 
   useEffect(() => {
     const update = () => {
       const w = window.innerWidth;
-      if (w>=1200) setCols(4);
-      else if (w>=900) setCols(3);
-      else if (w>=600) setCols(2);
-      else setCols(1);
+      if (w>=1200) setCols(4); else if (w>=900) setCols(3);
+      else if (w>=600) setCols(2); else setCols(1);
     };
     update();
     window.addEventListener("resize", update);
@@ -348,7 +356,7 @@ export default function App() {
   const booksFiltrats = ordenarBooks(
     books.filter(b => {
       const q = cerca.toLowerCase();
-      return (!cerca||b.titol?.toLowerCase().includes(q)||b.autor?.toLowerCase().includes(q))
+      return (!cerca||b.titol?.toLowerCase().includes(q)||b.autor?.toLowerCase().includes(q)||b.serie?.toLowerCase().includes(q))
           && (filtreEstat==="Tots"||b.estat===filtreEstat)
           && (filtreSeccio==="Totes"||b.seccio===filtreSeccio);
     }), ordre
@@ -358,65 +366,94 @@ export default function App() {
   const llegits = books.filter(b=>b.estat==="Llegit").length;
   const llegint = books.filter(b=>b.estat==="Llegint").length;
 
-  const formBuit = {titol:"",autor:"",any_publicacio:"",seccio:"Negre",estat:"No llegit",puntuacio:null,isbn:"",format:"Paper",notes:"",resum:"",foto_url:""};
+  const formBuit = {titol:"",autor:"",any_publicacio:"",seccio:"Negre",estat:"No llegit",puntuacio:null,isbn:"",format:"Paper",notes:"",resum:"",foto_url:"",serie:"",num_serie:""};
 
   const obrirAfegir = () => { setForm(formBuit); setLookupStatus(null); setModal("add"); };
   const obrirDetall = (b) => { setSelected(b); setShowUrlInput(false); setUrlInputVal(""); setModal("detail"); };
-  const obrirEditar = () => { setForm({...selected}); setLookupStatus(null); setModal("edit"); };
+  const obrirEditar = () => { setForm({...selected, num_serie: selected.num_serie||""}); setLookupStatus(null); setModal("edit"); };
   const tancar = () => { stopScanner(); setModal(null); setSelected(null); setForm({}); setLookupStatus(null); setShowUrlInput(false); };
 
   // ── ISBN Lookup ───────────────────────────────────────────
   const lookupISBN = async (isbnVal) => {
     const isbn = (isbnVal||form.isbn||"").trim();
     if (!isbn) return;
-    setLookupStatus(null);
-    setLookupMsg("Buscant...");
+    setLookupStatus(null); setLookupMsg("Buscant...");
 
-    // 1) Intent Google Books
+    // 1) Google Books
     try {
       const res  = await fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`);
       const data = await res.json();
       if (data.items?.length) {
         const info = data.items[0].volumeInfo;
+        // Intentem extreure sèrie del títol (ex: "Wallander 3: El guerrer blanc")
+        const serieMatch = info.title?.match(/^(.+?)\s*[\d]+[:·]/);
+        const serie = info.seriesInfo?.bookDisplayNumber
+          ? info.seriesInfo.canonicalVolumeLink
+          : (serieMatch?.[1] || "");
+        const numSerie = info.seriesInfo?.bookDisplayNumber || "";
         setForm(f=>({
           ...f, isbn,
-          titol:          info.title                              || f.titol,
-          autor:          info.authors?.[0]                       || f.autor,
-          any_publicacio: info.publishedDate?.substring(0,4)      || f.any_publicacio,
-          resum:          info.description?.substring(0,400)      || f.resum,
+          titol:          info.title                         || f.titol,
+          autor:          info.authors?.[0]                  || f.autor,
+          any_publicacio: info.publishedDate?.substring(0,4) || f.any_publicacio,
+          resum:          info.description?.substring(0,400) || f.resum,
+          serie:          serie || f.serie,
+          num_serie:      numSerie || f.num_serie,
         }));
-        setLookupStatus("ok");
-        setLookupMsg(`Google Books: ${info.title}`);
+        setLookupStatus("ok"); setLookupMsg(`Google Books: ${info.title}`);
         return;
       }
     } catch {}
 
-    // 2) Fallback OpenLibrary
+    // 2) OpenLibrary
     try {
       const res  = await fetch(`https://openlibrary.org/api/books?bibkeys=ISBN:${isbn}&format=json&jscmd=data`);
       const data = await res.json();
       const key  = `ISBN:${isbn}`;
       if (data[key]) {
-        const info = data[key];
+        const info  = data[key];
         const autor = info.authors?.[0]?.name || "";
         const any   = info.publish_date?.match(/\d{4}/)?.[0] || "";
-        const resum = info.excerpts?.[0]?.text || info.notes || "";
+        const resum = typeof info.excerpts?.[0]?.text === "string" ? info.excerpts[0].text.substring(0,400) : "";
+        const serie = info.subjects?.find(s=>s.name?.toLowerCase().includes("series"))?.name || "";
         setForm(f=>({
           ...f, isbn,
-          titol:          info.title  || f.titol,
-          autor:          autor       || f.autor,
-          any_publicacio: any         || f.any_publicacio,
-          resum:          typeof resum === "string" ? resum.substring(0,400) : f.resum,
+          titol:          info.title || f.titol,
+          autor:          autor      || f.autor,
+          any_publicacio: any        || f.any_publicacio,
+          resum:          resum      || f.resum,
+          serie:          serie      || f.serie,
         }));
-        setLookupStatus("ok");
-        setLookupMsg(`OpenLibrary: ${info.title}`);
+        setLookupStatus("ok"); setLookupMsg(`OpenLibrary: ${info.title}`);
         return;
       }
     } catch {}
 
-    // 3) Res trobat
-    setLookupStatus("err");
-    setLookupMsg("No s'ha trobat cap resultat (Google Books + OpenLibrary)");
+    setLookupStatus("err"); setLookupMsg("No s'ha trobat cap resultat");
+  };
+
+  // ── Resum IA ──────────────────────────────────────────────
+  const handleGenerarResum = async () => {
+    const titol = form.titol || selected?.titol;
+    const autor = form.autor || selected?.autor;
+    if (!titol || !autor) { showToast("Cal tenir títol i autor per generar el resum"); return; }
+    setGenerantResum(true);
+    try {
+      const resum = await generarResumIA(titol, autor, form.serie||selected?.serie, form.num_serie||selected?.num_serie);
+      if (resum) {
+        if (modal === "detail") {
+          // Desa directament a BD des del detall
+          await supabase.from("books").update({resum}).eq("id", selected.id);
+          const updated = {...selected, resum};
+          setSelected(updated);
+          setBooks(bs=>bs.map(b=>b.id===selected.id?updated:b));
+          showToast("Resum generat ✓");
+        } else {
+          setForm(f=>({...f, resum}));
+        }
+      } else showToast("No s'ha pogut generar el resum");
+    } catch { showToast("Error generant el resum"); }
+    setGenerantResum(false);
   };
 
   // ── Scanner ───────────────────────────────────────────────
@@ -430,8 +467,7 @@ export default function App() {
     if (!("BarcodeDetector" in window)) { isbnInputRef.current?.click(); return; }
     try {
       const stream = await navigator.mediaDevices.getUserMedia({video:{facingMode:"environment",width:{ideal:1280},height:{ideal:720}}});
-      streamRef.current = stream;
-      setScanning(true);
+      streamRef.current = stream; setScanning(true);
       await new Promise(r=>setTimeout(r,120));
       if (!videoRef.current) { stopScanner(); return; }
       videoRef.current.srcObject = stream;
@@ -457,23 +493,21 @@ export default function App() {
       await new Promise(r=>{img.onload=r;});
       const detector = new window.BarcodeDetector({formats:["ean_13","ean_8","upc_a","upc_e"]});
       const barcodes = await detector.detect(img);
-      if (barcodes.length>0) { const code=barcodes[0].rawValue; setForm(f=>({...f,isbn:code})); lookupISBN(code); showToast(`ISBN: ${code}`); }
+      if (barcodes.length>0) { const code=barcodes[0].rawValue; setForm(f=>({...f,isbn:code})); lookupISBN(code); }
       else showToast("No s'ha detectat cap ISBN");
     } catch { showToast("Error processant la imatge"); }
     e.target.value="";
   };
 
-  // ── Cloudinary upload genèric ─────────────────────────────
+  // ── Cloudinary ────────────────────────────────────────────
   const uploadToCloudinary = async (file) => {
     const fd = new FormData();
-    fd.append("file", file);
-    fd.append("upload_preset", CLOUDINARY_PRESET);
-    const res  = await fetch(CLOUDINARY_UPLOAD, {method:"POST",body:fd});
+    fd.append("file",file); fd.append("upload_preset",CLOUDINARY_PRESET);
+    const res  = await fetch(CLOUDINARY_UPLOAD,{method:"POST",body:fd});
     const data = await res.json();
-    return data.secure_url || null;
+    return data.secure_url||null;
   };
 
-  // Foto portada al formulari d'edició
   const handleFotoChange = async (e) => {
     const file = e.target.files?.[0]; if (!file) return;
     setUploadingFoto(true);
@@ -485,42 +519,33 @@ export default function App() {
     setUploadingFoto(false); e.target.value="";
   };
 
-  // ── Portada des de detall (sense obrir editar) ────────────
+  // ── Portada des de detall ─────────────────────────────────
   const portadaGoogleBooks = async () => {
-    const isbn = selected?.isbn;
-    if (!isbn) { showToast("Aquest llibre no té ISBN"); return; }
+    const isbn = selected?.isbn; if (!isbn) { showToast("Aquest llibre no té ISBN"); return; }
     try {
       const res  = await fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`);
       const data = await res.json();
       const imgUrl = data.items?.[0]?.volumeInfo?.imageLinks?.thumbnail?.replace("http://","https://")
                   || data.items?.[0]?.volumeInfo?.imageLinks?.smallThumbnail?.replace("http://","https://");
-      if (!imgUrl) { showToast("No s'ha trobat portada a Google Books"); return; }
+      if (!imgUrl) { showToast("No s'ha trobat portada"); return; }
       const {error} = await supabase.from("books").update({foto_url:imgUrl}).eq("id",selected.id);
       if (!error) {
-        const updated = {...selected, foto_url:imgUrl};
-        setSelected(updated);
-        setBooks(bs=>bs.map(b=>b.id===selected.id?updated:b));
-        setPortadaKey(k=>k+1);
-        showToast("Portada actualitzada ✓");
+        const updated={...selected,foto_url:imgUrl};
+        setSelected(updated); setBooks(bs=>bs.map(b=>b.id===selected.id?updated:b));
+        setPortadaKey(k=>k+1); showToast("Portada actualitzada ✓");
       }
     } catch { showToast("Error buscant portada"); }
   };
 
   const portadaURL = async () => {
-    const url = urlInputVal.trim();
-    if (!url) return;
+    const url = urlInputVal.trim(); if (!url) return;
     setUploadingPortada(true);
-    try {
-      const {error} = await supabase.from("books").update({foto_url:url}).eq("id",selected.id);
-      if (!error) {
-        const updated = {...selected,foto_url:url};
-        setSelected(updated);
-        setBooks(bs=>bs.map(b=>b.id===selected.id?updated:b));
-        setPortadaKey(k=>k+1);
-        setShowUrlInput(false); setUrlInputVal("");
-        showToast("Portada actualitzada ✓");
-      }
-    } catch { showToast("Error desant URL"); }
+    const {error} = await supabase.from("books").update({foto_url:url}).eq("id",selected.id);
+    if (!error) {
+      const updated={...selected,foto_url:url};
+      setSelected(updated); setBooks(bs=>bs.map(b=>b.id===selected.id?updated:b));
+      setPortadaKey(k=>k+1); setShowUrlInput(false); setUrlInputVal(""); showToast("Portada actualitzada ✓");
+    }
     setUploadingPortada(false);
   };
 
@@ -532,11 +557,9 @@ export default function App() {
       if (url) {
         const {error} = await supabase.from("books").update({foto_url:url}).eq("id",selected.id);
         if (!error) {
-          const updated = {...selected,foto_url:url};
-          setSelected(updated);
-          setBooks(bs=>bs.map(b=>b.id===selected.id?updated:b));
-          setPortadaKey(k=>k+1);
-          showToast("Foto pujada ✓");
+          const updated={...selected,foto_url:url};
+          setSelected(updated); setBooks(bs=>bs.map(b=>b.id===selected.id?updated:b));
+          setPortadaKey(k=>k+1); showToast("Foto pujada ✓");
         }
       } else showToast("Error pujant la foto");
     } catch { showToast("Error pujant la foto"); }
@@ -547,7 +570,16 @@ export default function App() {
   const desar = async () => {
     if (!form.titol?.trim()||!form.autor?.trim()) { showToast("Títol i autor són obligatoris"); return; }
     setSaving(true);
-    const payload = {titol:form.titol.trim(),autor:form.autor.trim(),any_publicacio:form.any_publicacio?parseInt(form.any_publicacio):null,seccio:form.seccio,estat:form.estat,puntuacio:form.puntuacio||null,isbn:form.isbn?.trim()||null,format:form.format,notes:form.notes?.trim()||null,resum:form.resum?.trim()||null,foto_url:form.foto_url?.trim()||null};
+    const payload = {
+      titol:form.titol.trim(), autor:form.autor.trim(),
+      any_publicacio:form.any_publicacio?parseInt(form.any_publicacio):null,
+      seccio:form.seccio, estat:form.estat, puntuacio:form.puntuacio||null,
+      isbn:form.isbn?.trim()||null, format:form.format,
+      notes:form.notes?.trim()||null, resum:form.resum?.trim()||null,
+      foto_url:form.foto_url?.trim()||null,
+      serie:form.serie?.trim()||null,
+      num_serie:form.num_serie?parseInt(form.num_serie):null,
+    };
     if (modal==="add") {
       if (payload.isbn) {
         const {data:dup} = await supabase.from("books").select("id,titol").eq("isbn",payload.isbn).maybeSingle();
@@ -557,7 +589,8 @@ export default function App() {
       if (!error) { showToast("Llibre afegit ✓"); fetchBooks(); tancar(); } else showToast("Error en desar");
     } else {
       const {error} = await supabase.from("books").update(payload).eq("id",selected.id);
-      if (!error) { showToast("Canvis desats ✓"); fetchBooks(); setSelected({...selected,...payload}); setModal("detail"); } else showToast("Error en desar");
+      if (!error) { showToast("Canvis desats ✓"); fetchBooks(); setSelected({...selected,...payload}); setModal("detail"); }
+      else showToast("Error en desar");
     }
     setSaving(false);
   };
@@ -570,6 +603,11 @@ export default function App() {
 
   const getPortada = (b) => { if (!b) return null; if (b.foto_url) return b.foto_url; return getOpenLibraryUrl(b.isbn); };
 
+  const formatSerie = (b) => {
+    if (!b?.serie) return null;
+    return b.num_serie ? `${b.serie} #${b.num_serie}` : b.serie;
+  };
+
   // ── Login ─────────────────────────────────────────────────
   if (!logat) return (
     <>
@@ -577,7 +615,8 @@ export default function App() {
       <div className="login-screen">
         <div className="login-logo"><LogoSVG/></div>
         <div className="login-sub">Col·lecció de novel·la negra</div>
-        <input className="login-input" type="password" placeholder="·····" value={pwd} onChange={e=>setPwd(e.target.value)} onKeyDown={e=>e.key==="Enter"&&login()} autoFocus/>
+        <input className="login-input" type="password" placeholder="·····" value={pwd}
+          onChange={e=>setPwd(e.target.value)} onKeyDown={e=>e.key==="Enter"&&login()} autoFocus/>
         <button className="login-btn" onClick={login}>Entrar</button>
         {pwdError&&<div className="login-error">Contrasenya incorrecta</div>}
       </div>
@@ -589,6 +628,8 @@ export default function App() {
     <>
       <div className="modal-handle"/>
       <div className="modal-title">{modal==="add"?"Afegir llibre":"Editar llibre"}</div>
+
+      {/* ISBN */}
       <div className="form-group">
         <label className="form-label">ISBN</label>
         <div className="isbn-row">
@@ -609,8 +650,22 @@ export default function App() {
         )}
         <input ref={isbnInputRef} type="file" accept="image/*" capture="environment" style={{display:"none"}} onChange={handleIsbnPhoto}/>
       </div>
+
       <div className="form-group"><label className="form-label">Títol *</label><input className="form-input" value={form.titol||""} onChange={e=>setForm(f=>({...f,titol:e.target.value}))} placeholder="Títol del llibre"/></div>
       <div className="form-group"><label className="form-label">Autor *</label><input className="form-input" value={form.autor||""} onChange={e=>setForm(f=>({...f,autor:e.target.value}))} placeholder="Nom de l'autor/a"/></div>
+
+      {/* Sèrie */}
+      <div className="form-row">
+        <div className="form-group">
+          <label className="form-label">Sèrie</label>
+          <input className="form-input" value={form.serie||""} onChange={e=>setForm(f=>({...f,serie:e.target.value}))} placeholder="Ex: Wallander"/>
+        </div>
+        <div className="form-group" style={{maxWidth:"90px"}}>
+          <label className="form-label">Núm.</label>
+          <input className="form-input" type="number" min="1" value={form.num_serie||""} onChange={e=>setForm(f=>({...f,num_serie:e.target.value}))} placeholder="#"/>
+        </div>
+      </div>
+
       <div className="form-row">
         <div className="form-group"><label className="form-label">Any</label><input className="form-input" type="number" value={form.any_publicacio||""} onChange={e=>setForm(f=>({...f,any_publicacio:e.target.value}))} placeholder="Any"/></div>
         <div className="form-group"><label className="form-label">Format</label><select className="form-select" value={form.format||"Paper"} onChange={e=>setForm(f=>({...f,format:e.target.value}))}>{FORMATS.map(f=><option key={f}>{f}</option>)}</select></div>
@@ -623,6 +678,8 @@ export default function App() {
         <label className="form-label">Puntuació</label>
         <div className="stars-input">{[1,2,3,4,5].map(n=><button key={n} className="star-btn" onClick={()=>setForm(f=>({...f,puntuacio:f.puntuacio===n?null:n}))}>{(form.puntuacio||0)>=n?"★":"☆"}</button>)}</div>
       </div>
+
+      {/* Foto */}
       <div className="form-group">
         <label className="form-label">Foto portada</label>
         <div className="foto-row">
@@ -634,7 +691,22 @@ export default function App() {
         </div>
         <input ref={fotoInputRef} type="file" accept="image/*" capture="environment" style={{display:"none"}} onChange={handleFotoChange}/>
       </div>
-      {form.resum&&<div className="form-group"><label className="form-label">Resum</label><div className="resum-box">{form.resum}</div><button style={{fontSize:11,color:"var(--text-muted)",background:"none",border:"none",cursor:"pointer"}} onClick={()=>setForm(f=>({...f,resum:""}))}>Esborrar resum</button></div>}
+
+      {/* Resum */}
+      <div className="form-group">
+        <label className="form-label">Resum</label>
+        <div className="resum-row">
+          {form.resum
+            ? <div className="resum-box">{form.resum}</div>
+            : <div className="resum-box" style={{color:"var(--text-muted)",fontStyle:"normal"}}>Sense resum</div>
+          }
+          <button className="btn-ia" onClick={handleGenerarResum} disabled={generantResum}>
+            {generantResum?"...":"✨ IA"}
+          </button>
+        </div>
+        {form.resum&&<button style={{fontSize:11,color:"var(--text-muted)",background:"none",border:"none",cursor:"pointer"}} onClick={()=>setForm(f=>({...f,resum:""}))}>Esborrar resum</button>}
+      </div>
+
       <div className="form-group"><label className="form-label">Notes</label><textarea className="form-textarea" value={form.notes||""} onChange={e=>setForm(f=>({...f,notes:e.target.value}))} placeholder="Impressions, cites, comentaris..."/></div>
       <div className="btn-row">
         <button className="btn btn-secondary" onClick={tancar}>Cancel·lar</button>
@@ -648,52 +720,30 @@ export default function App() {
     const b = selected; if (!b) return null;
     const portada = getPortada(b);
     const ec = ESTAT_COLORS[b.estat]||"#5a5a5a";
+    const serieLabel = formatSerie(b);
     return (
       <>
         <div className="modal-handle"/>
-
-        {/* Portada */}
-        {portada
-          ? <img key={portadaKey} src={portada} alt={b.titol} className="detail-cover" onError={e=>{e.target.style.display="none";e.target.nextSibling.style.display="flex";}}/>
-          : null
-        }
+        {portada?<img key={portadaKey} src={portada} alt={b.titol} className="detail-cover" onError={e=>{e.target.style.display="none";e.target.nextSibling.style.display="flex";}}/>:null}
         <div className="detail-cover-ph" style={{display:portada?"none":"flex"}}>🔍</div>
 
         {/* Botons portada */}
         <div className="portada-btns">
-          <button className="portada-btn" onClick={portadaGoogleBooks} disabled={uploadingPortada}>
-            🔍 Google
-          </button>
-          <button className="portada-btn" onClick={()=>{setShowUrlInput(v=>!v);setUrlInputVal("");}}>
-            🔗 URL
-          </button>
-          <button className={`portada-btn${uploadingPortada?" uploading":""}`} onClick={()=>portadaInputRef.current?.click()} disabled={uploadingPortada}>
-            📷 {uploadingPortada?"Pujant...":"Foto"}
-          </button>
-          {b.foto_url&&(
-            <button className="portada-btn" style={{color:"var(--red)"}} onClick={async()=>{
-              await supabase.from("books").update({foto_url:null}).eq("id",b.id);
-              const updated={...b,foto_url:null};
-              setSelected(updated);
-              setBooks(bs=>bs.map(x=>x.id===b.id?updated:x));
-              setPortadaKey(k=>k+1);
-              showToast("Foto eliminada");
-            }}>✕ Treure</button>
-          )}
+          <button className="portada-btn" onClick={portadaGoogleBooks} disabled={uploadingPortada}>🔍 Google</button>
+          <button className="portada-btn" onClick={()=>{setShowUrlInput(v=>!v);setUrlInputVal("");}}>🔗 URL</button>
+          <button className="portada-btn" onClick={()=>portadaInputRef.current?.click()} disabled={uploadingPortada}>📷 {uploadingPortada?"Pujant...":"Foto"}</button>
+          {b.foto_url&&<button className="portada-btn" style={{color:"var(--red)"}} onClick={async()=>{
+            await supabase.from("books").update({foto_url:null}).eq("id",b.id);
+            const u={...b,foto_url:null}; setSelected(u); setBooks(bs=>bs.map(x=>x.id===b.id?u:x)); setPortadaKey(k=>k+1); showToast("Foto eliminada");
+          }}>✕ Treure</button>}
         </div>
-
-        {/* Input URL */}
-        {showUrlInput&&(
-          <div className="url-input-row">
-            <input value={urlInputVal} onChange={e=>setUrlInputVal(e.target.value)} placeholder="https://..." onKeyDown={e=>e.key==="Enter"&&portadaURL()}/>
-            <button onClick={portadaURL}>OK</button>
-          </div>
-        )}
-
+        {showUrlInput&&<div className="url-input-row"><input value={urlInputVal} onChange={e=>setUrlInputVal(e.target.value)} placeholder="https://..." onKeyDown={e=>e.key==="Enter"&&portadaURL()}/><button onClick={portadaURL}>OK</button></div>}
         <input ref={portadaInputRef} type="file" accept="image/*" capture="environment" style={{display:"none"}} onChange={handlePortadaFoto}/>
 
         <div className="detail-titol">{b.titol}</div>
         <div className="detail-autor">{b.autor}{b.any_publicacio?` · ${b.any_publicacio}`:""}</div>
+        {serieLabel&&<div className="detail-serie"><span className="serie-tag">📚 {serieLabel}</span></div>}
+
         <div className="detail-tags">
           <span className="detail-tag">{b.seccio}</span>
           <span className="detail-tag">{b.format}</span>
@@ -701,8 +751,18 @@ export default function App() {
           {b.isbn&&<span className="detail-tag">ISBN {b.isbn}</span>}
         </div>
         {b.puntuacio&&<div className="detail-stars"><Stars n={b.puntuacio}/></div>}
-        {b.resum&&<><div className="detail-sec-label">Resum</div><div className="detail-resum">{b.resum}</div></>}
-        {b.notes&&<div className="detail-notes">"{b.notes}"</div>}
+
+        {/* Resum + botó IA */}
+        <div className="detail-sec-label">Resum</div>
+        {b.resum
+          ? <div className="detail-resum">{b.resum}</div>
+          : <div className="detail-resum" style={{color:"var(--text-muted)",fontStyle:"normal"}}>Sense resum</div>
+        }
+        <button className="btn-ia-inline" onClick={handleGenerarResum} disabled={generantResum}>
+          {generantResum?"✨ Generant resum...":"✨ Generar resum amb IA"}
+        </button>
+
+        {b.notes&&<><div className="detail-sec-label">Notes</div><div className="detail-notes">"{b.notes}"</div></>}
         <hr className="detail-divider"/>
         <div className="btn-row">
           <button className="btn btn-secondary" onClick={tancar}>Tancar</button>
@@ -717,12 +777,15 @@ export default function App() {
   const renderCard = (b) => {
     const portada = getPortada(b);
     const ec = ESTAT_COLORS[b.estat]||"#5a5a5a";
+    const serieLabel = formatSerie(b);
+
     if (cols===1) return (
       <div key={b.id} className="book-card-list" onClick={()=>obrirDetall(b)}>
         {portada?<img src={portada} alt={b.titol} className="book-cover-sm" onError={e=>{e.target.style.display="none";e.target.nextSibling.style.display="flex";}}/>:null}
         <div className="book-cover-sm-ph" style={{display:portada?"none":"flex"}}>🔍</div>
         <div className="book-info">
           <div className="book-titol">{b.titol}</div>
+          {serieLabel&&<div className="book-serie-tag">📚 {serieLabel}</div>}
           <div className="book-autor">{b.autor}{b.any_publicacio?` · ${b.any_publicacio}`:""}</div>
           <div className="book-meta">
             <span className="tag">{b.seccio}</span>
@@ -732,6 +795,7 @@ export default function App() {
         </div>
       </div>
     );
+
     return (
       <div key={b.id} className="book-card" onClick={()=>obrirDetall(b)}>
         <span className="estat-badge" style={{color:ec}}>● {b.estat}</span>
@@ -739,6 +803,7 @@ export default function App() {
         <div className="book-card-cover-ph" style={{display:portada?"none":"flex"}}>🔍</div>
         <div className="book-card-body">
           <div className="book-card-titol">{b.titol}</div>
+          {serieLabel&&<div className="book-card-serie">📚 {serieLabel}</div>}
           <div className="book-card-autor">{b.autor}</div>
           <div className="book-card-meta">
             <span className="tag-mini">{b.seccio}</span>
@@ -761,7 +826,7 @@ export default function App() {
               <button className="btn-logout" onClick={()=>setLogat(false)}>↩</button>
             </div>
           </div>
-          <input className="search-input" placeholder="Cercar per títol o autor..." value={cerca} onChange={e=>setCerca(e.target.value)}/>
+          <input className="search-input" placeholder="Cercar per títol, autor o sèrie..." value={cerca} onChange={e=>setCerca(e.target.value)}/>
           <div className="estat-filters">
             {["Tots",...ESTATS].map(e=><button key={e} className={`estat-btn${filtreEstat===e?" active":""}`} onClick={()=>setFiltreEstat(e)}>{e}</button>)}
           </div>
@@ -789,7 +854,7 @@ export default function App() {
 
         <div className="books-grid" style={{gridTemplateColumns:`repeat(${cols},1fr)`}}>
           {loading?(<div className="empty"><div className="empty-icon">⏳</div></div>)
-          :booksFiltrats.length===0?(<div className="empty"><div className="empty-icon">🔍</div><div className="empty-text">{books.length===0?"Encara no hi ha llibres. Afegeix el primer!":"Cap resultat per a aquesta cerca"}</div></div>)
+          :booksFiltrats.length===0?(<div className="empty"><div className="empty-icon">🔍</div><div className="empty-text">{books.length===0?"Encara no hi ha llibres. Afegeix el primer!":"Cap resultat"}</div></div>)
           :booksFiltrats.map(b=>renderCard(b))}
         </div>
 
