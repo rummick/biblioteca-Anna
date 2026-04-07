@@ -9,6 +9,7 @@ const CLOUDINARY_CLOUD  = "dyup2h4mh";
 const CLOUDINARY_PRESET = "ml_per_defecte";
 const CLOUDINARY_UPLOAD = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/image/upload`;
 const PASSWORD          = "NOIR01";
+const VERSIO            = "v1.7.0";
 
 const SECCIONS = ["Negre", "Policial", "Thriller", "Nòrdic", "Històric", "Altres"];
 const ESTATS   = ["Llegit", "Llegint", "Pendent", "No llegit"];
@@ -237,8 +238,8 @@ const styles = `
   .detail-tags{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:16px;}
   .detail-tag{padding:4px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:12px;font-size:12px;color:var(--text-dim);}
   .detail-stars{text-align:center;font-size:20px;color:var(--gold);margin-bottom:16px;}
-  .detail-sec-label{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-bottom:4px;}
-  .detail-resum{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:12px;font-size:12px;color:var(--text-muted);line-height:1.6;margin-bottom:8px;}
+  .detail-sec-label{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--gold-dim);margin-bottom:6px;font-weight:500;}
+  .detail-resum{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:14px;font-size:13.5px;color:var(--text-dim);line-height:1.75;margin-bottom:8px;}
   .detail-notes{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:12px;font-size:13px;color:var(--text-dim);line-height:1.6;margin-bottom:16px;font-style:italic;}
   .detail-divider{border:none;border-top:1px solid var(--border);margin:16px 0;}
 
@@ -249,6 +250,16 @@ const styles = `
   .confirm-box{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:24px 20px;max-width:320px;width:100%;text-align:center;}
   .confirm-box p{font-size:15px;color:var(--text);margin-bottom:20px;line-height:1.5;}
   .confirm-row{display:flex;gap:10px;}
+
+  /* Lot resums */
+  .lot-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:400;display:flex;align-items:center;justify-content:center;padding:20px;}
+  .lot-box{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:28px 24px;max-width:360px;width:100%;text-align:center;}
+  .lot-title{font-family:'Playfair Display',serif;font-size:18px;color:var(--gold);margin-bottom:6px;}
+  .lot-sub{font-size:12px;color:var(--text-muted);margin-bottom:20px;}
+  .lot-progress-bar{width:100%;height:6px;background:var(--bg3);border-radius:3px;overflow:hidden;margin-bottom:10px;}
+  .lot-progress-fill{height:100%;background:var(--gold);border-radius:3px;transition:width 0.3s;}
+  .lot-progress-text{font-size:12px;color:var(--text-dim);margin-bottom:6px;}
+  .lot-current{font-size:11px;color:var(--text-muted);min-height:16px;margin-bottom:20px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 
   /* Vista llista */
   .list-view{flex:1;overflow-y:auto;padding:0;}
@@ -267,6 +278,7 @@ const styles = `
   /* Diagnòstic */
   .btn-diag{width:32px;height:32px;background:transparent;color:var(--text-muted);border:1px solid var(--border);border-radius:50%;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:color 0.15s,border-color 0.15s;}
   .btn-diag.active{color:var(--gold);border-color:var(--gold);}
+  .header-versio{font-size:10px;color:var(--text-muted);letter-spacing:1px;margin-top:2px;text-align:right;flex-shrink:0;align-self:flex-end;padding-bottom:3px;}
   .btn-diag:hover{color:var(--gold);border-color:var(--gold-dim);}
   .diag-summary{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px;}
   .diag-stat{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:12px;text-align:center;}
@@ -371,6 +383,8 @@ export default function App() {
   const [uploadingFoto, setUploadingFoto] = useState(false);
   const [generantResum, setGenerantResum] = useState(false);
   const [vistaLlista, setVistaLlista]     = useState(false);
+  const [processantLot, setProcessantLot] = useState(false);
+  const [lotProgress, setLotProgress]     = useState(null); // {actual, total}
   const [showDiag, setShowDiag] = useState(false);
   const [toast, setToast] = useState(null);
   const [cols, setCols]   = useState(1);
@@ -715,6 +729,34 @@ export default function App() {
     showToast(`${books.length} llibres exportats ✓`);
   };
 
+  // ── Lot de resums automàtics ─────────────────────────────
+  const generarTotsResums = async () => {
+    const sensResum = books.filter(b => !b.resum);
+    if (sensResum.length === 0) { showToast("Tots els llibres ja tenen resum ✓"); return; }
+    setProcessantLot(true);
+    setLotProgress({ actual: 0, total: sensResum.length, titolActual: "" });
+
+    let actualitzats = 0;
+    for (let i = 0; i < sensResum.length; i++) {
+      const b = sensResum[i];
+      setLotProgress({ actual: i, total: sensResum.length, titolActual: b.titol });
+      try {
+        const resum = await buscarResumOnline(b.titol, b.autor, b.isbn);
+        if (resum) {
+          await supabase.from("books").update({ resum }).eq("id", b.id);
+          setBooks(bs => bs.map(x => x.id === b.id ? { ...x, resum } : x));
+          actualitzats++;
+        }
+      } catch {}
+      // Pausa breu per no saturar l'API
+      await new Promise(r => setTimeout(r, 400));
+    }
+
+    setLotProgress(null);
+    setProcessantLot(false);
+    showToast(`${actualitzats} resums nous afegits ✓`);
+  };
+
   // ── Login ─────────────────────────────────────────────────
   if (!logat) return (
     <>
@@ -933,7 +975,9 @@ export default function App() {
       <div className="app">
         <header className="header">
           <div className="header-top">
-            <div className="header-logo"><LogoSVG/></div>
+            <div style={{display:"flex",flexDirection:"column",flex:1,maxWidth:280}}>
+              <div className="header-logo"><LogoSVG/></div>
+            </div>
             <div className="header-actions">
               <button className={`btn-diag${vistaLlista?" active":""}`} onClick={()=>setVistaLlista(v=>!v)} title={vistaLlista?"Vista graella":"Vista llista"}>
                 {vistaLlista?"⊞":"☰"}
@@ -942,6 +986,7 @@ export default function App() {
               <button className="btn-diag" onClick={exportarCSV} title="Exportar CSV">⬇</button>
               <button className="btn-add" onClick={obrirAfegir}>+</button>
               <button className="btn-logout" onClick={()=>setLogat(false)}>↩</button>
+              <span className="header-versio">{VERSIO}</span>
             </div>
           </div>
           <input className="search-input" placeholder="Cercar per títol, autor o sèrie..." value={cerca} onChange={e=>setCerca(e.target.value)}/>
@@ -1155,11 +1200,38 @@ export default function App() {
                 )}
 
                 <hr className="diag-divider"/>
+                {senseRes.length > 0 && (
+                  <button
+                    className="btn btn-primary"
+                    style={{width:"100%",marginBottom:10}}
+                    onClick={()=>{ setShowDiag(false); generarTotsResums(); }}
+                  >
+                    🔍 Buscar resums automàticament ({senseRes.length})
+                  </button>
+                )}
                 <button className="btn btn-secondary" style={{width:"100%"}} onClick={()=>setShowDiag(false)}>Tancar</button>
               </div>
             </div>
           );
         })()}
+
+        {/* Modal progrés lot resums */}
+        {processantLot && lotProgress && (
+          <div className="lot-overlay">
+            <div className="lot-box">
+              <div className="lot-title">🔍 Buscant resums</div>
+              <div className="lot-sub">Consultant Google Books i OpenLibrary...</div>
+              <div className="lot-progress-bar">
+                <div className="lot-progress-fill"
+                  style={{width:`${Math.round((lotProgress.actual/lotProgress.total)*100)}%`}}/>
+              </div>
+              <div className="lot-progress-text">
+                {lotProgress.actual} de {lotProgress.total} llibres
+              </div>
+              <div className="lot-current">{lotProgress.titolActual}</div>
+            </div>
+          </div>
+        )}
 
         {toast&&<div className="toast">{toast}</div>}
       </div>
