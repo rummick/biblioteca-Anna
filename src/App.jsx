@@ -18,6 +18,8 @@ const ORDRES   = [
   { valor:"titol_desc",     label:"Títol Z→A" },
   { valor:"autor_asc",      label:"Autor A→Z" },
   { valor:"autor_desc",     label:"Autor Z→A" },
+  { valor:"serie_asc",      label:"Sèrie A→Z" },
+  { valor:"serie_num_asc",  label:"Sèrie + núm." },
   { valor:"any_desc",       label:"Any ↓" },
   { valor:"any_asc",        label:"Any ↑" },
   { valor:"puntuacio_desc", label:"Puntuació ↓" },
@@ -248,8 +250,23 @@ const styles = `
   .confirm-box p{font-size:15px;color:var(--text);margin-bottom:20px;line-height:1.5;}
   .confirm-row{display:flex;gap:10px;}
 
+  /* Vista llista */
+  .list-view{flex:1;overflow-y:auto;padding:0;}
+  .list-row{display:flex;align-items:center;gap:12px;padding:10px 20px;border-bottom:1px solid var(--border);cursor:pointer;transition:background 0.12s;}
+  .list-row:hover{background:var(--bg2);}
+  .list-cover{width:36px;height:50px;border-radius:3px;object-fit:cover;flex-shrink:0;background:var(--bg3);}
+  .list-cover-ph{width:36px;height:50px;border-radius:3px;flex-shrink:0;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--text-muted);}
+  .list-titol{font-family:'Playfair Display',serif;font-size:14px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:2;min-width:0;}
+  .list-autor{font-size:12px;color:var(--text-dim);flex:1.2;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .list-serie{font-size:11px;color:var(--purple);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .list-estat{font-size:10px;font-weight:600;flex-shrink:0;width:66px;text-align:right;}
+  .list-stars{color:var(--gold);font-size:10px;flex-shrink:0;}
+  .list-header{display:flex;align-items:center;gap:12px;padding:6px 20px;border-bottom:1px solid var(--border);background:var(--bg2);}
+  .list-header span{font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;}
+
   /* Diagnòstic */
   .btn-diag{width:32px;height:32px;background:transparent;color:var(--text-muted);border:1px solid var(--border);border-radius:50%;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:color 0.15s,border-color 0.15s;}
+  .btn-diag.active{color:var(--gold);border-color:var(--gold);}
   .btn-diag:hover{color:var(--gold);border-color:var(--gold-dim);}
   .diag-summary{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px;}
   .diag-stat{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:12px;text-align:center;}
@@ -276,6 +293,15 @@ const Stars = ({ n, mini }) => {
 };
 
 const ordenarBooks = (books, ordre) => {
+  if (ordre === "serie_num_asc") {
+    return [...books].sort((a, b) => {
+      const sa = (a.serie||"zzz").toLowerCase();
+      const sb = (b.serie||"zzz").toLowerCase();
+      if (sa < sb) return -1;
+      if (sa > sb) return 1;
+      return (a.num_serie||999) - (b.num_serie||999);
+    });
+  }
   const parts = ordre.split("_");
   const dir   = parts.pop();
   const key   = parts.join("_") === "any" ? "any_publicacio" : parts.join("_");
@@ -344,6 +370,7 @@ export default function App() {
   const [scanning, setScanning]         = useState(false);
   const [uploadingFoto, setUploadingFoto] = useState(false);
   const [generantResum, setGenerantResum] = useState(false);
+  const [vistaLlista, setVistaLlista]     = useState(false);
   const [showDiag, setShowDiag] = useState(false);
   const [toast, setToast] = useState(null);
   const [cols, setCols]   = useState(1);
@@ -908,6 +935,9 @@ export default function App() {
           <div className="header-top">
             <div className="header-logo"><LogoSVG/></div>
             <div className="header-actions">
+              <button className={`btn-diag${vistaLlista?" active":""}`} onClick={()=>setVistaLlista(v=>!v)} title={vistaLlista?"Vista graella":"Vista llista"}>
+                {vistaLlista?"⊞":"☰"}
+              </button>
               <button className="btn-diag" onClick={()=>setShowDiag(true)} title="Diagnòstic">🔧</button>
               <button className="btn-diag" onClick={exportarCSV} title="Exportar CSV">⬇</button>
               <button className="btn-add" onClick={obrirAfegir}>+</button>
@@ -940,11 +970,42 @@ export default function App() {
           <div className="results-count">{booksFiltrats.length} {booksFiltrats.length===1?"resultat":"resultats"}</div>
         )}
 
-        <div className="books-grid" style={{gridTemplateColumns:`repeat(${cols},1fr)`}}>
-          {loading?(<div className="empty"><div className="empty-icon">⏳</div></div>)
-          :booksFiltrats.length===0?(<div className="empty"><div className="empty-icon">🔍</div><div className="empty-text">{books.length===0?"Encara no hi ha llibres. Afegeix el primer!":"Cap resultat"}</div></div>)
-          :booksFiltrats.map(b=>renderCard(b))}
-        </div>
+        {vistaLlista ? (
+          <div className="list-view">
+            <div className="list-header">
+              <div style={{width:36,flexShrink:0}}/>
+              <span style={{flex:2}}>Títol</span>
+              <span style={{flex:1.2}}>Autor</span>
+              <span style={{flex:1}}>Sèrie</span>
+              <span style={{width:66,textAlign:"right"}}>Estat</span>
+            </div>
+            {loading ? <div className="empty"><div className="empty-icon">⏳</div></div>
+            : booksFiltrats.length===0 ? <div className="empty"><div className="empty-icon">🔍</div><div className="empty-text">{books.length===0?"Encara no hi ha llibres. Afegeix el primer!":"Cap resultat"}</div></div>
+            : booksFiltrats.map(b => {
+              const portada = getPortada(b);
+              const ec = ESTAT_COLORS[b.estat]||"#5a5a5a";
+              const serieLabel = formatSerie(b);
+              return (
+                <div key={b.id} className="list-row" onClick={()=>obrirDetall(b)}>
+                  {portada
+                    ? <img src={portada} alt={b.titol} className="list-cover" onError={e=>{e.target.style.display="none";e.target.nextSibling.style.display="flex";}}/>
+                    : null}
+                  <div className="list-cover-ph" style={{display:portada?"none":"flex"}}>🔍</div>
+                  <div className="list-titol">{b.titol}</div>
+                  <div className="list-autor">{b.autor}</div>
+                  <div className="list-serie">{serieLabel||""}</div>
+                  <div className="list-estat" style={{color:ec}}>● {b.estat}</div>
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="books-grid" style={{gridTemplateColumns:`repeat(${cols},1fr)`}}>
+            {loading?(<div className="empty"><div className="empty-icon">⏳</div></div>)
+            :booksFiltrats.length===0?(<div className="empty"><div className="empty-icon">🔍</div><div className="empty-text">{books.length===0?"Encara no hi ha llibres. Afegeix el primer!":"Cap resultat"}</div></div>)
+            :booksFiltrats.map(b=>renderCard(b))}
+          </div>
+        )}
 
         {modal&&(
           <div className="modal-overlay" onClick={e=>{if(e.target===e.currentTarget)tancar();}}>
