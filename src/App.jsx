@@ -291,32 +291,34 @@ const ordenarBooks = (books, ordre) => {
   });
 };
 
-// ── Generar resum IA via /api/claude (Vercel Edge proxy) ──
-const generarResumIA = async (titol, autor, serie, numSerie) => {
-  const ctx = [
-    titol && `Titol: ${titol}`,
-    autor && `Autor/a: ${autor}`,
-    serie && `Serie: ${serie}${numSerie ? ` (num. ${numSerie})` : ""}`,
-  ].filter(Boolean).join("\n");
-
-  const prompt = `Ets un expert en novella negra. Escriu un resum breu (max 3 frases, ~80 paraules) d'aquest llibre en catala. Informatiu, sense revelar el desenllas, atmosfera noir. Respon NOMES amb el resum.\n\n${ctx}`;
-
+// ── Buscar resum via Google Books + OpenLibrary ───────────
+const buscarResumOnline = async (titol, autor, isbn) => {
+  // 1) Primer per ISBN si el tenim
+  if (isbn) {
+    try {
+      const r = await fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`);
+      const d = await r.json();
+      const desc = d.items?.[0]?.volumeInfo?.description;
+      if (desc) return desc.substring(0, 500);
+    } catch {}
+    try {
+      const r = await fetch(`https://openlibrary.org/api/books?bibkeys=ISBN:${isbn}&format=json&jscmd=data`);
+      const d = await r.json();
+      const info = d[`ISBN:${isbn}`];
+      const exc  = info?.excerpts?.[0]?.text;
+      if (exc) return exc.substring(0, 500);
+    } catch {}
+  }
+  // 2) Per títol + autor
   try {
-    const res = await fetch("/api/claude", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        model: "claude-sonnet-4-20250514",
-        max_tokens: 300,
-        messages: [{ role: "user", content: prompt }],
-      }),
-    });
-    if (!res.ok) return null;
-    const data = await res.json();
-    return data.content?.[0]?.text?.trim() || null;
-  } catch { return null; }
+    const q   = encodeURIComponent(`intitle:${titol} inauthor:${autor}`);
+    const r   = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${q}&maxResults=1`);
+    const d   = await r.json();
+    const desc = d.items?.[0]?.volumeInfo?.description;
+    if (desc) return desc.substring(0, 500);
+  } catch {}
+  return null;
 };
-
 
 export default function App() {
   const [logat, setLogat]       = useState(false);
@@ -487,27 +489,27 @@ export default function App() {
     setLookupStatus("err"); setLookupMsg("No s'ha trobat cap resultat");
   };
 
-  // ── Resum IA ──────────────────────────────────────────────
+  // ── Buscar resum online ───────────────────────────────────
   const handleGenerarResum = async () => {
     const titol = form.titol || selected?.titol;
     const autor = form.autor || selected?.autor;
-    if (!titol || !autor) { showToast("Cal tenir títol i autor per generar el resum"); return; }
+    const isbn  = form.isbn  || selected?.isbn;
+    if (!titol) { showToast("Cal tenir el títol per buscar el resum"); return; }
     setGenerantResum(true);
     try {
-      const resum = await generarResumIA(titol, autor, form.serie||selected?.serie, form.num_serie||selected?.num_serie);
+      const resum = await buscarResumOnline(titol, autor, isbn);
       if (resum) {
         if (modal === "detail") {
-          // Desa directament a BD des del detall
           await supabase.from("books").update({resum}).eq("id", selected.id);
           const updated = {...selected, resum};
           setSelected(updated);
           setBooks(bs=>bs.map(b=>b.id===selected.id?updated:b));
-          showToast("Resum generat ✓");
+          showToast("Resum trobat ✓");
         } else {
           setForm(f=>({...f, resum}));
         }
-      } else showToast("No s'ha pogut generar el resum");
-    } catch { showToast("Error generant el resum"); }
+      } else showToast("No s'ha trobat resum per a aquest llibre");
+    } catch { showToast("Error buscant el resum"); }
     setGenerantResum(false);
   };
 
@@ -762,7 +764,7 @@ export default function App() {
             : <div className="resum-box" style={{color:"var(--text-muted)",fontStyle:"normal"}}>Sense resum</div>
           }
           <button className="btn-ia" onClick={handleGenerarResum} disabled={generantResum}>
-            {generantResum?"...":"✨ IA"}
+            {generantResum?"Buscant...":"🔍 Resum"}
           </button>
         </div>
         {form.resum&&<button style={{fontSize:11,color:"var(--text-muted)",background:"none",border:"none",cursor:"pointer"}} onClick={()=>setForm(f=>({...f,resum:""}))}>Esborrar resum</button>}
@@ -821,7 +823,7 @@ export default function App() {
           : <div className="detail-resum" style={{color:"var(--text-muted)",fontStyle:"normal"}}>Sense resum</div>
         }
         <button className="btn-ia-inline" onClick={handleGenerarResum} disabled={generantResum}>
-          {generantResum?"✨ Generant resum...":"✨ Generar resum amb IA"}
+          {generantResum?"Buscant resum...":"🔍 Buscar resum automàtic"}
         </button>
 
         {b.notes&&<><div className="detail-sec-label">Notes</div><div className="detail-notes">"{b.notes}"</div></>}
