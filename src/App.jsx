@@ -666,6 +666,28 @@ export default function App() {
     return b.num_serie ? `${b.serie} #${b.num_serie}` : b.serie;
   };
 
+  // ── Exportar CSV ─────────────────────────────────────────
+  const exportarCSV = () => {
+    const camps = ["id","titol","autor","any_publicacio","seccio","estat","puntuacio","isbn","diposit_legal","format","serie","num_serie","resum","notes","foto_url","created_at"];
+    const header = camps.join(",");
+    const esc = (v) => {
+      if (v == null) return "";
+      const s = String(v);
+      if (s.includes(",") || s.includes('"') || s.includes("\n")) return `"${s.replace(/"/g,'""')}"`;
+      return s;
+    };
+    const rows = books.map(b => camps.map(c => esc(b[c])).join(","));
+    const csv  = [header, ...rows].join("\n");
+    const blob = new Blob([csv], { type:"text/csv;charset=utf-8;" });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement("a");
+    a.href     = url;
+    a.download = `noir_${new Date().toISOString().slice(0,10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast(`${books.length} llibres exportats ✓`);
+  };
+
   // ── Login ─────────────────────────────────────────────────
   if (!logat) return (
     <>
@@ -887,6 +909,7 @@ export default function App() {
             <div className="header-logo"><LogoSVG/></div>
             <div className="header-actions">
               <button className="btn-diag" onClick={()=>setShowDiag(true)} title="Diagnòstic">🔧</button>
+              <button className="btn-diag" onClick={exportarCSV} title="Exportar CSV">⬇</button>
               <button className="btn-add" onClick={obrirAfegir}>+</button>
               <button className="btn-logout" onClick={()=>setLogat(false)}>↩</button>
             </div>
